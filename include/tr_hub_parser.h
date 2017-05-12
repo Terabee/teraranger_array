@@ -15,7 +15,7 @@
  * notice, this list of conditions and the following disclaimer in
  * the documentation and/or other materials provided with the
  * distribution.
- * 3. Neither the name Teraranger_tower nor the names of its contributors may be
+ * 3. Neither the name Teraranger_hub nor the names of its contributors may be
  * used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
@@ -30,26 +30,26 @@
  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE. 
+ * POSSIBILITY OF SUCH DAMAGE.
  *
  ****************************************************************************/
 
-#ifndef TERARANGER_tower_TERARANGER_H_
-#define TERARANGER_tower_TERARANGER_H_
+#ifndef TERARANGER_HUB_TERARANGER_H_
+#define TERARANGER_HUB_TERARANGER_H_
 
 #include <ros/ros.h>
-#include <sensor_msgs/LaserScan.h>
+#include <sensor_msgs/Range.h>
 #include <std_msgs/Char.h>
 #include <dynamic_reconfigure/server.h>
 
 #include <string>
 
 #include "serial_port.h"
-//#include "teraranger_tower/Teraranger_towerConfig.h"
+//#include "teraranger_hub/Teraranger_hubConfig.h"
 
 #define BUFFER_SIZE 19
 
-namespace teraranger_tower
+namespace teraranger_hub
 {
 
 static const char PRECISE_MODE[] = "PPP";
@@ -58,6 +58,7 @@ static const char OUTDOOR_MODE[] = "OOO";
 
 static const char BINARY_MODE[] = "BBB";
 static const char TEXT_MODE[] = "TTT";
+static const char FORCE_8_SENSORS[] = "CFF";
 
 static const uint8_t crc_table[] = {0x00, 0x07, 0x0e, 0x09, 0x1c, 0x1b, 0x12, 0x15, 0x38, 0x3f, 0x36, 0x31, 0x24, 0x23,
                                     0x2a, 0x2d, 0x70, 0x77, 0x7e, 0x79, 0x6c, 0x6b, 0x62, 0x65, 0x48, 0x4f, 0x46, 0x41,
@@ -79,44 +80,34 @@ static const uint8_t crc_table[] = {0x00, 0x07, 0x0e, 0x09, 0x1c, 0x1b, 0x12, 0x
                                     0x84, 0x83, 0xde, 0xd9, 0xd0, 0xd7, 0xc2, 0xc5, 0xcc, 0xcb, 0xe6, 0xe1, 0xe8, 0xef,
                                     0xfa, 0xfd, 0xf4, 0xf3};
 
-class Teraranger_tower
+class Teraranger_hub
 {
 public:
-  Teraranger_tower();
-  virtual ~Teraranger_tower();
+  Teraranger_hub();
+  virtual ~Teraranger_hub();
 
   uint8_t crc8(uint8_t *p, uint8_t len);
   void serialDataCallback(uint8_t data);
 
-  void dynParamCallback(const teraranger_tower::Teraranger_towerConfig &config, uint32_t level);
+  //void dynParamCallback(const teraranger_hub::Teraranger_hubConfig &config, uint32_t level);
 
   bool loadParameters();
   void setMode(const char *c);
-  void AHRSupdate(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz);
-  void ComplementaryFilter(float gx, float gy, float gz, float ax, float ay, float az, float dt);
-  ros::NodeHandle nh_;
-  ros::Publisher scan_publisher_;
-  ros::Publisher scan_publisher2_;
-  ros::Publisher imu_publisher_;
-  ros::Publisher pcl_pub_;
 
-  dynamic_reconfigure::Server<teraranger_tower::Teraranger_towerConfig> dyn_param_server_;
-  dynamic_reconfigure::Server<teraranger_tower::Teraranger_towerConfig>::CallbackType dyn_param_server_callback_function_;
+  ros::NodeHandle nh_;
+  ros::Publisher range_publisher_;
+
+  //dynamic_reconfigure::Server<teraranger_hub::Teraranger_hubConfig> dyn_param_server_;
+  //dynamic_reconfigure::Server<teraranger_hub::Teraranger_hubConfig>::CallbackType dyn_param_server_callback_function_;
 
   SerialPort * serial_port_;
   boost::function<void(uint8_t)> serial_data_callback_function_;
 
   std::string portname_;
-
-  float q0, q1, q2, q3; // quaternion elements representing the estimated orientation
-  float iq0, iq1, iq2, iq3;
-  float exInt, eyInt, ezInt;  // scaled integral error
-  float halfT; // half the sample period expressed in seconds
-  int startLoopTime;
-  double lastUpdate, now;
-
+  std::string ns_;
 };
 
-} // namespace teraranger_tower
+} // namespace teraranger_hub
 
-#endif  // TERARANGER_tower_TERARANGER_H_
+#endif  // TERARANGER_HUB_TERARANGER_H_
+

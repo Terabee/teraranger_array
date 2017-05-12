@@ -37,10 +37,10 @@
 #include <string>
 #include <ros/console.h>
 
-#include "teraranger_tower/serial_port.h"
-#include "teraranger_tower/teraranger_tower.h"
+#include "serial_port.h"
+#include "tr_hub_parser.h"
 
-namespace teraranger_tower
+namespace teraranger_hub
 {
 
 SerialPort::SerialPort() :
