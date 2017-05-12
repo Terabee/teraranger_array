@@ -34,8 +34,8 @@
  *
  ****************************************************************************/
 
-#ifndef TERARANGER_tower_SERIAL_PORT_H_
-#define TERARANGER_tower_SERIAL_PORT_H_
+#ifndef TR_HUB_SERIAL_PORT_H
+#define TR_HUB_SERIAL_PORT_H
 
 #include <stdio.h>    // Standard input/output definitions
 #include <string.h>   // String function definitions
@@ -50,7 +50,7 @@
 
 #include <string>
 
-namespace teraranger_hub
+namespace tr_hub_parser
 {
 
 class SerialPort
@@ -74,6 +74,6 @@ public:
   boost::function<void(uint8_t)> * serial_callback_function;
 };
 
-} // namespace teraranger_tower
+} // namespace tr_hub_parser
 
-#endif  // TERARANGER_tower_SERIAL_PORT_H_
+#endif  // TR_HUB_SERIAL_PORT_H

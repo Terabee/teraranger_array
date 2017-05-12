@@ -40,7 +40,7 @@
 #include "serial_port.h"
 #include "tr_hub_parser.h"
 
-namespace teraranger_hub
+namespace tr_hub_parser
 {
 
 SerialPort::SerialPort() :
@@ -128,4 +128,4 @@ void SerialPort::serialThread()
 
 }
 
-} // namespace teraranger_tower
+} // tr_hub_parser

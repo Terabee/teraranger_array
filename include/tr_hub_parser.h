@@ -34,22 +34,24 @@
  *
  ****************************************************************************/
 
-#ifndef TERARANGER_HUB_TERARANGER_H_
-#define TERARANGER_HUB_TERARANGER_H_
+#ifndef TR_HUB_PARSER_H
+#define TR_HUB_PARSER_H
 
 #include <ros/ros.h>
 #include <sensor_msgs/Range.h>
 #include <std_msgs/Char.h>
-#include <dynamic_reconfigure/server.h>
+
 
 #include <string>
 
 #include "serial_port.h"
-//#include "teraranger_hub/Teraranger_hubConfig.h"
+
+#include <dynamic_reconfigure/server.h>
+#include "tr_hub_parser/Tr_hub_parserConfig.h"
 
 #define BUFFER_SIZE 19
 
-namespace teraranger_hub
+namespace tr_hub_parser
 {
 
 static const char PRECISE_MODE[] = "PPP";
@@ -80,16 +82,16 @@ static const uint8_t crc_table[] = {0x00, 0x07, 0x0e, 0x09, 0x1c, 0x1b, 0x12, 0x
                                     0x84, 0x83, 0xde, 0xd9, 0xd0, 0xd7, 0xc2, 0xc5, 0xcc, 0xcb, 0xe6, 0xe1, 0xe8, 0xef,
                                     0xfa, 0xfd, 0xf4, 0xf3};
 
-class Teraranger_hub
+class Tr_hub_parser
 {
 public:
-  Teraranger_hub();
-  virtual ~Teraranger_hub();
+  Tr_hub_parser();
+  virtual ~Tr_hub_parser();
 
   uint8_t crc8(uint8_t *p, uint8_t len);
   void serialDataCallback(uint8_t data);
 
-  //void dynParamCallback(const teraranger_hub::Teraranger_hubConfig &config, uint32_t level);
+  void dynParamCallback(const tr_hub_parser::Tr_hub_parserConfig &config, uint32_t level);
 
   bool loadParameters();
   void setMode(const char *c);
@@ -97,8 +99,8 @@ public:
   ros::NodeHandle nh_;
   ros::Publisher range_publisher_;
 
-  //dynamic_reconfigure::Server<teraranger_hub::Teraranger_hubConfig> dyn_param_server_;
-  //dynamic_reconfigure::Server<teraranger_hub::Teraranger_hubConfig>::CallbackType dyn_param_server_callback_function_;
+  dynamic_reconfigure::Server<tr_hub_parser::Tr_hub_parserConfig> dyn_param_server_;
+  dynamic_reconfigure::Server<tr_hub_parser::Tr_hub_parserConfig>::CallbackType dyn_param_server_callback_function_;
 
   SerialPort * serial_port_;
   boost::function<void(uint8_t)> serial_data_callback_function_;
@@ -107,7 +109,7 @@ public:
   std::string ns_;
 };
 
-} // namespace teraranger_hub
+} // namespace tr_hub_parser
 
-#endif  // TERARANGER_HUB_TERARANGER_H_
+#endif  // TR_HUB_PARSER_H
 
