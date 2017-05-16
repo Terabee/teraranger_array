@@ -113,14 +113,17 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
 
   tr_hub_parser::RangeArray measure;
 
-  for (size_t i; i < number_of_sensor; i++) {
+  for (size_t i=0; i < number_of_sensor; i++) {
     sensor_msgs::Range range;
     range.field_of_view = field_of_view;
     range.max_range = max_range;
     range.min_range = min_range;
     range.radiation_type = sensor_msgs::Range::INFRARED;
+    range.range = -1.0f;
     range.header.frame_id =
         ros::names::append(ns_, frame_id + boost::lexical_cast<std::string>(i));
+
+    measure.ranges.push_back(range);
   }
 
   if (single_character != 'T' && buffer_ctr < 19) {
@@ -128,30 +131,33 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
     input_buffer[buffer_ctr++] = single_character;
     return;
   }
-
   else if (single_character == 'T') {
+
+
+    // ROS_INFO("%s\n", reinterpret_cast<const char*>(single_character));
 
     if (buffer_ctr == 19) {
       // end of feed, calculate
       int16_t crc = crc8(input_buffer, 18);
 
       if (crc == input_buffer[18]) {
-
-        for (size_t i; i < measure.ranges.size(); i++) {
+        for (size_t i=0; i < measure.ranges.size(); i++) {
           measure.ranges.at(i).header.stamp = ros::Time::now();
           measure.ranges.at(i).header.seq = seq_ctr++;
 
           int16_t current_range = input_buffer[2 * (i + 1)] << 8;
           current_range |= input_buffer[2 * (i + 1) + 1];
-          current_range = current_range * 0.001;
 
-          if (current_range < min_range) {
-            current_range = min_range;
-          } else if (current_range > max_range) {
-            current_range = max_range;
+          float float_range = (float)current_range * 0.001;
+          //ROS_INFO("%f\n", float_range);
+
+          if (float_range < min_range) {
+            float_range = min_range;
+          } else if (float_range > max_range) {
+            float_range = max_range;
           }
+          measure.ranges.at(i).range = float_range;
         }
-
         range_publisher_.publish(measure);
 
       } else {
