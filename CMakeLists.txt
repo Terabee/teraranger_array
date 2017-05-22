@@ -32,6 +32,10 @@ include_directories(
   ${Boost_INCLUDE_DIRS}
 )
 
+# Adding tests
+catkin_add_gtest(tr_hub_parser_test test/test_tr_hub_parser.cpp)
+target_link_libraries(tr_hub_parser_test ${Boost_LIBRARIES})
+
 # make the executables
 add_executable(tr_hub_parser src/tr_hub_parser.cpp src/serial_port.cpp)
 target_link_libraries(tr_hub_parser ${catkin_LIBRARIES} ${Boost_LIBRARIES})

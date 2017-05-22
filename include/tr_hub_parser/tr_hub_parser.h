@@ -47,7 +47,7 @@
 #include "serial_port.h"
 
 #include <dynamic_reconfigure/server.h>
-#include "tr_hub_parser/Tr_hub_parserConfig.h"
+#include <tr_hub_parser/Tr_hub_parserConfig.h>
 
 #define BUFFER_SIZE 19
 
@@ -112,4 +112,3 @@ public:
 } // namespace tr_hub_parser
 
 #endif  // TR_HUB_PARSER_H
-

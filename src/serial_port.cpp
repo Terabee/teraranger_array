@@ -37,8 +37,8 @@
 #include <string>
 #include <ros/console.h>
 
-#include "serial_port.h"
-#include "tr_hub_parser.h"
+#include <tr_hub_parser/serial_port.h>
+#include <tr_hub_parser/tr_hub_parser.h>
 
 namespace tr_hub_parser
 {
