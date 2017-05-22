@@ -34,10 +34,9 @@
  *
  ****************************************************************************/
 
-#include "tr_hub_parser.h"
+#include <tr_hub_parser.h>
 #include <ros/console.h>
 #include <string>
-#include <tr_hub_parser/RangeArray.h>
 
 namespace tr_hub_parser {
 
@@ -46,6 +45,25 @@ Tr_hub_parser::Tr_hub_parser() {
   ros::NodeHandle private_node_handle_("~");
   private_node_handle_.param("portname", portname_,
                              std::string("/dev/ttyACM0"));
+  //Initialize local parameters and measurement array
+  field_of_view = 0.0593;
+  max_range = 14.0;
+  min_range = 0.2;
+  number_of_sensor = 8;
+  frame_id = "base_range_";
+
+  for (size_t i=0; i < number_of_sensor; i++) {
+   sensor_msgs::Range range;
+   range.field_of_view = field_of_view;
+   range.max_range = max_range;
+   range.min_range = min_range;
+   range.radiation_type = sensor_msgs::Range::INFRARED;
+   range.range = 0.0;
+   range.header.frame_id =
+       ros::names::append(ns_, frame_id + boost::lexical_cast<std::string>(i));
+
+   measure.ranges.push_back(range);
+  }
 
   // Publishers
   range_publisher_ = nh_.advertise<tr_hub_parser::RangeArray>("tr_hub_parser", 8);
@@ -105,27 +123,6 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
   static int buffer_ctr = 0;
   static int seq_ctr = 0;
 
-  float field_of_view = 0.0593;
-  float max_range = 14.0;
-  float min_range = 0.2;
-  int number_of_sensor = 8;
-  std::string frame_id = "base_range_";
-
-  tr_hub_parser::RangeArray measure;
-
-  for (size_t i=0; i < number_of_sensor; i++) {
-    sensor_msgs::Range range;
-    range.field_of_view = field_of_view;
-    range.max_range = max_range;
-    range.min_range = min_range;
-    range.radiation_type = sensor_msgs::Range::INFRARED;
-    range.range = -1.0f;
-    range.header.frame_id =
-        ros::names::append(ns_, frame_id + boost::lexical_cast<std::string>(i));
-
-    measure.ranges.push_back(range);
-  }
-
   if (single_character != 'T' && buffer_ctr < 19) {
     // not begin of serial feed so add char to buffer
     input_buffer[buffer_ctr++] = single_character;
@@ -134,13 +131,16 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
   else if (single_character == 'T') {
 
 
-    // ROS_INFO("%s\n", reinterpret_cast<const char*>(single_character));
+    //ROS_INFO("%s\n", reinterpret_cast<const char*>(single_character));
+
 
     if (buffer_ctr == 19) {
       // end of feed, calculate
       int16_t crc = crc8(input_buffer, 18);
 
+
       if (crc == input_buffer[18]) {
+        //ROS_INFO("%d\n", measure.ranges.size());
         for (size_t i=0; i < measure.ranges.size(); i++) {
           measure.ranges.at(i).header.stamp = ros::Time::now();
           measure.ranges.at(i).header.seq = seq_ctr++;
@@ -149,7 +149,7 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
           current_range |= input_buffer[2 * (i + 1) + 1];
 
           float float_range = (float)current_range * 0.001;
-          //ROS_INFO("%f\n", float_range);
+          //ROS_INFO("%f", float_range);
 
           if (float_range < min_range) {
             float_range = min_range;

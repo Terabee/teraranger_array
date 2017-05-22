@@ -47,7 +47,8 @@
 #include "serial_port.h"
 
 #include <dynamic_reconfigure/server.h>
-#include "tr_hub_parser/Tr_hub_parserConfig.h"
+#include <tr_hub_parser/Tr_hub_parserConfig.h>
+#include <tr_hub_parser/RangeArray.h>
 
 #define BUFFER_SIZE 19
 
@@ -107,9 +108,16 @@ public:
 
   std::string portname_;
   std::string ns_;
+private:
+  float field_of_view ;
+  float max_range;
+  float min_range;
+  int number_of_sensor;
+  std::string frame_id;
+
+  tr_hub_parser::RangeArray measure;
 };
 
 } // namespace tr_hub_parser
 
 #endif  // TR_HUB_PARSER_H
-
