@@ -33,14 +33,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ****************************************************************************/
-#include <tr_hub_parser.h>
 #include <ros/console.h>
 #include <string>
-<<<<<<< Updated upstream
-=======
+
 #include <tr_hub_parser/RangeArray.h>
 #include <tr_hub_parser/tr_hub_parser.h>
->>>>>>> Stashed changes
 
 namespace tr_hub_parser {
 
