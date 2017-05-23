@@ -33,6 +33,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ****************************************************************************/
+#include <tr_hub_parser.h>
 #include <ros/console.h>
 #include <string>
 <<<<<<< Updated upstream
@@ -48,9 +49,28 @@ Tr_hub_parser::Tr_hub_parser() {
   ros::NodeHandle private_node_handle_("~");
   private_node_handle_.param("portname", portname_,
                              std::string("/dev/ttyACM0"));
+  //Initialize local parameters and measurement array
+  field_of_view = 0.0593;
+  max_range = 14.0;
+  min_range = 0.2;
+  number_of_sensor = 8;
+  frame_id = "base_range_";
+
+  for (size_t i=0; i < number_of_sensor; i++) {
+   sensor_msgs::Range range;
+   range.field_of_view = field_of_view;
+   range.max_range = max_range;
+   range.min_range = min_range;
+   range.radiation_type = sensor_msgs::Range::INFRARED;
+   range.range = 0.0;
+   range.header.frame_id =
+       ros::names::append(ns_, frame_id + boost::lexical_cast<std::string>(i));
+
+   measure.ranges.push_back(range);
+  }
 
   // Publishers
-  range_publisher_ = nh_.advertise<sensor_msgs::Range>("tr_hub_parser", 8);
+  range_publisher_ = nh_.advertise<tr_hub_parser::RangeArray>("tr_hub_parser", 8);
 
   // Create serial port
   serial_port_ = new SerialPort();
@@ -107,196 +127,38 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
   static int buffer_ctr = 0;
   static int seq_ctr = 0;
 
-  sensor_msgs::Range range_msg0;
-  range_msg0.field_of_view = 0.0593;
-  range_msg0.max_range = 14.0;
-  range_msg0.min_range = 0.2;
-  range_msg0.radiation_type = sensor_msgs::Range::INFRARED;
-  range_msg0.header.frame_id =
-      ros::names::append(ns_, std::string("base_range_0"));
-
-  sensor_msgs::Range range_msg1;
-  range_msg1.field_of_view = 0.0593;
-  range_msg1.max_range = 14.0;
-  range_msg1.min_range = 0.2;
-  range_msg1.radiation_type = sensor_msgs::Range::INFRARED;
-  range_msg1.header.frame_id =
-      ros::names::append(ns_, std::string("base_range_1"));
-
-  sensor_msgs::Range range_msg2;
-  range_msg2.field_of_view = 0.0593;
-  range_msg2.max_range = 14.0;
-  range_msg2.min_range = 0.2;
-  range_msg2.radiation_type = sensor_msgs::Range::INFRARED;
-  range_msg2.header.frame_id =
-      ros::names::append(ns_, std::string("base_range_2"));
-
-  sensor_msgs::Range range_msg3;
-  range_msg3.field_of_view = 0.0593;
-  range_msg3.max_range = 14.0;
-  range_msg3.min_range = 0.2;
-  range_msg3.radiation_type = sensor_msgs::Range::INFRARED;
-  range_msg3.header.frame_id =
-      ros::names::append(ns_, std::string("base_range_3"));
-
-  sensor_msgs::Range range_msg4;
-  range_msg4.field_of_view = 0.0593;
-  range_msg4.max_range = 14.0;
-  range_msg4.min_range = 0.2;
-  range_msg4.radiation_type = sensor_msgs::Range::INFRARED;
-  range_msg4.header.frame_id =
-      ros::names::append(ns_, std::string("base_range_4"));
-
-  sensor_msgs::Range range_msg5;
-  range_msg5.field_of_view = 0.0593;
-  range_msg5.max_range = 14.0;
-  range_msg5.min_range = 0.2;
-  range_msg5.radiation_type = sensor_msgs::Range::INFRARED;
-  range_msg5.header.frame_id =
-      ros::names::append(ns_, std::string("base_range_5"));
-
-  sensor_msgs::Range range_msg6;
-  range_msg6.field_of_view = 0.0593;
-  range_msg6.max_range = 14.0;
-  range_msg6.min_range = 0.2;
-  range_msg6.radiation_type = sensor_msgs::Range::INFRARED;
-  range_msg6.header.frame_id =
-      ros::names::append(ns_, std::string("base_range_6"));
-
-  sensor_msgs::Range range_msg7;
-  range_msg7.field_of_view = 0.0593;
-  range_msg7.max_range = 14.0;
-  range_msg7.min_range = 0.2;
-  range_msg7.radiation_type = sensor_msgs::Range::INFRARED;
-  range_msg7.header.frame_id =
-      ros::names::append(ns_, std::string("base_range_7"));
-
   if (single_character != 'T' && buffer_ctr < 19) {
-    // not begin of serial feed so add char to buffer
+    // not the beginning of serial feed so add char to buffer
     input_buffer[buffer_ctr++] = single_character;
     return;
   }
-
   else if (single_character == 'T') {
+    //ROS_INFO("%s\n", reinterpret_cast<const char*>(single_character));
 
     if (buffer_ctr == 19) {
       // end of feed, calculate
       int16_t crc = crc8(input_buffer, 18);
 
       if (crc == input_buffer[18]) {
-        int16_t range0 = input_buffer[2] << 8;
-        range0 |= input_buffer[3];
-        int16_t range1 = input_buffer[4] << 8;
-        range1 |= input_buffer[5];
-        int16_t range2 = input_buffer[6] << 8;
-        range2 |= input_buffer[7];
-        int16_t range3 = input_buffer[8] << 8;
-        range3 |= input_buffer[9];
-        int16_t range4 = input_buffer[10] << 8;
-        range4 |= input_buffer[11];
-        int16_t range5 = input_buffer[12] << 8;
-        range5 |= input_buffer[13];
-        int16_t range6 = input_buffer[14] << 8;
-        range6 |= input_buffer[15];
-        int16_t range7 = input_buffer[16] << 8;
-        range7 |= input_buffer[17];
+        ROS_DEBUG("Frame: %s ", input_buffer);
 
-        if (range0 < 14000 && range0 > 200) {
-          range_msg0.header.stamp = ros::Time::now();
-          range_msg0.header.seq = seq_ctr++;
-          range_msg0.range = range0 * 0.001; // convert to m
-          range_publisher_.publish(range_msg0);
-        } else {
+        for (size_t i=0; i < measure.ranges.size(); i++) {
+          measure.ranges.at(i).header.stamp = ros::Time::now();
+          measure.ranges.at(i).header.seq = seq_ctr++;
 
-          range_msg0.header.stamp = ros::Time::now();
-          range_msg0.header.seq = seq_ctr++;
-          range_msg0.range = 0.0;
-          range_publisher_.publish(range_msg0);
+          int16_t current_range = input_buffer[2 * (i + 1)] << 8;
+          current_range |= input_buffer[2 * (i + 1) + 1];
+
+          float float_range = (float)current_range * 0.001;
+
+          if (float_range < min_range) {
+            float_range = min_range;
+          } else if (float_range > max_range) {
+            float_range = max_range;
+          }
+          measure.ranges.at(i).range = float_range;
         }
-        if (range1 < 14000 && range1 > 200) {
-          range_msg1.header.stamp = ros::Time::now();
-          range_msg1.header.seq = seq_ctr++;
-          range_msg1.range = range1 * 0.001;
-          range_publisher_.publish(range_msg1);
-        } else {
-
-          range_msg1.header.stamp = ros::Time::now();
-          range_msg1.header.seq = seq_ctr++;
-          range_msg1.range = 0.0;
-          range_publisher_.publish(range_msg1);
-        }
-        if (range2 < 14000 && range2 > 200) {
-          range_msg2.header.stamp = ros::Time::now();
-          range_msg2.header.seq = seq_ctr++;
-          range_msg2.range = range2 * 0.001;
-          range_publisher_.publish(range_msg2);
-        } else {
-
-          range_msg2.header.stamp = ros::Time::now();
-          range_msg2.header.seq = seq_ctr++;
-          range_msg2.range = 0.0;
-          range_publisher_.publish(range_msg2);
-        }
-        if (range3 < 14000 && range3 > 200) {
-          range_msg3.header.stamp = ros::Time::now();
-          range_msg3.header.seq = seq_ctr++;
-          range_msg3.range = range3 * 0.001;
-          range_publisher_.publish(range_msg3);
-        } else {
-
-          range_msg3.header.stamp = ros::Time::now();
-          range_msg3.header.seq = seq_ctr++;
-          range_msg3.range = 0.0;
-          range_publisher_.publish(range_msg3);
-        }
-        if (range4 < 14000 && range4 > 200) {
-          range_msg4.header.stamp = ros::Time::now();
-          range_msg4.header.seq = seq_ctr++;
-          range_msg4.range = range4 * 0.001;
-          range_publisher_.publish(range_msg4);
-        } else {
-
-          range_msg4.header.stamp = ros::Time::now();
-          range_msg4.header.seq = seq_ctr++;
-          range_msg4.range = 0.0;
-          range_publisher_.publish(range_msg4);
-        }
-        if (range5 < 14000 && range5 > 200) {
-          range_msg5.header.stamp = ros::Time::now();
-          range_msg5.header.seq = seq_ctr++;
-          range_msg5.range = range5 * 0.001;
-          range_publisher_.publish(range_msg5);
-        } else {
-
-          range_msg5.header.stamp = ros::Time::now();
-          range_msg5.header.seq = seq_ctr++;
-          range_msg5.range = 0.0;
-          range_publisher_.publish(range_msg5);
-        }
-        if (range6 < 14000 && range6 > 200) {
-          range_msg6.header.stamp = ros::Time::now();
-          range_msg6.header.seq = seq_ctr++;
-          range_msg6.range = range6 * 0.001;
-          range_publisher_.publish(range_msg6);
-        } else {
-
-          range_msg6.header.stamp = ros::Time::now();
-          range_msg6.header.seq = seq_ctr++;
-          range_msg6.range = 0.0;
-          range_publisher_.publish(range_msg6);
-        }
-        if (range7 < 14000 && range7 > 200) {
-          range_msg7.header.stamp = ros::Time::now();
-          range_msg7.header.seq = seq_ctr++;
-          range_msg7.range = range7 * 0.001;
-          range_publisher_.publish(range_msg7);
-        } else {
-
-          range_msg7.header.stamp = ros::Time::now();
-          range_msg7.header.seq = seq_ctr++;
-          range_msg7.range = 0.0;
-          range_publisher_.publish(range_msg7);
-        }
+        range_publisher_.publish(measure);
 
       } else {
         ROS_DEBUG("[%s] crc missmatch", ros::this_node::getName().c_str());

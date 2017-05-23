@@ -10,13 +10,24 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
   dynamic_reconfigure
-#  tr_hub_parser
+  message_generation
+  #tr_hub_parser
 )
 # since we need boost search it as well
 # find_package makes the ${..._INCLUDE_DIRS} ${..._LIBRARIES} variables we use later
 find_package(Boost REQUIRED COMPONENTS system thread)
 
 generate_dynamic_reconfigure_options(cfg/tr_hub_parser.cfg)
+
+## Generate messages in the 'msg' folder
+add_message_files(
+    FILES
+    RangeArray.msg
+)
+generate_messages(
+  DEPENDENCIES
+  sensor_msgs
+)
 
 # export the dependencies of this package for who ever depends on us
 catkin_package(
@@ -41,3 +52,5 @@ add_executable(tr_hub_parser src/tr_hub_parser.cpp src/serial_port.cpp)
 target_link_libraries(tr_hub_parser ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 add_dependencies(tr_hub_parser ${catkin_EXPORTED_TARGETS})
 add_dependencies(tr_hub_parser ${PROJECT_NAME}_gencfg)
+add_dependencies(tr_hub_parser ${${PROJECT_NAME}_EXPORTED_TARGETS})
+add_dependencies(tr_hub_parser ${PROJECT_NAME}_generate_message_cpp)
