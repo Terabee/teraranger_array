@@ -124,23 +124,20 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
   static int seq_ctr = 0;
 
   if (single_character != 'T' && buffer_ctr < 19) {
-    // not begin of serial feed so add char to buffer
+    // not the beginning of serial feed so add char to buffer
     input_buffer[buffer_ctr++] = single_character;
     return;
   }
   else if (single_character == 'T') {
-
-
     //ROS_INFO("%s\n", reinterpret_cast<const char*>(single_character));
-
 
     if (buffer_ctr == 19) {
       // end of feed, calculate
       int16_t crc = crc8(input_buffer, 18);
 
-
       if (crc == input_buffer[18]) {
-        //ROS_INFO("%d\n", measure.ranges.size());
+        ROS_DEBUG("Frame: %s ", input_buffer);
+
         for (size_t i=0; i < measure.ranges.size(); i++) {
           measure.ranges.at(i).header.stamp = ros::Time::now();
           measure.ranges.at(i).header.seq = seq_ctr++;
@@ -149,7 +146,6 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
           current_range |= input_buffer[2 * (i + 1) + 1];
 
           float float_range = (float)current_range * 0.001;
-          //ROS_INFO("%f", float_range);
 
           if (float_range < min_range) {
             float_range = min_range;
