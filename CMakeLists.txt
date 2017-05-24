@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
+SET(CMAKE_CXX_STANDARD 11)
+SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(tr_hub_parser)
 
 #Add custom (non compiling) targets so launch scripts and python files show up in QT Creator's project view.
@@ -32,6 +34,7 @@ generate_messages(
 # export the dependencies of this package for who ever depends on us
 catkin_package(
   INCLUDE_DIRS include
+  LIBRARIES ${PROJECT_NAME}
   CATKIN_DEPENDS roscpp sensor_msgs std_msgs dynamic_reconfigure
   DEPENDS boost
 )
@@ -43,14 +46,19 @@ include_directories(
   ${Boost_INCLUDE_DIRS}
 )
 
-# Adding tests
-catkin_add_gtest(tr_hub_parser_test test/test_tr_hub_parser.cpp)
-target_link_libraries(tr_hub_parser_test ${Boost_LIBRARIES})
-
 # make the executables
 add_executable(tr_hub_parser src/tr_hub_parser.cpp src/serial_port.cpp)
 target_link_libraries(tr_hub_parser ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 add_dependencies(tr_hub_parser ${catkin_EXPORTED_TARGETS})
 add_dependencies(tr_hub_parser ${PROJECT_NAME}_gencfg)
-add_dependencies(tr_hub_parser ${${PROJECT_NAME}_EXPORTED_TARGETS})
+#add_dependencies(tr_hub_parser ${${PROJECT_NAME}_EXPORTED_TARGETS})
 add_dependencies(tr_hub_parser ${PROJECT_NAME}_generate_message_cpp)
+
+# Make the library for the test
+add_library(${PROJECT_NAME}_LIB src/tr_hub_parser.cpp src/serial_port.cpp)
+target_link_libraries(${PROJECT_NAME}_LIB ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+# Adding tests
+catkin_add_gtest(tr_hub_parser_test test/test_tr_hub_parser.cpp)
+add_dependencies(tr_hub_parser_test ${${PROJECT_NAME}_EXPORTED_TARGETS})
+target_link_libraries(tr_hub_parser_test ${Boost_LIBRARIES} ${GTEST_LIBRARIES} ${PROJECT_NAME}_LIB)
