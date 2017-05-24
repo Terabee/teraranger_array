@@ -108,7 +108,7 @@ Tr_hub_parser::Tr_hub_parser() {
 
 Tr_hub_parser::~Tr_hub_parser() {}
 
-uint8_t Tr_hub_parser::crc8(uint8_t *p, uint8_t len) {
+uint8_t crc8(uint8_t *p, uint8_t len) {
   uint16_t i;
   uint16_t crc = 0x0;
 
@@ -117,6 +117,14 @@ uint8_t Tr_hub_parser::crc8(uint8_t *p, uint8_t len) {
     crc = (crc_table[i] ^ (crc << 8)) & 0xFF;
   }
   return crc & 0xFF;
+}
+
+float two_chars_to_float(uint8_t c1, uint8_t c2){
+  int16_t current_range = c1 << 8;
+  current_range |= c2;
+
+  float res = (float)current_range * 0.001;
+  return res;
 }
 
 void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
@@ -143,10 +151,7 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
           measure.ranges.at(i).header.stamp = ros::Time::now();
           measure.ranges.at(i).header.seq = seq_ctr++;
 
-          int16_t current_range = input_buffer[2 * (i + 1)] << 8;
-          current_range |= input_buffer[2 * (i + 1) + 1];
-
-          float float_range = (float)current_range * 0.001;
+          float float_range = two_chars_to_float(input_buffer[2 * (i + 1)],input_buffer[2 * (i + 1) + 1]);
 
           if (float_range < min_range) {
             float_range = min_range;
