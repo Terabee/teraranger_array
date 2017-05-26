@@ -91,7 +91,7 @@ float two_chars_to_float(uint8_t c1, uint8_t c2){
   int16_t current_range = c1 << 8;
   current_range |= c2;
 
-  float res = (float)current_range * 0.001;
+  float res = (float)current_range;
   return res;
 }
 
@@ -122,10 +122,12 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
           // Doesn't go out of range because of fixed buffer size as long as the number of sensor is not above 8
           float float_range = two_chars_to_float(input_buffer[2 * (i + 1)],input_buffer[2 * (i + 1) + 1]);
 
-          if (float_range < min_range) {
+          if ((float_range * 0.001 < min_range) && (float_range > 0)) { //check for hardware cut-off
             float_range = min_range;
-          } else if (float_range > max_range) {
-            float_range = max_range;
+          } else if (float_range * 0.001 > max_range) { //software cut-off should be adapted to sensor
+            float_range = -1.0;
+          } else {
+            float_range = float_range * 0.001
           }
           measure.ranges.at(i).range = float_range;
         }
