@@ -1,46 +1,9 @@
-/****************************************************************************
- *
- * Copyright (C) 2014 Flavio Fontana & Luis Rodrigues. All rights reserved.
- * Author: Flavio Fontana <fly.fontana@gmail.com>
- * Author: Luis Rodrigues <luis.rodrigues@terabee.com>
-
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in
- * the documentation and/or other materials provided with the
- * distribution.
- * 3. Neither the name Teraranger_hub nor the names of its contributors may be
- * used to endorse or promote products derived from this software
- * without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- ****************************************************************************/
-
 #ifndef TR_HUB_PARSER_H
 #define TR_HUB_PARSER_H
 
 #include <ros/ros.h>
 #include <sensor_msgs/Range.h>
 #include <std_msgs/Char.h>
-
 
 #include <string>
 
@@ -82,6 +45,8 @@ static const uint8_t crc_table[] = {0x00, 0x07, 0x0e, 0x09, 0x1c, 0x1b, 0x12, 0x
                                     0xae, 0xa9, 0xa0, 0xa7, 0xb2, 0xb5, 0xbc, 0xbb, 0x96, 0x91, 0x98, 0x9f, 0x8a, 0x8d,
                                     0x84, 0x83, 0xde, 0xd9, 0xd0, 0xd7, 0xc2, 0xc5, 0xcc, 0xcb, 0xe6, 0xe1, 0xe8, 0xef,
                                     0xfa, 0xfd, 0xf4, 0xf3};
+uint8_t crc8(uint8_t *p, uint8_t len);
+float two_chars_to_float(uint8_t c1, uint8_t c2);
 
 class Tr_hub_parser
 {
@@ -89,7 +54,7 @@ public:
   Tr_hub_parser();
   virtual ~Tr_hub_parser();
 
-  uint8_t crc8(uint8_t *p, uint8_t len);
+
   void serialDataCallback(uint8_t data);
 
   void dynParamCallback(const tr_hub_parser::Tr_hub_parserConfig &config, uint32_t level);

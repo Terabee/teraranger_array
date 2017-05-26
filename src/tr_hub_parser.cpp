@@ -1,42 +1,8 @@
-/****************************************************************************
- *
- * Copyright (C) 2014 Flavio Fontana & Luis Rodrigues. All rights reserved.
- * Author: Flavio Fontana <fly.fontana@gmail.com>
- * Author: Luis Rodrigues <luis.rodrigues@terabee.com>
-
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in
- * the documentation and/or other materials provided with the
- * distribution.
- * 3. Neither the name Teraranger_tower nor the names of its contributors may be
- * used to endorse or promote products derived from this software
- * without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- ****************************************************************************/
-
-#include <tr_hub_parser.h>
 #include <ros/console.h>
 #include <string>
+
+#include <tr_hub_parser/RangeArray.h>
+#include <tr_hub_parser/tr_hub_parser.h>
 
 namespace tr_hub_parser {
 
@@ -81,6 +47,9 @@ Tr_hub_parser::Tr_hub_parser() {
     ros::shutdown();
     return;
   }
+  else {
+    ROS_ERROR("Could not open : %s ", portname_.c_str());
+  }
 
   // Output loaded parameters to console for double checking
   ROS_INFO("[%s] is up and running with the following parameters:",
@@ -107,7 +76,7 @@ Tr_hub_parser::Tr_hub_parser() {
 
 Tr_hub_parser::~Tr_hub_parser() {}
 
-uint8_t Tr_hub_parser::crc8(uint8_t *p, uint8_t len) {
+uint8_t crc8(uint8_t *p, uint8_t len) {
   uint16_t i;
   uint16_t crc = 0x0;
 
@@ -116,6 +85,14 @@ uint8_t Tr_hub_parser::crc8(uint8_t *p, uint8_t len) {
     crc = (crc_table[i] ^ (crc << 8)) & 0xFF;
   }
   return crc & 0xFF;
+}
+
+float two_chars_to_float(uint8_t c1, uint8_t c2){
+  int16_t current_range = c1 << 8;
+  current_range |= c2;
+
+  float res = (float)current_range * 0.001;
+  return res;
 }
 
 void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
@@ -142,10 +119,8 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
           measure.ranges.at(i).header.stamp = ros::Time::now();
           measure.ranges.at(i).header.seq = seq_ctr++;
 
-          int16_t current_range = input_buffer[2 * (i + 1)] << 8;
-          current_range |= input_buffer[2 * (i + 1) + 1];
-
-          float float_range = (float)current_range * 0.001;
+          // Doesn't go out of range because of fixed buffer size as long as the number of sensor is not above 8
+          float float_range = two_chars_to_float(input_buffer[2 * (i + 1)],input_buffer[2 * (i + 1) + 1]);
 
           if (float_range < min_range) {
             float_range = min_range;
@@ -160,7 +135,7 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
         ROS_DEBUG("[%s] crc missmatch", ros::this_node::getName().c_str());
       }
     } else {
-      ROS_DEBUG("[%s] reveived T but did not expect it, reset buffer without "
+      ROS_DEBUG("[%s] received T but did not expect it, reset buffer without "
                 "evaluating data",
                 ros::this_node::getName().c_str());
     }
@@ -177,9 +152,7 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
 
   // store T
   input_buffer[buffer_ctr++] = 'T';
-} //
-
-// set mode original
+}
 
 void Tr_hub_parser::setMode(const char *c) { serial_port_->sendChar(c); }
 
