@@ -13,7 +13,7 @@ TEST_F(HubParserTest, crc8Test){
 
 TEST_F(HubParserTest, parsingTest){
   float result = tr_hub_parser::two_chars_to_float(input_buffer[2],input_buffer[3]);
-  ASSERT_FLOAT_EQ(result, 2.214999999);
+  ASSERT_FLOAT_EQ(result, 2215);
 }
 
 int main(int argc, char **argv) {

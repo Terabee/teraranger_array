@@ -127,7 +127,7 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
           } else if (float_range * 0.001 > max_range) { //software cut-off should be adapted to sensor
             float_range = -1.0;
           } else {
-            float_range = float_range * 0.001
+            float_range = float_range * 0.001;
           }
           measure.ranges.at(i).range = float_range;
         }
