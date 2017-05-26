@@ -44,11 +44,9 @@ Tr_hub_parser::Tr_hub_parser() {
 
   // Connect serial port
   if (!serial_port_->connect(portname_)) {
+    ROS_ERROR("Could not open : %s ", portname_.c_str());
     ros::shutdown();
     return;
-  }
-  else {
-    ROS_ERROR("Could not open : %s ", portname_.c_str());
   }
 
   // Output loaded parameters to console for double checking
@@ -124,7 +122,7 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
 
           if ((float_range * 0.001 < min_range) && (float_range > 0)) { //check for hardware cut-off
             float_range = min_range;
-          } else if (float_range * 0.001 > max_range) { //software cut-off should be adapted to sensor
+          } else if ((float_range * 0.001 > max_range) || (float_range < 0)) { //software cut-off should be adapted to sensor
             float_range = -1.0;
           } else {
             float_range = float_range * 0.001;
