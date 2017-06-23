@@ -51,8 +51,15 @@ add_executable(tr_hub_parser src/tr_hub_parser.cpp src/serial_port.cpp)
 target_link_libraries(tr_hub_parser ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 add_dependencies(tr_hub_parser ${catkin_EXPORTED_TARGETS})
 add_dependencies(tr_hub_parser ${PROJECT_NAME}_gencfg)
-#add_dependencies(tr_hub_parser ${${PROJECT_NAME}_EXPORTED_TARGETS})
 add_dependencies(tr_hub_parser ${PROJECT_NAME}_generate_message_cpp)
+#add_dependencies(tr_hub_parser ${${PROJECT_NAME}_EXPORTED_TARGETS})
+
+
+add_executable(tr_evo_hub_parser src/tr_evo_hub_parser.cpp src/serial_port.cpp)
+target_link_libraries(tr_evo_hub_parser ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+add_dependencies(tr_evo_hub_parser ${catkin_EXPORTED_TARGETS})
+add_dependencies(tr_evo_hub_parser ${PROJECT_NAME}_gencfg)
+add_dependencies(tr_evo_hub_parser ${PROJECT_NAME}_generate_message_cpp)
 
 # Make the library for the test
 add_library(${PROJECT_NAME}_LIB src/tr_hub_parser.cpp src/serial_port.cpp)
