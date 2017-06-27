@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>tr_hub_parser</name>
-  <version>0.0.0</version>
+  <version>1.0.0-0</version>
   <description>The tr_hub_parser package</description>
 
   <maintainer email="pierre-louis.kabaradjian@terabee.com">Pierre-Louis Kabaradjian</maintainer>
