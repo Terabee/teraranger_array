@@ -98,7 +98,10 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
   static int buffer_ctr = 0;
   static int seq_ctr = 0;
 
-  if (single_character != 'T' && buffer_ctr < 19) {
+  int frame_length = 31;
+  int crc_length = 19;
+
+  if (single_character != 'T' && buffer_ctr < frame_length) {
     // not the beginning of serial feed so add char to buffer
     input_buffer[buffer_ctr++] = single_character;
     return;
@@ -106,12 +109,13 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
   else if (single_character == 'T') {
     //ROS_INFO("%s\n", reinterpret_cast<const char*>(single_character));
 
-    if (buffer_ctr == 19) {
+    if (buffer_ctr == (frame_length-1)) {
       // end of feed, calculate
-      int16_t crc = crc8(input_buffer, 18);
+      int16_t crc = crc8(input_buffer, crc_length);
 
-      if (crc == input_buffer[18]) {
+      if (crc == input_buffer[crc_length]) {
         ROS_DEBUG("Frame: %s ", input_buffer);
+        ROS_INFO("Bitmask: %d", (int)input_buffer[18]);
 
         for (size_t i=0; i < measure.ranges.size(); i++) {
           measure.ranges.at(i).header.stamp = ros::Time::now();

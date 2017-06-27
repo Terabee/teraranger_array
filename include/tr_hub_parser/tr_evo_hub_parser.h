@@ -13,7 +13,7 @@
 #include <tr_hub_parser/Tr_hub_parserConfig.h>
 #include <tr_hub_parser/RangeArray.h>
 
-#define BUFFER_SIZE 19
+#define BUFFER_SIZE 31
 
 namespace tr_hub_parser
 {
