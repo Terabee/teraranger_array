@@ -48,6 +48,11 @@ Tr_hub_parser::Tr_hub_parser() {
     ros::shutdown();
     return;
   }
+  else {
+    // This line is needed to start measurements on the hub
+    const char enable[5] = {(char)0x00, (char)0x52, (char)0x02, (char)0x01, (char)0xDF}; //00520201DF
+    serial_port_->sendChar(enable, 5);
+  }
 
   // Output loaded parameters to console for double checking
   ROS_INFO("[%s] is up and running with the following parameters:",
@@ -115,7 +120,7 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
 
       if (crc == input_buffer[crc_length]) {
         ROS_DEBUG("Frame: %s ", input_buffer);
-        ROS_INFO("Bitmask: %d", (int)input_buffer[18]);
+        // ROS_INFO("Bitmask: %d", (int)input_buffer[18]);
 
         for (size_t i=0; i < measure.ranges.size(); i++) {
           measure.ranges.at(i).header.stamp = ros::Time::now();

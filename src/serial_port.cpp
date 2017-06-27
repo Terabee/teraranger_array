@@ -65,10 +65,13 @@ void SerialPort::disconnect()
 
 bool SerialPort::sendChar(const char c[])
 {
+  // this function is used to support legacy 3char hub1 command
   return write(serial_port_fd_, (const void*)c, 3);
 }
 
-
+bool SerialPort::sendChar(const char c[], int count){
+  return write(serial_port_fd_, (const void*)c, count);
+}
 
 void SerialPort::setSerialCallbackFunction(boost::function<void(uint8_t)> * f)
 {
