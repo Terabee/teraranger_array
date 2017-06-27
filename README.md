@@ -1,5 +1,5 @@
 # ROS module for Teraranger-Hub and Teraranger-Tower
-TeraRanger Tower ROS Module
+TeraRanger Hub/Tower ROS Module
 
 This is the ROS module for the TeraRanger Tower or Hub (www.teraranger.com).
 ## Using module
