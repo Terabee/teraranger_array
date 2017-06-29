@@ -14,17 +14,38 @@
 #include <tr_hub_parser/RangeArray.h>
 
 #define BUFFER_SIZE 31
+#define RANGES_FRAME_LENGTH = 20
+#define RANGE_CRC_POS = 19
+#define IMU_QUAT_FRAME_LENGHT = 12
+#define IMU_EULER_FRAME_LENGHT = 10
+#define IMU_QUATLIN_FRAME_LENGHT = 18
 
 namespace tr_hub_parser
 {
+// Protocol commands
+static const char ENABLE_CMD[5] = {(char)0x00, (char)0x52, (char)0x02, (char)0x01, (char)0xDF};
+static const char DISABLE_CMD[5] = {(char)0x00, (char)0x52, (char)0x02, (char)0x00, (char)0xD8};
 
-static const char PRECISE_MODE[] = "PPP";
-static const char FAST_MODE[] = "FFF";
-static const char OUTDOOR_MODE[] = "OOO";
+static const char TEXT_MODE[4] = {(char)0x00, (char)0x11, (char)0x01, (char)0x45};
+static const char BINARY_MODE[4] = {(char)0x00, (char)0x11, (char)0x02, (char)0x4C};
 
-static const char BINARY_MODE[] = "BBB";
-static const char TEXT_MODE[] = "TTT";
-static const char FORCE_8_SENSORS[] = "CFF";
+static const char CROSSTALK_MODE[4] = {(char)0x00, (char)0x31,(char)0x01,(char)0xB5}; // All sensors in parallel
+static const char NONCROSSTALK_MODE[4] = {(char)0x00, (char)0x31, (char)0x02, (char)0xE5}; // All sensors sequentially
+static const char TOWER_MODE[4] = {(char)0x00, (char)0x31, (char)0x03, (char)0xE5}; // 4 by 4 in a cross manner
+
+static const char IMU_OFF[4] = {(char)0x00, (char)0x41, (char)0x01, (char)0x49};
+static const char IMU_QUAT[4] = {(char)0x00, (char)0x41, (char)0x02, (char)0x40};
+static const char IMU_EULER[4] = {(char)0x00, (char)0x41, (char)0x03, (char)0x47};
+static const char IMU_QUATLIN[4] = {(char)0x00, (char)0x41, (char)0x04, (char)0x52};
+
+static const char RATE_ASAP[5] = {(char)0x00, (char)0x52, (char)0x03,(char)0x01, (char)0xCA};
+static const char RATE_700[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x02,(char)0xC3};
+static const char RATE_600[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x03,(char)0xC4};
+static const char RATE_500[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x04,(char)0xD1};
+static const char RATE_250[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x05,(char)0xD6};
+static const char RATE_100[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x06,(char)0xDF};
+static const char RATE_50[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x07,(char)0xD8};
+
 
 static const uint8_t crc_table[] = {0x00, 0x07, 0x0e, 0x09, 0x1c, 0x1b, 0x12, 0x15, 0x38, 0x3f, 0x36, 0x31, 0x24, 0x23,
                                     0x2a, 0x2d, 0x70, 0x77, 0x7e, 0x79, 0x6c, 0x6b, 0x62, 0x65, 0x48, 0x4f, 0x46, 0x41,
@@ -45,6 +66,7 @@ static const uint8_t crc_table[] = {0x00, 0x07, 0x0e, 0x09, 0x1c, 0x1b, 0x12, 0x
                                     0xae, 0xa9, 0xa0, 0xa7, 0xb2, 0xb5, 0xbc, 0xbb, 0x96, 0x91, 0x98, 0x9f, 0x8a, 0x8d,
                                     0x84, 0x83, 0xde, 0xd9, 0xd0, 0xd7, 0xc2, 0xc5, 0xcc, 0xcb, 0xe6, 0xe1, 0xe8, 0xef,
                                     0xfa, 0xfd, 0xf4, 0xf3};
+
 uint8_t crc8(uint8_t *p, uint8_t len);
 float two_chars_to_float(uint8_t c1, uint8_t c2);
 
@@ -60,6 +82,7 @@ public:
   void dynParamCallback(const tr_hub_parser::Tr_hub_parserConfig &config, uint32_t level);
 
   bool loadParameters();
+  void setMode(const char *c, int length);
   void setMode(const char *c);
 
   ros::NodeHandle nh_;

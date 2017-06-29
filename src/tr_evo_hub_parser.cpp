@@ -7,7 +7,7 @@
 namespace tr_hub_parser {
 
 Tr_hub_parser::Tr_hub_parser() {
-  // Get paramters
+  // Get parameters
   ros::NodeHandle private_node_handle_("~");
   private_node_handle_.param("portname", portname_,
                              std::string("/dev/ttyACM0"));
@@ -51,7 +51,9 @@ Tr_hub_parser::Tr_hub_parser() {
   else {
     // This line is needed to start measurements on the hub
     const char enable[5] = {(char)0x00, (char)0x52, (char)0x02, (char)0x01, (char)0xDF}; //00520201DF
+    const char tower_mode[4] = {(char)0x00, (char)0x31, (char)0x03, (char)0xE5};
     serial_port_->sendChar(enable, 5);
+    serial_port_->sendChar(tower_mode, 4);
   }
 
   // Output loaded parameters to console for double checking
