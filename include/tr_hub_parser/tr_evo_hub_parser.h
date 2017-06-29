@@ -14,11 +14,11 @@
 #include <tr_hub_parser/RangeArray.h>
 
 #define BUFFER_SIZE 31
-#define RANGES_FRAME_LENGTH = 20
-#define RANGE_CRC_POS = 19
-#define IMU_QUAT_FRAME_LENGHT = 12
-#define IMU_EULER_FRAME_LENGHT = 10
-#define IMU_QUATLIN_FRAME_LENGHT = 18
+#define RANGES_FRAME_LENGTH 20
+#define RANGE_CRC_POS 19
+#define IMU_QUAT_FRAME_LENGHT 12
+#define IMU_EULER_FRAME_LENGHT 10
+#define IMU_QUATLIN_FRAME_LENGHT 18
 
 namespace tr_hub_parser
 {

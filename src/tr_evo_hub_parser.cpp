@@ -63,7 +63,8 @@ Tr_hub_parser::Tr_hub_parser() {
     // This line is needed to start measurements on the hub
     setMode(ENABLE_CMD, 5);
     setMode(BINARY_MODE, 4);
-    setMode(CROSSTALK_MODE, 4)
+    setMode(CROSSTALK_MODE, 4);
+    setMode(RATE_700, 5);
 
     // Dynamic reconfigure
     dyn_param_server_callback_function_ =
@@ -127,16 +128,17 @@ Tr_hub_parser::Tr_hub_parser() {
       return;
     }
 
-    if (buffer_ctr >= 2 && buffer_ctr < RANGES_FRAME_LENGTH) {
+    if (buffer_ctr > 1 && buffer_ctr < RANGES_FRAME_LENGTH) {
       input_buffer[buffer_ctr++] = single_character;
-      //ROS_INFO("%s\n", reinterpret_cast<const char*>(single_character));
+      return;
+    }
 
-      if (buffer_ctr == RANGES_FRAME_LENGTH-1) {
-        // end of feed, calculate
-        input_buffer[buffer_ctr++] = single_character;
-        int16_t crc = crc8(input_buffer, 19);
+    if (buffer_ctr == RANGES_FRAME_LENGTH) {
+      // end of feed, calculate
+      input_buffer[buffer_ctr++] = single_character;
+      int16_t crc = crc8(input_buffer, 19);
 
-        if (crc == input_buffer[RANGE_CRC_POS]) {
+      if (crc == input_buffer[RANGE_CRC_POS]) {
           ROS_DEBUG("Frame: %s ", input_buffer);
 
           for (size_t i=0; i < measure.ranges.size(); i++) {
@@ -156,28 +158,18 @@ Tr_hub_parser::Tr_hub_parser() {
             measure.ranges.at(i).range = float_range;
           }
           range_publisher_.publish(measure);
-
-        } else {
-          ROS_DEBUG("[%s] crc missmatch", ros::this_node::getName().c_str());
-        }
       } else {
-        ROS_DEBUG("[%s] received T but did not expect it, reset buffer without "
-                  "evaluating data",
-                  ros::this_node::getName().c_str());
+        ROS_DEBUG("[%s] crc missmatch", ros::this_node::getName().c_str());
       }
     } else {
-      ROS_DEBUG("[%s] buffer_overflowed without receiving T, reset input_buffer",
-                ros::this_node::getName().c_str());
+        ROS_DEBUG("[%s] : Buffer overflow, resetting buffer without "
+                  "evaluating data",
+                  ros::this_node::getName().c_str());
     }
 
-    // reset
+    // resetting buffer and ctr
     buffer_ctr = 0;
-
-    // clear struct
     bzero(&input_buffer, BUFFER_SIZE);
-
-    // store T
-    input_buffer[buffer_ctr++] = 'T';
   }
 
   }
