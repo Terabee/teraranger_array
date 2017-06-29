@@ -170,15 +170,15 @@ void Tr_hub_parser::setMode(const char *c) { serial_port_->sendChar(c); }
 void Tr_hub_parser::dynParamCallback(
     const tr_hub_parser::Tr_hub_parserConfig &config, uint32_t level) {
   if (config.Mode == tr_hub_parser::Tr_hub_parser_Fast) {
-    setMode(FAST_MODE);
+    // setMode(FAST_MODE);
   }
 
   if (config.Mode == tr_hub_parser::Tr_hub_parser_Precise) {
-    setMode(PRECISE_MODE);
+    // setMode(PRECISE_MODE);
   }
 
   if (config.Mode == tr_hub_parser::Tr_hub_parser_Outdoor) {
-    setMode(OUTDOOR_MODE);
+    // setMode(OUTDOOR_MODE);
   }
 }
 }
