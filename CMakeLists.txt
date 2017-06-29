@@ -8,11 +8,11 @@ file(GLOB_RECURSE EXTRA_FILES */*)
 add_custom_target(${PROJECT_NAME}_OTHER_FILES ALL WORKING_DIRECTORY ${PROJECT_SOURCE_DIR} SOURCES ${EXTRA_FILES})
 
 find_package(catkin REQUIRED COMPONENTS
+  message_generation
   roscpp
   sensor_msgs
   std_msgs
   dynamic_reconfigure
-  message_generation
   #tr_hub_parser
 )
 # since we need boost search it as well
@@ -35,7 +35,7 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp sensor_msgs std_msgs dynamic_reconfigure
+  CATKIN_DEPENDS roscpp sensor_msgs std_msgs message_runtime dynamic_reconfigure 
   DEPENDS boost
 )
 
@@ -49,10 +49,7 @@ include_directories(
 # make the executables
 add_executable(tr_hub_parser src/tr_hub_parser.cpp src/serial_port.cpp)
 target_link_libraries(tr_hub_parser ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-add_dependencies(tr_hub_parser ${catkin_EXPORTED_TARGETS})
-add_dependencies(tr_hub_parser ${PROJECT_NAME}_gencfg)
-#add_dependencies(tr_hub_parser ${${PROJECT_NAME}_EXPORTED_TARGETS})
-add_dependencies(tr_hub_parser ${PROJECT_NAME}_generate_message_cpp)
+add_dependencies(tr_hub_parser ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
 # Make the library for the test
 add_library(${PROJECT_NAME}_LIB src/tr_hub_parser.cpp src/serial_port.cpp)
