@@ -39,6 +39,7 @@ include_directories(
 add_executable(tr_hub_parser src/tr_hub_parser.cpp src/serial_port.cpp)
 target_link_libraries(tr_hub_parser ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 add_dependencies(tr_hub_parser ${${PROJECT_NAME}_EXPORTED_TARGETS})
+add_dependencies(tr_hub_parser ${PROJECT_NAME}_generate_messages_cpp)
 
 add_library(${PROJECT_NAME}_LIB src/tr_hub_parser.cpp src/serial_port.cpp)
 target_link_libraries(${PROJECT_NAME}_LIB ${catkin_LIBRARIES} ${Boost_LIBRARIES})
