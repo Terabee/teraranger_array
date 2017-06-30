@@ -89,7 +89,6 @@ void SerialPort::serialThread()
     {
       (*serial_callback_function)(single_character);
     }
-    ros::Duration(0.0001).sleep();
   }
   return;
 
