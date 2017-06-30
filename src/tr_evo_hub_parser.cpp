@@ -112,6 +112,8 @@ Tr_hub_parser::Tr_hub_parser() {
     }
   }
 
+  void Tr_hub_parser::setMode(const char *c) { serial_port_->sendChar(c); }
+
   void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
     static uint8_t input_buffer[BUFFER_SIZE];
     static int buffer_ctr = 0;
@@ -173,23 +175,6 @@ Tr_hub_parser::Tr_hub_parser() {
 
     // Appending current char to hook next frame
     input_buffer[buffer_ctr++] = single_character;
-}
-
-void Tr_hub_parser::setMode(const char *c) { serial_port_->sendChar(c); }
-
-void Tr_hub_parser::dynParamCallback(
-    const tr_hub_parser::Tr_hub_parserConfig &config, uint32_t level) {
-  if (config.Mode == tr_hub_parser::Tr_hub_parser_Fast) {
-    // setMode(FAST_MODE);
-  }
-
-  if (config.Mode == tr_hub_parser::Tr_hub_parser_Precise) {
-    // setMode(PRECISE_MODE);
-  }
-
-  if (config.Mode == tr_hub_parser::Tr_hub_parser_Outdoor) {
-    // setMode(OUTDOOR_MODE);
-  }
 }
 }
 
