@@ -117,6 +117,8 @@ Tr_hub_parser::Tr_hub_parser() {
     static int buffer_ctr = 0;
     static int seq_ctr = 0;
 
+    ROS_DEBUG("Buffer of size %d : %s | current char : %c", buffer_ctr, input_buffer, (char)single_character);
+
     if (single_character == 'T' && buffer_ctr == 0) {
       // Waiting for T
       input_buffer[buffer_ctr++] = single_character;
@@ -128,18 +130,17 @@ Tr_hub_parser::Tr_hub_parser() {
       return;
     }
 
+    // Gathering after-header range data
     if (buffer_ctr > 1 && buffer_ctr < RANGES_FRAME_LENGTH) {
       input_buffer[buffer_ctr++] = single_character;
       return;
     }
-
-    if (buffer_ctr == RANGES_FRAME_LENGTH) {
-      // end of feed, calculate
-      input_buffer[buffer_ctr++] = single_character;
+    else if (buffer_ctr == RANGES_FRAME_LENGTH) {
+      //Processing full range frame
       int16_t crc = crc8(input_buffer, 19);
 
       if (crc == input_buffer[RANGE_CRC_POS]) {
-          ROS_DEBUG("Frame: %s ", input_buffer);
+          ROS_DEBUG("Frame of size %d : %s ", buffer_ctr, input_buffer);
 
           for (size_t i=0; i < measure.ranges.size(); i++) {
             measure.ranges.at(i).header.stamp = ros::Time::now();
@@ -161,15 +162,17 @@ Tr_hub_parser::Tr_hub_parser() {
       } else {
         ROS_DEBUG("[%s] crc missmatch", ros::this_node::getName().c_str());
       }
-    } else {
+    } else if (buffer_ctr > RANGES_FRAME_LENGTH){
         ROS_DEBUG("[%s] : Buffer overflow, resetting buffer without "
                   "evaluating data",
                   ros::this_node::getName().c_str());
     }
-
     // resetting buffer and ctr
     buffer_ctr = 0;
     bzero(&input_buffer, BUFFER_SIZE);
+
+    // Appending current char to hook next frame
+    input_buffer[buffer_ctr++] = single_character;
   }
 
   }
