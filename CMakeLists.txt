@@ -26,7 +26,7 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp sensor_msgs std_msgs message_runtime dynamic_reconfigure 
+  CATKIN_DEPENDS roscpp sensor_msgs std_msgs message_runtime dynamic_reconfigure
   DEPENDS Boost
 )
 
@@ -38,13 +38,15 @@ include_directories(
 
 add_executable(tr_hub_parser src/tr_hub_parser.cpp src/serial_port.cpp)
 target_link_libraries(tr_hub_parser ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+add_dependencies(tr_hub_parser tr_hub_parser_generate_messages_cpp)
 add_dependencies(tr_hub_parser ${${PROJECT_NAME}_EXPORTED_TARGETS})
-add_dependencies(tr_hub_parser ${PROJECT_NAME}_generate_messages_cpp)
 
-add_library(${PROJECT_NAME}_LIB src/tr_hub_parser.cpp src/serial_port.cpp)
-target_link_libraries(${PROJECT_NAME}_LIB ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
-if(CATKIN_ENABLE_TESTING)
+ if(CATKIN_ENABLE_TESTING)
+    add_library(${PROJECT_NAME}_LIB src/tr_hub_parser.cpp src/serial_port.cpp)
+    target_link_libraries(${PROJECT_NAME}_LIB ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+    add_dependencies(tr_hub_parser_LIB tr_hub_parser_generate_messages_cpp)
+
     catkin_add_gtest(tr_hub_parser_test test/test_tr_hub_parser.cpp)
     add_dependencies(tr_hub_parser_test ${${PROJECT_NAME}_EXPORTED_TARGETS})
     target_link_libraries(tr_hub_parser_test ${Boost_LIBRARIES} ${GTEST_LIBRARIES} ${PROJECT_NAME}_LIB)
