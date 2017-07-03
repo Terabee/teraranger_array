@@ -6,7 +6,7 @@
 
 namespace teraranger_hub {
 
-Tr_hub_parser::Tr_hub_parser() {
+Teraranger_hub_one::Teraranger_hub_one() {
   // Get paramters
   ros::NodeHandle private_node_handle_("~");
   private_node_handle_.param("portname", portname_,
@@ -39,7 +39,7 @@ Tr_hub_parser::Tr_hub_parser() {
 
   // Set callback function for the serial ports
   serial_data_callback_function_ =
-      boost::bind(&Tr_hub_parser::serialDataCallback, this, _1);
+      boost::bind(&Teraranger_hub_one::serialDataCallback, this, _1);
   serial_port_->setSerialCallbackFunction(&serial_data_callback_function_);
 
   // Connect serial port
@@ -68,11 +68,11 @@ Tr_hub_parser::Tr_hub_parser() {
 
   // Dynamic reconfigure
   dyn_param_server_callback_function_ =
-      boost::bind(&Tr_hub_parser::dynParamCallback, this, _1, _2);
+      boost::bind(&Teraranger_hub_one::dynParamCallback, this, _1, _2);
   dyn_param_server_.setCallback(dyn_param_server_callback_function_);
 }
 
-Tr_hub_parser::~Tr_hub_parser() {}
+Teraranger_hub_one::~Teraranger_hub_one() {}
 
 uint8_t crc8(uint8_t *p, uint8_t len) {
   uint16_t i;
@@ -93,7 +93,7 @@ float two_chars_to_float(uint8_t c1, uint8_t c2){
   return res;
 }
 
-void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
+void Teraranger_hub_one::serialDataCallback(uint8_t single_character) {
   static uint8_t input_buffer[BUFFER_SIZE];
   static int buffer_ctr = 0;
   static int seq_ctr = 0;
@@ -154,9 +154,9 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
   input_buffer[buffer_ctr++] = 'T';
 }
 
-void Tr_hub_parser::setMode(const char *c) { serial_port_->sendChar(c); }
+void Teraranger_hub_one::setMode(const char *c) { serial_port_->sendChar(c); }
 
-void Tr_hub_parser::dynParamCallback(
+void Teraranger_hub_one::dynParamCallback(
     const teraranger_hub::teraranger_hub_oneConfig &config, uint32_t level) {
   if (config.Mode == teraranger_hub::teraranger_hub_one_Fast) {
     setMode(FAST_MODE);
@@ -173,8 +173,8 @@ void Tr_hub_parser::dynParamCallback(
 }
 
 int main(int argc, char **argv) {
-  ros::init(argc, argv, "tr_hub_parser_node");
-  teraranger_hub::Tr_hub_parser tr_hub_parser_node;
+  ros::init(argc, argv, "teraranger_hub_one");
+  teraranger_hub::Teraranger_hub_one teraranger_one;
   ros::spin();
 
   return 0;
