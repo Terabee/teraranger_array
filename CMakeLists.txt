@@ -38,7 +38,7 @@ include_directories(
 
 add_executable(tr_hub_parser src/tr_hub_parser.cpp src/serial_port.cpp)
 target_link_libraries(tr_hub_parser ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-add_dependencies(tr_hub_parser tr_hub_parser_generate_messages_cpp)
+add_dependencies(tr_hub_parser ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(tr_hub_parser ${${PROJECT_NAME}_EXPORTED_TARGETS})
 add_dependencies(tr_hub_parser ${PROJECT_NAME}_gencfg)
 
@@ -51,7 +51,7 @@ install( TARGETS
  if(CATKIN_ENABLE_TESTING)
     add_library(${PROJECT_NAME}_LIB src/tr_hub_parser.cpp src/serial_port.cpp)
     target_link_libraries(${PROJECT_NAME}_LIB ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-    add_dependencies(${PROJECT_NAME}_LIB tr_hub_parser_generate_messages_cpp)
+    add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_generate_messages_cpp)
     add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_gencfg)
 
     catkin_add_gtest(tr_hub_parser_test test/test_tr_hub_parser.cpp)
