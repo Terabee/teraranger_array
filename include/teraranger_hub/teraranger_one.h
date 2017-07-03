@@ -10,7 +10,7 @@
 #include "serial_port.h"
 
 #include <dynamic_reconfigure/server.h>
-#include <teraranger_hub/Tr_hub_parserConfig.h>
+#include <teraranger_hub/teraranger_hub_oneConfig.h>
 #include <teraranger_hub/RangeArray.h>
 
 #define BUFFER_SIZE 19
@@ -57,7 +57,7 @@ public:
 
   void serialDataCallback(uint8_t data);
 
-  void dynParamCallback(const teraranger_hub::Tr_hub_parserConfig &config, uint32_t level);
+  void dynParamCallback(const teraranger_hub::teraranger_hub_oneConfig &config, uint32_t level);
 
   bool loadParameters();
   void setMode(const char *c);
@@ -65,8 +65,8 @@ public:
   ros::NodeHandle nh_;
   ros::Publisher range_publisher_;
 
-  dynamic_reconfigure::Server<teraranger_hub::Tr_hub_parserConfig> dyn_param_server_;
-  dynamic_reconfigure::Server<teraranger_hub::Tr_hub_parserConfig>::CallbackType dyn_param_server_callback_function_;
+  dynamic_reconfigure::Server<teraranger_hub::teraranger_hub_oneConfig> dyn_param_server_;
+  dynamic_reconfigure::Server<teraranger_hub::teraranger_hub_oneConfig>::CallbackType dyn_param_server_callback_function_;
 
   SerialPort * serial_port_;
   boost::function<void(uint8_t)> serial_data_callback_function_;
