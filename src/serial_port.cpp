@@ -4,7 +4,7 @@
 #include <teraranger_hub/serial_port.h>
 #include <teraranger_hub/teraranger_one.h>
 
-namespace tr_hub_parser
+namespace teraranger_hub
 {
 
 SerialPort::SerialPort() :

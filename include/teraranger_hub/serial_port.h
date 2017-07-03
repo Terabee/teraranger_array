@@ -14,7 +14,7 @@
 
 #include <string>
 
-namespace tr_hub_parser
+namespace teraranger_hub
 {
 
 class SerialPort

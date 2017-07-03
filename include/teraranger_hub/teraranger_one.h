@@ -15,7 +15,7 @@
 
 #define BUFFER_SIZE 19
 
-namespace tr_hub_parser
+namespace teraranger_hub
 {
 
 static const char PRECISE_MODE[] = "PPP";
@@ -57,7 +57,7 @@ public:
 
   void serialDataCallback(uint8_t data);
 
-  void dynParamCallback(const tr_hub_parser::Tr_hub_parserConfig &config, uint32_t level);
+  void dynParamCallback(const teraranger_hub::Tr_hub_parserConfig &config, uint32_t level);
 
   bool loadParameters();
   void setMode(const char *c);
@@ -65,8 +65,8 @@ public:
   ros::NodeHandle nh_;
   ros::Publisher range_publisher_;
 
-  dynamic_reconfigure::Server<tr_hub_parser::Tr_hub_parserConfig> dyn_param_server_;
-  dynamic_reconfigure::Server<tr_hub_parser::Tr_hub_parserConfig>::CallbackType dyn_param_server_callback_function_;
+  dynamic_reconfigure::Server<teraranger_hub::Tr_hub_parserConfig> dyn_param_server_;
+  dynamic_reconfigure::Server<teraranger_hub::Tr_hub_parserConfig>::CallbackType dyn_param_server_callback_function_;
 
   SerialPort * serial_port_;
   boost::function<void(uint8_t)> serial_data_callback_function_;

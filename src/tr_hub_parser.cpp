@@ -4,7 +4,7 @@
 #include <teraranger_hub/RangeArray.h>
 #include <teraranger_hub/teraranger_one.h>
 
-namespace tr_hub_parser {
+namespace teraranger_hub {
 
 Tr_hub_parser::Tr_hub_parser() {
   // Get paramters
@@ -157,16 +157,16 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
 void Tr_hub_parser::setMode(const char *c) { serial_port_->sendChar(c); }
 
 void Tr_hub_parser::dynParamCallback(
-    const tr_hub_parser::Tr_hub_parserConfig &config, uint32_t level) {
-  if (config.Mode == tr_hub_parser::Tr_hub_parser_Fast) {
+    const teraranger_hub::Tr_hub_parserConfig &config, uint32_t level) {
+  if (config.Mode == teraranger_hub::Tr_hub_parser_Fast) {
     setMode(FAST_MODE);
   }
 
-  if (config.Mode == tr_hub_parser::Tr_hub_parser_Precise) {
+  if (config.Mode == teraranger_hub::Tr_hub_parser_Precise) {
     setMode(PRECISE_MODE);
   }
 
-  if (config.Mode == tr_hub_parser::Tr_hub_parser_Outdoor) {
+  if (config.Mode == teraranger_hub::Tr_hub_parser_Outdoor) {
     setMode(OUTDOOR_MODE);
   }
 }
@@ -174,7 +174,7 @@ void Tr_hub_parser::dynParamCallback(
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "tr_hub_parser_node");
-  tr_hub_parser::Tr_hub_parser tr_hub_parser_node;
+  teraranger_hub::Tr_hub_parser tr_hub_parser_node;
   ros::spin();
 
   return 0;
