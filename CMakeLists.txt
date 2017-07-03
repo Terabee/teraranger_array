@@ -36,7 +36,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(tr_hub_parser src/tr_hub_parser.cpp src/serial_port.cpp)
+add_executable(tr_hub_parser src/teraranger_one.cpp src/serial_port.cpp)
 target_link_libraries(tr_hub_parser ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 add_dependencies(tr_hub_parser ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(tr_hub_parser ${${PROJECT_NAME}_EXPORTED_TARGETS})
@@ -49,12 +49,12 @@ install( TARGETS
 
 
  if(CATKIN_ENABLE_TESTING)
-    add_library(${PROJECT_NAME}_LIB src/tr_hub_parser.cpp src/serial_port.cpp)
+    add_library(${PROJECT_NAME}_LIB src/teraranger_one.cpp src/serial_port.cpp)
     target_link_libraries(${PROJECT_NAME}_LIB ${catkin_LIBRARIES} ${Boost_LIBRARIES})
     add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_generate_messages_cpp)
     add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_gencfg)
 
-    catkin_add_gtest(tr_hub_parser_test test/test_tr_hub_parser.cpp)
+    catkin_add_gtest(tr_hub_parser_test test/test_teraranger_one.cpp)
     add_dependencies(tr_hub_parser_test ${${PROJECT_NAME}_EXPORTED_TARGETS})
     target_link_libraries(tr_hub_parser_test ${Boost_LIBRARIES} ${GTEST_LIBRARIES} ${PROJECT_NAME}_LIB)
 endif()
