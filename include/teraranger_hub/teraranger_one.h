@@ -1,5 +1,5 @@
-#ifndef TR_HUB_PARSER_H
-#define TR_HUB_PARSER_H
+#ifndef TERARANGER_HUB_ONE_H
+#define TERARANGER_HUB_ONE_H
 
 #include <ros/ros.h>
 #include <sensor_msgs/Range.h>
@@ -85,4 +85,4 @@ private:
 
 } // namespace tr_hub_parser
 
-#endif  // TR_HUB_PARSER_H
+#endif  // TERARANGER_HUB_ONE_H

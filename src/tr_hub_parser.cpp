@@ -2,7 +2,7 @@
 #include <string>
 
 #include <teraranger_hub/RangeArray.h>
-#include <teraranger_hub/tr_hub_parser.h>
+#include <teraranger_hub/teraranger_one.h>
 
 namespace tr_hub_parser {
 
