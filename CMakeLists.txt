@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 find_package(Boost REQUIRED COMPONENTS system thread)
 
-generate_dynamic_reconfigure_options(cfg/tr_hub_parser.cfg)
+generate_dynamic_reconfigure_options(cfg/Tr_hub_parser.cfg)
 
 add_message_files(
     FILES
@@ -40,6 +40,7 @@ add_executable(tr_hub_parser src/tr_hub_parser.cpp src/serial_port.cpp)
 target_link_libraries(tr_hub_parser ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 add_dependencies(tr_hub_parser tr_hub_parser_generate_messages_cpp)
 add_dependencies(tr_hub_parser ${${PROJECT_NAME}_EXPORTED_TARGETS})
+add_dependencies(tr_hub_parser ${PROJECT_NAME}_gencfg)
 
 install( TARGETS
   tr_hub_parser
