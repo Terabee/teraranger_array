@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 SET(CMAKE_CXX_STANDARD 11)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
-project(tr_hub_parser)
+project(teraranger_hub)
 
 find_package(catkin REQUIRED COMPONENTS
   message_generation
@@ -51,8 +51,8 @@ install( TARGETS
  if(CATKIN_ENABLE_TESTING)
     add_library(${PROJECT_NAME}_LIB src/tr_hub_parser.cpp src/serial_port.cpp)
     target_link_libraries(${PROJECT_NAME}_LIB ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-    add_dependencies(tr_hub_parser_LIB tr_hub_parser_generate_messages_cpp)
-    add_dependencies(tr_hub_parser_LIB ${PROJECT_NAME}_gencfg)
+    add_dependencies(${PROJECT_NAME}_LIB tr_hub_parser_generate_messages_cpp)
+    add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_gencfg)
 
     catkin_add_gtest(tr_hub_parser_test test/test_tr_hub_parser.cpp)
     add_dependencies(tr_hub_parser_test ${${PROJECT_NAME}_EXPORTED_TARGETS})

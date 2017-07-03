@@ -10,8 +10,8 @@
 #include "serial_port.h"
 
 #include <dynamic_reconfigure/server.h>
-#include <tr_hub_parser/Tr_hub_parserConfig.h>
-#include <tr_hub_parser/RangeArray.h>
+#include <teraranger_hub/Tr_hub_parserConfig.h>
+#include <teraranger_hub/RangeArray.h>
 
 #define BUFFER_SIZE 19
 
@@ -80,7 +80,7 @@ private:
   int number_of_sensor;
   std::string frame_id;
 
-  tr_hub_parser::RangeArray measure;
+  teraranger_hub::RangeArray measure;
 };
 
 } // namespace tr_hub_parser

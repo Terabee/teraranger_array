@@ -1,8 +1,8 @@
 #include <ros/console.h>
 #include <string>
 
-#include <tr_hub_parser/RangeArray.h>
-#include <tr_hub_parser/tr_hub_parser.h>
+#include <teraranger_hub/RangeArray.h>
+#include <teraranger_hub/tr_hub_parser.h>
 
 namespace tr_hub_parser {
 
@@ -32,7 +32,7 @@ Tr_hub_parser::Tr_hub_parser() {
   }
 
   // Publishers
-  range_publisher_ = nh_.advertise<tr_hub_parser::RangeArray>("tr_hub_parser", 8);
+  range_publisher_ = nh_.advertise<teraranger_hub::RangeArray>("tr_hub_parser", 8);
 
   // Create serial port
   serial_port_ = new SerialPort();

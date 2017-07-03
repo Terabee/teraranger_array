@@ -1,8 +1,8 @@
 #include <string>
 #include <ros/console.h>
 
-#include <tr_hub_parser/serial_port.h>
-#include <tr_hub_parser/tr_hub_parser.h>
+#include <teraranger_hub/serial_port.h>
+#include <teraranger_hub/tr_hub_parser.h>
 
 namespace tr_hub_parser
 {
