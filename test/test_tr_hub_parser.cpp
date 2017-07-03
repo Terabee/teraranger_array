@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <teraranger_hub/tr_hub_parser.h>
+#include <teraranger_hub/teraranger_one.h>
 
 class HubParserTest : public ::testing::Test{
 protected:
