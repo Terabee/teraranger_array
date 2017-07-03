@@ -41,6 +41,11 @@ target_link_libraries(tr_hub_parser ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 add_dependencies(tr_hub_parser tr_hub_parser_generate_messages_cpp)
 add_dependencies(tr_hub_parser ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
+install( TARGETS
+  tr_hub_parser
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  )
+
 
  if(CATKIN_ENABLE_TESTING)
     add_library(${PROJECT_NAME}_LIB src/tr_hub_parser.cpp src/serial_port.cpp)
