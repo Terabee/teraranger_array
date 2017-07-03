@@ -1,5 +1,5 @@
-#ifndef TR_HUB_SERIAL_PORT_H
-#define TR_HUB_SERIAL_PORT_H
+#ifndef TERARANGER_HUB_SERIAL_PORT_H
+#define TERARANGER_HUB_SERIAL_PORT_H
 
 #include <stdio.h>    // Standard input/output definitions
 #include <string.h>   // String function definitions
@@ -40,4 +40,4 @@ public:
 
 } // namespace tr_hub_parser
 
-#endif  // TR_HUB_SERIAL_PORT_H
+#endif  // TERARANGER_HUB_SERIAL_PORT_H
