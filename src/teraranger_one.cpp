@@ -1,12 +1,12 @@
 #include <ros/console.h>
 #include <string>
 
-#include <tr_hub_parser/RangeArray.h>
-#include <tr_hub_parser/tr_hub_parser.h>
+#include <teraranger_hub/RangeArray.h>
+#include <teraranger_hub/teraranger_one.h>
 
-namespace tr_hub_parser {
+namespace teraranger_hub {
 
-Tr_hub_parser::Tr_hub_parser() {
+Teraranger_hub_one::Teraranger_hub_one() {
   // Get paramters
   ros::NodeHandle private_node_handle_("~");
   private_node_handle_.param("portname", portname_,
@@ -32,14 +32,14 @@ Tr_hub_parser::Tr_hub_parser() {
   }
 
   // Publishers
-  range_publisher_ = nh_.advertise<tr_hub_parser::RangeArray>("tr_hub_parser", 8);
+  range_publisher_ = nh_.advertise<teraranger_hub::RangeArray>("tr_hub_parser", 8);
 
   // Create serial port
   serial_port_ = new SerialPort();
 
   // Set callback function for the serial ports
   serial_data_callback_function_ =
-      boost::bind(&Tr_hub_parser::serialDataCallback, this, _1);
+      boost::bind(&Teraranger_hub_one::serialDataCallback, this, _1);
   serial_port_->setSerialCallbackFunction(&serial_data_callback_function_);
 
   // Connect serial port
@@ -68,11 +68,11 @@ Tr_hub_parser::Tr_hub_parser() {
 
   // Dynamic reconfigure
   dyn_param_server_callback_function_ =
-      boost::bind(&Tr_hub_parser::dynParamCallback, this, _1, _2);
+      boost::bind(&Teraranger_hub_one::dynParamCallback, this, _1, _2);
   dyn_param_server_.setCallback(dyn_param_server_callback_function_);
 }
 
-Tr_hub_parser::~Tr_hub_parser() {}
+Teraranger_hub_one::~Teraranger_hub_one() {}
 
 uint8_t crc8(uint8_t *p, uint8_t len) {
   uint16_t i;
@@ -93,7 +93,7 @@ float two_chars_to_float(uint8_t c1, uint8_t c2){
   return res;
 }
 
-void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
+void Teraranger_hub_one::serialDataCallback(uint8_t single_character) {
   static uint8_t input_buffer[BUFFER_SIZE];
   static int buffer_ctr = 0;
   static int seq_ctr = 0;
@@ -154,27 +154,27 @@ void Tr_hub_parser::serialDataCallback(uint8_t single_character) {
   input_buffer[buffer_ctr++] = 'T';
 }
 
-void Tr_hub_parser::setMode(const char *c) { serial_port_->sendChar(c); }
+void Teraranger_hub_one::setMode(const char *c) { serial_port_->sendChar(c); }
 
-void Tr_hub_parser::dynParamCallback(
-    const tr_hub_parser::Tr_hub_parserConfig &config, uint32_t level) {
-  if (config.Mode == tr_hub_parser::Tr_hub_parser_Fast) {
+void Teraranger_hub_one::dynParamCallback(
+    const teraranger_hub::teraranger_hub_oneConfig &config, uint32_t level) {
+  if (config.Mode == teraranger_hub::teraranger_hub_one_Fast) {
     setMode(FAST_MODE);
   }
 
-  if (config.Mode == tr_hub_parser::Tr_hub_parser_Precise) {
+  if (config.Mode == teraranger_hub::teraranger_hub_one_Precise) {
     setMode(PRECISE_MODE);
   }
 
-  if (config.Mode == tr_hub_parser::Tr_hub_parser_Outdoor) {
+  if (config.Mode == teraranger_hub::teraranger_hub_one_Outdoor) {
     setMode(OUTDOOR_MODE);
   }
 }
 }
 
 int main(int argc, char **argv) {
-  ros::init(argc, argv, "tr_hub_parser_node");
-  tr_hub_parser::Tr_hub_parser tr_hub_parser_node;
+  ros::init(argc, argv, "teraranger_hub_one");
+  teraranger_hub::Teraranger_hub_one teraranger_one;
   ros::spin();
 
   return 0;

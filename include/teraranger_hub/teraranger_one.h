@@ -1,5 +1,5 @@
-#ifndef TR_HUB_PARSER_H
-#define TR_HUB_PARSER_H
+#ifndef TERARANGER_HUB_ONE_H
+#define TERARANGER_HUB_ONE_H
 
 #include <ros/ros.h>
 #include <sensor_msgs/Range.h>
@@ -10,12 +10,12 @@
 #include "serial_port.h"
 
 #include <dynamic_reconfigure/server.h>
-#include <tr_hub_parser/Tr_hub_parserConfig.h>
-#include <tr_hub_parser/RangeArray.h>
+#include <teraranger_hub/teraranger_hub_oneConfig.h>
+#include <teraranger_hub/RangeArray.h>
 
 #define BUFFER_SIZE 19
 
-namespace tr_hub_parser
+namespace teraranger_hub
 {
 
 static const char PRECISE_MODE[] = "PPP";
@@ -48,16 +48,16 @@ static const uint8_t crc_table[] = {0x00, 0x07, 0x0e, 0x09, 0x1c, 0x1b, 0x12, 0x
 uint8_t crc8(uint8_t *p, uint8_t len);
 float two_chars_to_float(uint8_t c1, uint8_t c2);
 
-class Tr_hub_parser
+class Teraranger_hub_one
 {
 public:
-  Tr_hub_parser();
-  virtual ~Tr_hub_parser();
+  Teraranger_hub_one();
+  virtual ~Teraranger_hub_one();
 
 
   void serialDataCallback(uint8_t data);
 
-  void dynParamCallback(const tr_hub_parser::Tr_hub_parserConfig &config, uint32_t level);
+  void dynParamCallback(const teraranger_hub::teraranger_hub_oneConfig &config, uint32_t level);
 
   bool loadParameters();
   void setMode(const char *c);
@@ -65,8 +65,8 @@ public:
   ros::NodeHandle nh_;
   ros::Publisher range_publisher_;
 
-  dynamic_reconfigure::Server<tr_hub_parser::Tr_hub_parserConfig> dyn_param_server_;
-  dynamic_reconfigure::Server<tr_hub_parser::Tr_hub_parserConfig>::CallbackType dyn_param_server_callback_function_;
+  dynamic_reconfigure::Server<teraranger_hub::teraranger_hub_oneConfig> dyn_param_server_;
+  dynamic_reconfigure::Server<teraranger_hub::teraranger_hub_oneConfig>::CallbackType dyn_param_server_callback_function_;
 
   SerialPort * serial_port_;
   boost::function<void(uint8_t)> serial_data_callback_function_;
@@ -80,9 +80,9 @@ private:
   int number_of_sensor;
   std::string frame_id;
 
-  tr_hub_parser::RangeArray measure;
+  teraranger_hub::RangeArray measure;
 };
 
 } // namespace tr_hub_parser
 
-#endif  // TR_HUB_PARSER_H
+#endif  // TERARANGER_HUB_ONE_H

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <tr_hub_parser/tr_hub_parser.h>
+#include <teraranger_hub/teraranger_one.h>
 
 class HubParserTest : public ::testing::Test{
 protected:
@@ -7,12 +7,12 @@ protected:
 };
 
 TEST_F(HubParserTest, crc8Test){
-  int16_t crc = tr_hub_parser::crc8(input_buffer, 18);
+  int16_t crc = teraranger_hub::crc8(input_buffer, 18);
   EXPECT_EQ(crc, input_buffer[18]);
 }
 
 TEST_F(HubParserTest, parsingTest){
-  float result = tr_hub_parser::two_chars_to_float(input_buffer[2],input_buffer[3]);
+  float result = teraranger_hub::two_chars_to_float(input_buffer[2],input_buffer[3]);
   ASSERT_FLOAT_EQ(result, 2215);
 }
 
