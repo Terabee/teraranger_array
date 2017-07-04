@@ -32,7 +32,7 @@ Teraranger_hub_one::Teraranger_hub_one() {
   }
 
   // Publishers
-  range_publisher_ = nh_.advertise<teraranger_hub::RangeArray>("tr_hub_parser", 8);
+  range_publisher_ = nh_.advertise<teraranger_hub::RangeArray>("teraranger_hub_one", 8);
 
   // Create serial port
   serial_port_ = new SerialPort();
