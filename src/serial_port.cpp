@@ -1,8 +1,9 @@
 #include <string>
 #include <ros/console.h>
+#include <ros/ros.h>
 
 #include <teraranger_hub/serial_port.h>
-#include <teraranger_hub/teraranger_one.h>
+//#include <teraranger_hub/teraranger_one.h>
 
 namespace teraranger_hub
 {
@@ -68,6 +69,15 @@ bool SerialPort::sendChar(const char c[])
   return write(serial_port_fd_, (const void*)c, 3);
 }
 
+bool SerialPort::sendChar(const char c[], int len)
+{
+	for(int i = 0; i<len; i++)
+	{
+		ROS_DEBUG("Sending byte... %d %x",i,(unsigned int)(unsigned char)c[i]);
+	}
+
+  return write(serial_port_fd_, (const void*)c, len);
+}
 
 
 void SerialPort::setSerialCallbackFunction(boost::function<void(uint8_t)> * f)
