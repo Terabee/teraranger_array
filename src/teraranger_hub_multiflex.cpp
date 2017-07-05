@@ -278,7 +278,7 @@ void Teraranger_hub_multiflex::setSensorBitMask(int *sensor_bit_mask_ptr)
  serial_port_->sendChar(full_command, 5);
 }
 
-void Teraranger_hub_multiflex::dynParamCallback(const teraranger_hub_multiflex::Teraranger_hub_multiflexConfig &config, uint32_t level)
+void Teraranger_hub_multiflex::dynParamCallback(const teraranger_hub_multiflex::teraranger_hub_multiflexConfig &config, uint32_t level)
 {
 
   if (level == 1)
