@@ -83,6 +83,6 @@ private:
   teraranger_hub::RangeArray measure;
 };
 
-} // namespace tr_hub_parser
+} // namespace teraranger_hub
 
 #endif  // TERARANGER_HUB_ONE_H

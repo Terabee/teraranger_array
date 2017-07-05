@@ -17,7 +17,7 @@
 namespace teraranger_hub
 {
 
-
+// TODO: Re-enable if multiple modes are supported by Multiflex
 // static const char PRECISE_MODE[] = {0x00, 0x21, 0x02, 0xB5};
 // static const char FAST_MODE[] = {0x00, 0x21, 0x01, 0xBC};
 static const char LONG_RANGE_MODE[] = {(char)0x00, (char)0x21, (char)0x03, (char)0xB2};

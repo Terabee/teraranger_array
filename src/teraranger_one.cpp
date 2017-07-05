@@ -104,7 +104,6 @@ void Teraranger_hub_one::serialDataCallback(uint8_t single_character) {
     return;
   }
   else if (single_character == 'T') {
-    //ROS_INFO("%s\n", reinterpret_cast<const char*>(single_character));
 
     if (buffer_ctr == 19) {
       // end of feed, calculate

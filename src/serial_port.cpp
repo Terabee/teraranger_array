@@ -3,7 +3,6 @@
 #include <ros/ros.h>
 
 #include <teraranger_hub/serial_port.h>
-//#include <teraranger_hub/teraranger_one.h>
 
 namespace teraranger_hub
 {
@@ -102,4 +101,4 @@ void SerialPort::serialThread()
 
 }
 
-} // tr_hub_parser
+} // teraranger_hub

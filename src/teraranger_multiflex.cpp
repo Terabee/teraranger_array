@@ -266,6 +266,7 @@ void Teraranger_hub_multiflex::dynParamCallback(const teraranger_hub_multiflex::
 	  }
   }
 
+  // TODO: Re-enable when multiple modes are supported by Multiflex
   // else if (level == 0)
   // {
   //  if (config.Mode == teraranger_hub_multiflex::Teraranger_hub_multiflex_Fast)
