@@ -341,7 +341,7 @@ std::string Teraranger_hub_multiflex::IntToString( int number )
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "Teraranger_hub_multiflex");
+  ros::init(argc, argv, "teraranger_hub_multiflex");
   teraranger_hub::Teraranger_hub_multiflex multiflex;
   ros::spin();
 
