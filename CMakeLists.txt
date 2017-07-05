@@ -42,7 +42,7 @@ add_dependencies(teraranger_one ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(teraranger_one ${${PROJECT_NAME}_EXPORTED_TARGETS})
 add_dependencies(teraranger_one ${PROJECT_NAME}_gencfg)
 
-add_executable(teraranger_multiflex src/teraranger_hub_multiflex.cpp src/serial_port.cpp)
+add_executable(teraranger_multiflex src/teraranger_multiflex.cpp src/serial_port.cpp)
 target_link_libraries(teraranger_multiflex ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 add_dependencies(teraranger_multiflex ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(teraranger_multiflex ${${PROJECT_NAME}_EXPORTED_TARGETS})

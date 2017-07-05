@@ -38,7 +38,7 @@
 #include <sstream>
 #include <iomanip>
 
-#include <teraranger_hub/teraranger_hub_multiflex.h>
+#include <teraranger_hub/teraranger_multiflex.h>
 #include <ros/console.h>
 
 namespace teraranger_hub
