@@ -34,8 +34,8 @@
  *
  ****************************************************************************/
 
-#ifndef TERARANGER_HUB_MULTIFLEX_TERARANGER_H_
-#define TERARANGER_HUB_MULTIFLEX_TERARANGER_H_
+#ifndef TERARANGER_HUB_MULTIFLEX_H_
+#define TERARANGER_HUB_MULTIFLEX_H_
 
 #include <ros/ros.h>
 #include <sensor_msgs/Range.h>
@@ -118,4 +118,4 @@ public:
 
 } // namespace teraranger_hub
 
-#endif  // TERARANGER_HUB_TERARANGER_H_
+#endif  // TERARANGER_HUB_MULTIFLEX_H_
