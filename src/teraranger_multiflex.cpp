@@ -272,7 +272,7 @@ void Teraranger_hub_multiflex::setSensorBitMask(int *sensor_bit_mask_ptr)
  int8_t crc = crc8(command, 4);
 
  //send command
- char full_command[5] = {0x00, 0x52, 0x03,bit_mask_hex,crc};
+ char full_command[5] = {0x00, 0x52, 0x03,(char)bit_mask_hex, (char)crc};
 
 
  serial_port_->sendChar(full_command, 5);
