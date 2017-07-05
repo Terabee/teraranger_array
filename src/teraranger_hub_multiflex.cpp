@@ -38,11 +38,10 @@
 #include <sstream>
 #include <iomanip>
 
-#include "teraranger_hub_multiflex/teraranger_hub_multiflex.h"
-
+#include <teraranger_hub/teraranger_hub_multiflex.h>
 #include <ros/console.h>
 
-namespace teraranger_hub_multiflex
+namespace teraranger_hub
 {
 
 Teraranger_hub_multiflex::Teraranger_hub_multiflex()
@@ -343,7 +342,7 @@ std::string Teraranger_hub_multiflex::IntToString( int number )
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "Teraranger_hub_multiflex");
-  teraranger_hub_multiflex::Teraranger_hub_multiflex multiflex;
+  teraranger_hub::Teraranger_hub_multiflex multiflex;
   ros::spin();
 
   return 0;
