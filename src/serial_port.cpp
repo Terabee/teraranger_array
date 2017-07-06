@@ -62,11 +62,6 @@ void SerialPort::disconnect()
   close(serial_port_fd_);
 }
 
-bool SerialPort::sendChar(const char c[])
-{
-  return write(serial_port_fd_, (const void *)c, 3);
-}
-
 bool SerialPort::sendChar(const char c[], int len)
 {
   for (int i = 0; i < len; i++)

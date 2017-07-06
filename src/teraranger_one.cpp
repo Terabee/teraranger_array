@@ -176,7 +176,7 @@ void Teraranger_hub_one::serialDataCallback(uint8_t single_character)
   input_buffer[buffer_ctr++] = 'T';
 }
 
-void Teraranger_hub_one::setMode(const char *c) { serial_port_->sendChar(c); }
+void Teraranger_hub_one::setMode(const char *c) { serial_port_->sendChar(c, 3); }
 
 void Teraranger_hub_one::dynParamCallback(
     const teraranger_hub::teraranger_hub_oneConfig &config, uint32_t level)
