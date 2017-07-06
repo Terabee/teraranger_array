@@ -7,8 +7,7 @@
 namespace teraranger_hub
 {
 
-SerialPort::SerialPort() :
-    serial_callback_function()
+SerialPort::SerialPort() : serial_callback_function()
 {
   serial_thread_should_exit_ = false;
   serial_port_fd_ = 0;
@@ -43,8 +42,8 @@ bool SerialPort::connect(const std::string port)
 
   newtio.c_cflag &= ~PARENB; // no parity bit
   newtio.c_cflag &= ~CSTOPB; // 1 stop bit
-  newtio.c_cflag &= ~CSIZE; // Only one stop bit
-  newtio.c_cflag |= CS8; // 8 bit word
+  newtio.c_cflag &= ~CSIZE;  // Only one stop bit
+  newtio.c_cflag |= CS8;     // 8 bit word
 
   newtio.c_iflag = 0; // Raw output since no parity checking is done
   newtio.c_oflag = 0; // Raw output
@@ -65,21 +64,20 @@ void SerialPort::disconnect()
 
 bool SerialPort::sendChar(const char c[])
 {
-  return write(serial_port_fd_, (const void*)c, 3);
+  return write(serial_port_fd_, (const void *)c, 3);
 }
 
 bool SerialPort::sendChar(const char c[], int len)
 {
-	for(int i = 0; i<len; i++)
-	{
-		ROS_DEBUG("Sending byte... %d %x",i,(unsigned int)(unsigned char)c[i]);
-	}
+  for (int i = 0; i < len; i++)
+  {
+    ROS_DEBUG("Sending byte... %d %x", i, (unsigned int)(unsigned char)c[i]);
+  }
 
-  return write(serial_port_fd_, (const void*)c, len);
+  return write(serial_port_fd_, (const void *)c, len);
 }
 
-
-void SerialPort::setSerialCallbackFunction(boost::function<void(uint8_t)> * f)
+void SerialPort::setSerialCallbackFunction(boost::function<void(uint8_t)> *f)
 {
   serial_callback_function = f;
 }
@@ -98,7 +96,6 @@ void SerialPort::serialThread()
     ros::Duration(0.0001).sleep();
   }
   return;
-
 }
 
 } // teraranger_hub

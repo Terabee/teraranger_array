@@ -64,7 +64,7 @@ public:
   bool loadParameters();
   void setMode(const char *c);
   void setSensorBitMask(int *sensor_bit_mask_ptr);
-  int * sensor_bit_mask_ptr;
+  int *sensor_bit_mask_ptr;
   int sensor_bit_mask[8];
 
   ros::NodeHandle nh_;
@@ -73,7 +73,7 @@ public:
   dynamic_reconfigure::Server<teraranger_hub_multiflex::teraranger_hub_multiflexConfig> dyn_param_server_;
   dynamic_reconfigure::Server<teraranger_hub_multiflex::teraranger_hub_multiflexConfig>::CallbackType dyn_param_server_callback_function_;
 
-  SerialPort * serial_port_;
+  SerialPort *serial_port_;
   boost::function<void(uint8_t)> serial_data_callback_function_;
 
   std::string portname_;
@@ -82,4 +82,4 @@ public:
 
 } // namespace teraranger_hub
 
-#endif  // TERARANGER_HUB_MULTIFLEX_H_
+#endif // TERARANGER_HUB_MULTIFLEX_H_

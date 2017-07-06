@@ -54,7 +54,6 @@ public:
   Teraranger_hub_one();
   virtual ~Teraranger_hub_one();
 
-
   void serialDataCallback(uint8_t data);
 
   void dynParamCallback(const teraranger_hub::teraranger_hub_oneConfig &config, uint32_t level);
@@ -68,13 +67,14 @@ public:
   dynamic_reconfigure::Server<teraranger_hub::teraranger_hub_oneConfig> dyn_param_server_;
   dynamic_reconfigure::Server<teraranger_hub::teraranger_hub_oneConfig>::CallbackType dyn_param_server_callback_function_;
 
-  SerialPort * serial_port_;
+  SerialPort *serial_port_;
   boost::function<void(uint8_t)> serial_data_callback_function_;
 
   std::string portname_;
   std::string ns_;
+
 private:
-  float field_of_view ;
+  float field_of_view;
   float max_range;
   float min_range;
   int number_of_sensor;
@@ -85,4 +85,4 @@ private:
 
 } // namespace teraranger_hub
 
-#endif  // TERARANGER_HUB_ONE_H
+#endif // TERARANGER_HUB_ONE_H

@@ -29,7 +29,6 @@ public:
   bool sendChar(const char c[]);
   bool sendChar(const char c[], int len);
 
-
   void setSerialCallbackFunction(boost::function<void(uint8_t)> *f);
   void serialThread();
 
@@ -37,9 +36,9 @@ public:
   boost::thread serial_thread_;
   bool serial_thread_should_exit_;
 
-  boost::function<void(uint8_t)> * serial_callback_function;
+  boost::function<void(uint8_t)> *serial_callback_function;
 };
 
 } // namespace teraranger_hub
 
-#endif  // TERARANGER_HUB_SERIAL_PORT_H
+#endif // TERARANGER_HUB_SERIAL_PORT_H
