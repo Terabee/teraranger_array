@@ -179,19 +179,19 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
 void TerarangerHubOne::setMode(const char *c) { serial_port_->sendChar(c, 3); }
 
 void TerarangerHubOne::dynParamCallback(
-    const teraranger_hub::teraranger_hub_oneConfig &config, uint32_t level)
+    const teraranger_one_cfg::teraranger_hub_oneConfig &config, uint32_t level)
 {
-  if (config.Mode == teraranger_hub::teraranger_hub_one_Fast)
+  if (config.Mode == teraranger_one_cfg::teraranger_hub_one_Fast)
   {
     setMode(FAST_MODE);
   }
 
-  if (config.Mode == teraranger_hub::teraranger_hub_one_Precise)
+  if (config.Mode == teraranger_one_cfg::teraranger_hub_one_Precise)
   {
     setMode(PRECISE_MODE);
   }
 
-  if (config.Mode == teraranger_hub::teraranger_hub_one_Outdoor)
+  if (config.Mode == teraranger_one_cfg::teraranger_hub_one_Outdoor)
   {
     setMode(OUTDOOR_MODE);
   }

@@ -56,7 +56,7 @@ public:
 
   void serialDataCallback(uint8_t data);
 
-  void dynParamCallback(const teraranger_hub::teraranger_hub_oneConfig &config, uint32_t level);
+  void dynParamCallback(const teraranger_one_cfg::teraranger_hub_oneConfig &config, uint32_t level);
 
   bool loadParameters();
   void setMode(const char *c);
@@ -64,8 +64,8 @@ public:
   ros::NodeHandle nh_;
   ros::Publisher range_publisher_;
 
-  dynamic_reconfigure::Server<teraranger_hub::teraranger_hub_oneConfig> dyn_param_server_;
-  dynamic_reconfigure::Server<teraranger_hub::teraranger_hub_oneConfig>::CallbackType dyn_param_server_callback_function_;
+  dynamic_reconfigure::Server<teraranger_one_cfg::teraranger_hub_oneConfig> dyn_param_server_;
+  dynamic_reconfigure::Server<teraranger_one_cfg::teraranger_hub_oneConfig>::CallbackType dyn_param_server_callback_function_;
 
   SerialPort *serial_port_;
   boost::function<void(uint8_t)> serial_data_callback_function_;
