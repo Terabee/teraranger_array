@@ -8,7 +8,7 @@
 namespace teraranger_hub
 {
 
-Teraranger_hub_multiflex::Teraranger_hub_multiflex()
+TerarangerHubMultiflex::TerarangerHubMultiflex()
 {
 	// Get paramters
 	ros::NodeHandle private_node_handle_("~");
@@ -21,7 +21,7 @@ Teraranger_hub_multiflex::Teraranger_hub_multiflex()
 	serial_port_ = new SerialPort();
 
 	// Set callback function for the serial ports
-	serial_data_callback_function_ = boost::bind(&Teraranger_hub_multiflex::serialDataCallback, this, _1);
+	serial_data_callback_function_ = boost::bind(&TerarangerHubMultiflex::serialDataCallback, this, _1);
 	serial_port_->setSerialCallbackFunction(&serial_data_callback_function_);
 
 	// Connect serial port
@@ -46,15 +46,15 @@ Teraranger_hub_multiflex::Teraranger_hub_multiflex()
 	// Initialize all active sensors
 
 	// Dynamic reconfigure
-	dyn_param_server_callback_function_ = boost::bind(&Teraranger_hub_multiflex::dynParamCallback, this, _1, _2);
+	dyn_param_server_callback_function_ = boost::bind(&TerarangerHubMultiflex::dynParamCallback, this, _1, _2);
 	dyn_param_server_.setCallback(dyn_param_server_callback_function_);
 }
 
-Teraranger_hub_multiflex::~Teraranger_hub_multiflex()
+TerarangerHubMultiflex::~TerarangerHubMultiflex()
 {
 }
 
-uint8_t Teraranger_hub_multiflex::crc8(uint8_t *p, uint8_t len)
+uint8_t TerarangerHubMultiflex::crc8(uint8_t *p, uint8_t len)
 {
 	uint16_t i;
 	uint16_t crc = 0x0;
@@ -67,7 +67,7 @@ uint8_t Teraranger_hub_multiflex::crc8(uint8_t *p, uint8_t len)
 	return crc & 0xFF;
 }
 
-void Teraranger_hub_multiflex::parseCommand(uint8_t *input_buffer, uint8_t len)
+void TerarangerHubMultiflex::parseCommand(uint8_t *input_buffer, uint8_t len)
 {
 
 	static float min_range = 0.05;
@@ -137,7 +137,7 @@ void Teraranger_hub_multiflex::parseCommand(uint8_t *input_buffer, uint8_t len)
 	}
 }
 
-std::string Teraranger_hub_multiflex::arrayToString(uint8_t *input_buffer, uint8_t len)
+std::string TerarangerHubMultiflex::arrayToString(uint8_t *input_buffer, uint8_t len)
 {
 	std::ostringstream convert;
 	for (int a = 0; a < len; a++)
@@ -149,7 +149,7 @@ std::string Teraranger_hub_multiflex::arrayToString(uint8_t *input_buffer, uint8
 	return str;
 }
 
-void Teraranger_hub_multiflex::serialDataCallback(uint8_t single_character)
+void TerarangerHubMultiflex::serialDataCallback(uint8_t single_character)
 {
 	static uint8_t input_buffer[BUFFER_SIZE];
 	static int buffer_ctr = 0;
@@ -212,12 +212,12 @@ void Teraranger_hub_multiflex::serialDataCallback(uint8_t single_character)
 		bzero(&input_buffer, BUFFER_SIZE);
 	}
 }
-void Teraranger_hub_multiflex::setMode(const char *c)
+void TerarangerHubMultiflex::setMode(const char *c)
 {
 	serial_port_->sendChar(c, 4);
 }
 
-void Teraranger_hub_multiflex::setSensorBitMask(int *sensor_bit_mask_ptr)
+void TerarangerHubMultiflex::setSensorBitMask(int *sensor_bit_mask_ptr)
 {
 
 	uint8_t bit_mask_hex = 0x00;
@@ -237,7 +237,7 @@ void Teraranger_hub_multiflex::setSensorBitMask(int *sensor_bit_mask_ptr)
 	serial_port_->sendChar(full_command, 5);
 }
 
-void Teraranger_hub_multiflex::dynParamCallback(const teraranger_hub_multiflex::teraranger_hub_multiflexConfig &config, uint32_t level)
+void TerarangerHubMultiflex::dynParamCallback(const teraranger_hub_multiflex::teraranger_hub_multiflexConfig &config, uint32_t level)
 {
 
 	if (level == 1)
@@ -288,7 +288,7 @@ void Teraranger_hub_multiflex::dynParamCallback(const teraranger_hub_multiflex::
 	}
 }
 
-std::string Teraranger_hub_multiflex::IntToString(int number)
+std::string TerarangerHubMultiflex::IntToString(int number)
 {
 	std::ostringstream oss;
 	oss << number;
@@ -299,7 +299,7 @@ std::string Teraranger_hub_multiflex::IntToString(int number)
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "teraranger_hub_multiflex");
-	teraranger_hub::Teraranger_hub_multiflex multiflex;
+	teraranger_hub::TerarangerHubMultiflex multiflex;
 	ros::spin();
 
 	return 0;
