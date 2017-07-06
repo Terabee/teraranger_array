@@ -237,7 +237,7 @@ void TerarangerHubMultiflex::setSensorBitMask(int *sensor_bit_mask_ptr)
 	serial_port_->sendChar(full_command, 5);
 }
 
-void TerarangerHubMultiflex::dynParamCallback(const teraranger_hub_multiflex::teraranger_hub_multiflexConfig &config, uint32_t level)
+void TerarangerHubMultiflex::dynParamCallback(const teraranger_mutliflex_cfg::teraranger_hub_multiflexConfig &config, uint32_t level)
 {
 
 	if (level == 1)
@@ -264,19 +264,19 @@ void TerarangerHubMultiflex::dynParamCallback(const teraranger_hub_multiflex::te
 	// TODO: Re-enable when multiple modes are supported by Multiflex
 	// else if (level == 0)
 	// {
-	//  if (config.Mode == teraranger_hub_multiflex::Teraranger_hub_multiflex_Fast)
+	//  if (config.Mode == teraranger_mutliflex_cfg::Teraranger_hub_multiflex_Fast)
 	//  {
 	//    setMode(FAST_MODE);
 	// ROS_INFO("Fast mode set");
 	//  }
 	//
-	//  if (config.Mode == teraranger_hub_multiflex::Teraranger_hub_multiflex_Precise)
+	//  if (config.Mode == teraranger_mutliflex_cfg::Teraranger_hub_multiflex_Precise)
 	//  {
 	//    setMode(PRECISE_MODE);
 	// ROS_INFO("Precise mode set");
 	//  }
 	//
-	//  if (config.Mode == teraranger_hub_multiflex::Teraranger_hub_multiflex_LongRange)
+	//  if (config.Mode == teraranger_mutliflex_cfg::Teraranger_hub_multiflex_LongRange)
 	//  {
 	//    setMode(LONG_RANGE_MODE);
 	// ROS_INFO("Long range mode set");

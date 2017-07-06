@@ -56,7 +56,7 @@ public:
   uint8_t crc8(uint8_t *p, uint8_t len);
   void serialDataCallback(uint8_t data);
 
-  void dynParamCallback(const teraranger_hub_multiflex::teraranger_hub_multiflexConfig &config, uint32_t level);
+  void dynParamCallback(const teraranger_mutliflex_cfg::teraranger_hub_multiflexConfig &config, uint32_t level);
 
   void parseCommand(uint8_t *input_buffer, uint8_t len);
   std::string arrayToString(uint8_t *input_buffer, uint8_t len);
@@ -70,8 +70,8 @@ public:
   ros::NodeHandle nh_;
   ros::Publisher range_publisher_;
 
-  dynamic_reconfigure::Server<teraranger_hub_multiflex::teraranger_hub_multiflexConfig> dyn_param_server_;
-  dynamic_reconfigure::Server<teraranger_hub_multiflex::teraranger_hub_multiflexConfig>::CallbackType dyn_param_server_callback_function_;
+  dynamic_reconfigure::Server<teraranger_mutliflex_cfg::teraranger_hub_multiflexConfig> dyn_param_server_;
+  dynamic_reconfigure::Server<teraranger_mutliflex_cfg::teraranger_hub_multiflexConfig>::CallbackType dyn_param_server_callback_function_;
 
   SerialPort *serial_port_;
   boost::function<void(uint8_t)> serial_data_callback_function_;
