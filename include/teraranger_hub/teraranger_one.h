@@ -10,7 +10,7 @@
 #include "serial_port.h"
 
 #include <dynamic_reconfigure/server.h>
-#include <teraranger_hub/teraranger_hub_oneConfig.h>
+#include <teraranger_hub/TerarangerHubOneConfig.h>
 #include <teraranger_hub/RangeArray.h>
 
 #define BUFFER_SIZE 19
@@ -48,16 +48,15 @@ static const uint8_t crc_table[] = {0x00, 0x07, 0x0e, 0x09, 0x1c, 0x1b, 0x12, 0x
 uint8_t crc8(uint8_t *p, uint8_t len);
 float two_chars_to_float(uint8_t c1, uint8_t c2);
 
-class Teraranger_hub_one
+class TerarangerHubOne
 {
 public:
-  Teraranger_hub_one();
-  virtual ~Teraranger_hub_one();
-
+  TerarangerHubOne();
+  virtual ~TerarangerHubOne();
 
   void serialDataCallback(uint8_t data);
 
-  void dynParamCallback(const teraranger_hub::teraranger_hub_oneConfig &config, uint32_t level);
+  void dynParamCallback(const teraranger_one_cfg::TerarangerHubOneConfig &config, uint32_t level);
 
   bool loadParameters();
   void setMode(const char *c);
@@ -65,16 +64,17 @@ public:
   ros::NodeHandle nh_;
   ros::Publisher range_publisher_;
 
-  dynamic_reconfigure::Server<teraranger_hub::teraranger_hub_oneConfig> dyn_param_server_;
-  dynamic_reconfigure::Server<teraranger_hub::teraranger_hub_oneConfig>::CallbackType dyn_param_server_callback_function_;
+  dynamic_reconfigure::Server<teraranger_one_cfg::TerarangerHubOneConfig> dyn_param_server_;
+  dynamic_reconfigure::Server<teraranger_one_cfg::TerarangerHubOneConfig>::CallbackType dyn_param_server_callback_function_;
 
-  SerialPort * serial_port_;
+  SerialPort *serial_port_;
   boost::function<void(uint8_t)> serial_data_callback_function_;
 
   std::string portname_;
   std::string ns_;
+
 private:
-  float field_of_view ;
+  float field_of_view;
   float max_range;
   float min_range;
   int number_of_sensor;
@@ -83,6 +83,6 @@ private:
   teraranger_hub::RangeArray measure;
 };
 
-} // namespace tr_hub_parser
+} // namespace teraranger_hub
 
-#endif  // TERARANGER_HUB_ONE_H
+#endif // TERARANGER_HUB_ONE_H

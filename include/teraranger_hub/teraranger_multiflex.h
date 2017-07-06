@@ -1,39 +1,3 @@
-/****************************************************************************
- *
- * Copyright (C) 2014 Flavio Fontana & Luis Rodrigues. All rights reserved.
- * Author: Flavio Fontana <fly.fontana@gmail.com>
- * Author: Luis Rodrigues <luis.rodrigues@terabee.com>
-
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in
- * the documentation and/or other materials provided with the
- * distribution.
- * 3. Neither the name Teraranger_hub nor the names of its contributors may be
- * used to endorse or promote products derived from this software
- * without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- ****************************************************************************/
-
 #ifndef TERARANGER_HUB_MULTIFLEX_H_
 #define TERARANGER_HUB_MULTIFLEX_H_
 
@@ -46,14 +10,14 @@
 #include "serial_port.h"
 
 #include <dynamic_reconfigure/server.h>
-#include <teraranger_hub/teraranger_hub_multiflexConfig.h>
+#include <teraranger_hub/TerarangerHubMultiflexConfig.h>
 
 #define BUFFER_SIZE 20
 
 namespace teraranger_hub
 {
 
-
+// TODO: Re-enable if multiple modes are supported by Multiflex
 // static const char PRECISE_MODE[] = {0x00, 0x21, 0x02, 0xB5};
 // static const char FAST_MODE[] = {0x00, 0x21, 0x01, 0xBC};
 static const char LONG_RANGE_MODE[] = {(char)0x00, (char)0x21, (char)0x03, (char)0xB2};
@@ -81,18 +45,18 @@ static const uint8_t crc_table[] = {0x00, 0x07, 0x0e, 0x09, 0x1c, 0x1b, 0x12, 0x
                                     0x84, 0x83, 0xde, 0xd9, 0xd0, 0xd7, 0xc2, 0xc5, 0xcc, 0xcb, 0xe6, 0xe1, 0xe8, 0xef,
                                     0xfa, 0xfd, 0xf4, 0xf3};
 
-class Teraranger_hub_multiflex
+class TerarangerHubMultiflex
 {
 public:
-  Teraranger_hub_multiflex();
+  TerarangerHubMultiflex();
   std::string IntToString(int number);
 
-  virtual ~Teraranger_hub_multiflex();
+  virtual ~TerarangerHubMultiflex();
 
   uint8_t crc8(uint8_t *p, uint8_t len);
   void serialDataCallback(uint8_t data);
 
-  void dynParamCallback(const teraranger_hub_multiflex::teraranger_hub_multiflexConfig &config, uint32_t level);
+  void dynParamCallback(const teraranger_mutliflex_cfg::TerarangerHubMultiflexConfig &config, uint32_t level);
 
   void parseCommand(uint8_t *input_buffer, uint8_t len);
   std::string arrayToString(uint8_t *input_buffer, uint8_t len);
@@ -100,16 +64,16 @@ public:
   bool loadParameters();
   void setMode(const char *c);
   void setSensorBitMask(int *sensor_bit_mask_ptr);
-  int * sensor_bit_mask_ptr;
+  int *sensor_bit_mask_ptr;
   int sensor_bit_mask[8];
 
   ros::NodeHandle nh_;
   ros::Publisher range_publisher_;
 
-  dynamic_reconfigure::Server<teraranger_hub_multiflex::teraranger_hub_multiflexConfig> dyn_param_server_;
-  dynamic_reconfigure::Server<teraranger_hub_multiflex::teraranger_hub_multiflexConfig>::CallbackType dyn_param_server_callback_function_;
+  dynamic_reconfigure::Server<teraranger_mutliflex_cfg::TerarangerHubMultiflexConfig> dyn_param_server_;
+  dynamic_reconfigure::Server<teraranger_mutliflex_cfg::TerarangerHubMultiflexConfig>::CallbackType dyn_param_server_callback_function_;
 
-  SerialPort * serial_port_;
+  SerialPort *serial_port_;
   boost::function<void(uint8_t)> serial_data_callback_function_;
 
   std::string portname_;
@@ -118,4 +82,4 @@ public:
 
 } // namespace teraranger_hub
 
-#endif  // TERARANGER_HUB_MULTIFLEX_H_
+#endif // TERARANGER_HUB_MULTIFLEX_H_
