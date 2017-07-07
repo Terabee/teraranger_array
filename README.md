@@ -46,7 +46,7 @@ rosrun rqt_reconfigure rqt_reconfigure
 
 ### TeraRanger Tower
 
-<img src="http://www.teraranger.com/wp-content/uploads/2016/03/Teraranger_tower_typeB-1.png" width="600"/>
+<img src="http://www.teraranger.com/wp-content/uploads/2016/03/Teraranger_tower_typeB-1.png" width="300"/>
 
 | Information |
 | -------------- |
@@ -57,7 +57,7 @@ rosrun rqt_reconfigure rqt_reconfigure
 
 ### TeraRanger Multiflex
 
-<img src="http://www.teraranger.com/wp-content/uploads/2017/01/multiflx-on-kobuki.jpg" width="600"/>
+<img src="http://www.teraranger.com/wp-content/uploads/2017/01/multiflx-on-kobuki.jpg" width="300"/>
 
 
 | Information |
