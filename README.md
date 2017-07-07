@@ -1,19 +1,67 @@
-# ROS module for Teraranger-Hub and Teraranger-Tower
-TeraRanger Hub/Tower ROS Module
+# ROS package for TeraRanger array solutions by Terabee
 
-This is the ROS module for the TeraRanger Tower or Hub (www.teraranger.com).
-## Using module
+This package is a collection of nodes for TeraRanger array solutions:
+* [TeraRanger Tower](http://www.teraranger.com/teraranger-tower/)
+* [TeraRanger Multiflex](http://www.teraranger.com/products/teraranger-multiflex/)
+* [TeraRanger Hub](http://www.teraranger.com/products/teraranger-hub/)
 
-To use the ROS node you just need to:
+## Building and running the package from source
 
-    Create a ROS Workspace
-    Copy the node 'tr_hub_parser' package into the workspace src directory
-    Compile using: catkin_make
-    Setup environment: source devel/setup.sh
-    Run using: rosrun tr_hub_parser tr_hub_parser _portname:=/dev/ttyACM0
+To clone and build the package in your workspace follow these steps:
 
-If you want to change the operating mode, run
+```
+cd ~/ros_ws/src
+git clone git@github.com:Terabee/teraranger_hub.git
+cd ~/ros_ws
+catkin_make
+source devel/setup.bash
+```
 
-    rosrun rqt_reconfigure rqt_reconfigure
+## Running the TeraRanger Tower & TeraRanger Hub
 
-NB: remember to execute the daemon roscore before running the rosrun command
+TeraRanger Tower and TeraRanger Hub utilize **TeraRanger One** sensors for the distance measurements. To use them please run **teraranger_one node**.
+
+After your workspace is built and sourced:
+```
+rosrun teraranger_hub teraranger_one _portname:=/dev/ttyACM0
+```
+
+## Running TeraRanger Multiflex
+
+To use TeraRanger Multiflex please execute the following command after building and sourcing your workspace:
+
+```
+rosrun teraranger_hub teraranger_multiflex _portname:=/dev/ttyACM0
+``` 
+
+## Changing Sensor Configuration
+
+You can change the operating mode of the sensors by running **rqt_reconfigure**:
+
+```
+rosrun rqt_reconfigure rqt_reconfigure
+```
+
+## Product pictures and where to get the sensors
+
+### TeraRanger Tower
+
+<img src="http://www.teraranger.com/wp-content/uploads/2016/03/Teraranger_tower_typeB-1.png" width="600"/>
+
+| Information |
+| -------------- |
+|[Product page](http://www.teraranger.com/teraranger-tower/)| 
+|[Specification sheet](http://www.teraranger.com/wp-content/uploads/2016/03/Towerspecificationsheet.pdf)|
+|[Online shop](http://www.teraranger.com/product/teraranger-tower/) |
+
+
+### TeraRanger Multiflex
+
+<img src="http://www.teraranger.com/wp-content/uploads/2017/01/multiflx-on-kobuki.jpg" width="600"/>
+
+
+| Information |
+| -------------- |
+|[Product page](http://www.teraranger.com/products/teraranger-multiflex/)| 
+|[Specification sheet](http://www.teraranger.com/wp-content/uploads/2017/04/MultiflexSpecificationSheet.pdf)|
+|[Online shop](http://www.teraranger.com/product/teraranger-multiflex/) |
