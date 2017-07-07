@@ -1,5 +1,5 @@
-#ifndef TR_HUB_PARSER_H
-#define TR_HUB_PARSER_H
+#ifndef TERARANGER_HUB_MULTIFLEX_H_
+#define TERARANGER_HUB_MULTIFLEX_H_
 
 #include <ros/ros.h>
 #include <sensor_msgs/Range.h>
@@ -10,21 +10,20 @@
 #include "serial_port.h"
 
 #include <dynamic_reconfigure/server.h>
-#include <tr_hub_parser/Tr_hub_parserConfig.h>
-#include <tr_hub_parser/RangeArray.h>
+#include <teraranger_hub/teraranger_hub_multiflexConfig.h>
 
-#define BUFFER_SIZE 19
+#define BUFFER_SIZE 20
 
-namespace tr_hub_parser
+namespace teraranger_hub
 {
 
-static const char PRECISE_MODE[] = "PPP";
-static const char FAST_MODE[] = "FFF";
-static const char OUTDOOR_MODE[] = "OOO";
+// TODO: Re-enable if multiple modes are supported by Multiflex
+// static const char PRECISE_MODE[] = {0x00, 0x21, 0x02, 0xB5};
+// static const char FAST_MODE[] = {0x00, 0x21, 0x01, 0xBC};
+static const char LONG_RANGE_MODE[] = {(char)0x00, (char)0x21, (char)0x03, (char)0xB2};
 
-static const char BINARY_MODE[] = "BBB";
-static const char TEXT_MODE[] = "TTT";
-static const char FORCE_8_SENSORS[] = "CFF";
+static const char BINARY_MODE[] = {(char)0x00, (char)0x11, (char)0x02, (char)0x4C};
+static const char TEXT_MODE[] = {(char)0x00, (char)0x11, (char)0x01, (char)0x45};
 
 static const uint8_t crc_table[] = {0x00, 0x07, 0x0e, 0x09, 0x1c, 0x1b, 0x12, 0x15, 0x38, 0x3f, 0x36, 0x31, 0x24, 0x23,
                                     0x2a, 0x2d, 0x70, 0x77, 0x7e, 0x79, 0x6c, 0x6b, 0x62, 0x65, 0x48, 0x4f, 0x46, 0x41,
@@ -45,44 +44,42 @@ static const uint8_t crc_table[] = {0x00, 0x07, 0x0e, 0x09, 0x1c, 0x1b, 0x12, 0x
                                     0xae, 0xa9, 0xa0, 0xa7, 0xb2, 0xb5, 0xbc, 0xbb, 0x96, 0x91, 0x98, 0x9f, 0x8a, 0x8d,
                                     0x84, 0x83, 0xde, 0xd9, 0xd0, 0xd7, 0xc2, 0xc5, 0xcc, 0xcb, 0xe6, 0xe1, 0xe8, 0xef,
                                     0xfa, 0xfd, 0xf4, 0xf3};
-uint8_t crc8(uint8_t *p, uint8_t len);
-float two_chars_to_float(uint8_t c1, uint8_t c2);
 
-class Tr_hub_parser
+class Teraranger_hub_multiflex
 {
 public:
-  Tr_hub_parser();
-  virtual ~Tr_hub_parser();
+  Teraranger_hub_multiflex();
+  std::string IntToString(int number);
 
+  virtual ~Teraranger_hub_multiflex();
 
+  uint8_t crc8(uint8_t *p, uint8_t len);
   void serialDataCallback(uint8_t data);
 
-  void dynParamCallback(const tr_hub_parser::Tr_hub_parserConfig &config, uint32_t level);
+  void dynParamCallback(const teraranger_hub_multiflex::teraranger_hub_multiflexConfig &config, uint32_t level);
+
+  void parseCommand(uint8_t *input_buffer, uint8_t len);
+  std::string arrayToString(uint8_t *input_buffer, uint8_t len);
 
   bool loadParameters();
   void setMode(const char *c);
+  void setSensorBitMask(int *sensor_bit_mask_ptr);
+  int *sensor_bit_mask_ptr;
+  int sensor_bit_mask[8];
 
   ros::NodeHandle nh_;
   ros::Publisher range_publisher_;
 
-  dynamic_reconfigure::Server<tr_hub_parser::Tr_hub_parserConfig> dyn_param_server_;
-  dynamic_reconfigure::Server<tr_hub_parser::Tr_hub_parserConfig>::CallbackType dyn_param_server_callback_function_;
+  dynamic_reconfigure::Server<teraranger_hub_multiflex::teraranger_hub_multiflexConfig> dyn_param_server_;
+  dynamic_reconfigure::Server<teraranger_hub_multiflex::teraranger_hub_multiflexConfig>::CallbackType dyn_param_server_callback_function_;
 
-  SerialPort * serial_port_;
+  SerialPort *serial_port_;
   boost::function<void(uint8_t)> serial_data_callback_function_;
 
   std::string portname_;
   std::string ns_;
-private:
-  float field_of_view ;
-  float max_range;
-  float min_range;
-  int number_of_sensor;
-  std::string frame_id;
-
-  tr_hub_parser::RangeArray measure;
 };
 
-} // namespace tr_hub_parser
+} // namespace teraranger_hub
 
-#endif  // TR_HUB_PARSER_H
+#endif // TERARANGER_HUB_MULTIFLEX_H_

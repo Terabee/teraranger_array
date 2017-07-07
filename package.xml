@@ -1,22 +1,31 @@
 <?xml version="1.0"?>
 <package>
-  <name>tr_hub_parser</name>
-  <version>0.0.0</version>
-  <description>The tr_hub_parser package</description>
+  <name>teraranger_hub</name>
+  <version>1.0.0</version>
+  <description>The teraranger_hub package</description>
 
-  <maintainer email="plk@todo.todo">plk</maintainer>
+  <maintainer email="pierre-louis.kabaradjian@terabee.com">Pierre-Louis Kabaradjian</maintainer>
+  <maintainer email="krzysztof.zurad@terabee.com">Krzysztof Zurad</maintainer>
+  <maintainer email="mateusz.sadowski@terabee.com">Mateusz Sadowski</maintainer>
 
-  <license>TODO</license>
+  <author email="luis.rodrigues@terabee.com">Luis Rodrigues</author>
+
+  <license>GPL</license>
+
+  <url type="website">http://wiki.ros.org/tr_hub_parser</url>
+  <url type="website">https://github.com/Terabee/tr_hub_parser</url>
 
   <buildtool_depend>catkin</buildtool_depend>
-
+  <build_depend>message_generation</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>sensor_msgs</build_depend>
   <build_depend>std_msgs</build_depend>
   <build_depend>dynamic_reconfigure</build_depend>
   <build_depend>rospy</build_depend>
+
   <test_depend>rosunit</test_depend>
 
+  <run_depend>message_runtime</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>std_msgs</run_depend>

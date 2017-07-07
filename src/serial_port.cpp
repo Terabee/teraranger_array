@@ -1,14 +1,13 @@
 #include <string>
 #include <ros/console.h>
+#include <ros/ros.h>
 
-#include <tr_hub_parser/serial_port.h>
-#include <tr_hub_parser/tr_hub_parser.h>
+#include <teraranger_hub/serial_port.h>
 
-namespace tr_hub_parser
+namespace teraranger_hub
 {
 
-SerialPort::SerialPort() :
-    serial_callback_function()
+SerialPort::SerialPort() : serial_callback_function()
 {
   serial_thread_should_exit_ = false;
   serial_port_fd_ = 0;
@@ -43,8 +42,8 @@ bool SerialPort::connect(const std::string port)
 
   newtio.c_cflag &= ~PARENB; // no parity bit
   newtio.c_cflag &= ~CSTOPB; // 1 stop bit
-  newtio.c_cflag &= ~CSIZE; // Only one stop bit
-  newtio.c_cflag |= CS8; // 8 bit word
+  newtio.c_cflag &= ~CSIZE;  // Only one stop bit
+  newtio.c_cflag |= CS8;     // 8 bit word
 
   newtio.c_iflag = 0; // Raw output since no parity checking is done
   newtio.c_oflag = 0; // Raw output
@@ -63,17 +62,17 @@ void SerialPort::disconnect()
   close(serial_port_fd_);
 }
 
-bool SerialPort::sendChar(const char c[])
+bool SerialPort::sendChar(const char c[], int len)
 {
-  // this function is used to support legacy 3char hub1 command
-  return write(serial_port_fd_, (const void*)c, 3);
+  for (int i = 0; i < len; i++)
+  {
+    ROS_DEBUG("Sending byte... %d %x", i, (unsigned int)(unsigned char)c[i]);
+  }
+
+  return write(serial_port_fd_, (const void *)c, len);
 }
 
-bool SerialPort::sendChar(const char c[], int count){
-  return write(serial_port_fd_, (const void*)c, count);
-}
-
-void SerialPort::setSerialCallbackFunction(boost::function<void(uint8_t)> * f)
+void SerialPort::setSerialCallbackFunction(boost::function<void(uint8_t)> *f)
 {
   serial_callback_function = f;
 }
@@ -91,7 +90,6 @@ void SerialPort::serialThread()
     }
   }
   return;
-
 }
 
-} // tr_hub_parser
+} // teraranger_hub
