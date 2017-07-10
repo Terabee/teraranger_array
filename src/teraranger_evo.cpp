@@ -161,18 +161,23 @@ TerarangerHubEvo::TerarangerHubEvo() {
       int16_t crc = crc8(input_buffer, 19);
 
       if (crc == input_buffer[RANGE_CRC_POS]) {
-          ROS_DEBUG("Frame of size %d : %s ", buffer_ctr, input_buffer);
+          //ROS_DEBUG("Frame of size %d : %s ", buffer_ctr, input_buffer);
 
           for (size_t i=0; i < measure.ranges.size(); i++) {
             measure.ranges.at(i).header.stamp = ros::Time::now();
             measure.ranges.at(i).header.seq = seq_ctr++;
 
             // Doesn't go out of range because of fixed buffer size as long as the number of sensor is not above 8
-            float float_range = two_chars_to_float(input_buffer[2 * (i + 1)],input_buffer[2 * (i + 1) + 1]);
+            char c1 = input_buffer[2 * (i + 1)];
+            char c2 = input_buffer[2 * (i + 1) + 1];
+            ROS_DEBUG("c1 : %x, c2 : %x", (c1 & 0x0FF), (c2 & 0x0FF));
+            int16_t current_range = (c1 & 0x0FF) << 8;
+            current_range |= (c2 & 0x0FF);
 
-            if ((float_range * 0.001 < min_range) && (float_range > 0)) { //check for hardware cut-off
-              float_range = min_range;
-            } else if ((float_range * 0.001 > max_range) || (float_range < 0)) { //software cut-off should be adapted to sensor
+            float float_range = (float)current_range;
+            ROS_DEBUG("Value int : %d | float : %f", current_range, float_range);
+
+            if (current_range <= 1 || current_range == 255) {
               float_range = -1.0;
             } else {
               float_range = float_range * 0.001;
