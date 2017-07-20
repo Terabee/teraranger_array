@@ -63,8 +63,8 @@ TerarangerHubEvo::TerarangerHubEvo() {
     // This line is needed to start measurements on the hub
     setMode(ENABLE_CMD, 5);
     setMode(BINARY_MODE, 4);
-    setMode(CROSSTALK_MODE, 4);
-    setMode(RATE_700, 5);
+    setMode(TOWER_MODE, 4);
+    setMode(RATE_ASAP, 5);  
 
     // Dynamic reconfigure
     dyn_param_server_callback_function_ =
