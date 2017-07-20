@@ -10,7 +10,7 @@
 #include "serial_port.h"
 
 #include <dynamic_reconfigure/server.h>
-#include <teraranger_hub/teraranger_hub_multiflexConfig.h>
+#include <teraranger_hub/TerarangerHubMultiflexConfig.h>
 
 #define BUFFER_SIZE 20
 
@@ -45,18 +45,18 @@ static const uint8_t crc_table[] = {0x00, 0x07, 0x0e, 0x09, 0x1c, 0x1b, 0x12, 0x
                                     0x84, 0x83, 0xde, 0xd9, 0xd0, 0xd7, 0xc2, 0xc5, 0xcc, 0xcb, 0xe6, 0xe1, 0xe8, 0xef,
                                     0xfa, 0xfd, 0xf4, 0xf3};
 
-class Teraranger_hub_multiflex
+class TerarangerHubMultiflex
 {
 public:
-  Teraranger_hub_multiflex();
+  TerarangerHubMultiflex();
   std::string IntToString(int number);
 
-  virtual ~Teraranger_hub_multiflex();
+  virtual ~TerarangerHubMultiflex();
 
   uint8_t crc8(uint8_t *p, uint8_t len);
   void serialDataCallback(uint8_t data);
 
-  void dynParamCallback(const teraranger_hub_multiflex::teraranger_hub_multiflexConfig &config, uint32_t level);
+  void dynParamCallback(const teraranger_mutliflex_cfg::TerarangerHubMultiflexConfig &config, uint32_t level);
 
   void parseCommand(uint8_t *input_buffer, uint8_t len);
   std::string arrayToString(uint8_t *input_buffer, uint8_t len);
@@ -70,8 +70,8 @@ public:
   ros::NodeHandle nh_;
   ros::Publisher range_publisher_;
 
-  dynamic_reconfigure::Server<teraranger_hub_multiflex::teraranger_hub_multiflexConfig> dyn_param_server_;
-  dynamic_reconfigure::Server<teraranger_hub_multiflex::teraranger_hub_multiflexConfig>::CallbackType dyn_param_server_callback_function_;
+  dynamic_reconfigure::Server<teraranger_mutliflex_cfg::TerarangerHubMultiflexConfig> dyn_param_server_;
+  dynamic_reconfigure::Server<teraranger_mutliflex_cfg::TerarangerHubMultiflexConfig>::CallbackType dyn_param_server_callback_function_;
 
   SerialPort *serial_port_;
   boost::function<void(uint8_t)> serial_data_callback_function_;

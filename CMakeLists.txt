@@ -13,9 +13,9 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(Boost REQUIRED COMPONENTS system thread)
 
 generate_dynamic_reconfigure_options(
-cfg/teraranger_hub_one.cfg
-cfg/teraranger_hub_multiflex.cfg
-cfg/teraranger_hub_evo.cfg
+cfg/TerarangerHubOne.cfg
+cfg/TerarangerHubMultiflex.cfg
+cfg/TerarangerHubEvo.cfg
 )
 
 add_message_files(

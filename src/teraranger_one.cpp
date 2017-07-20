@@ -7,7 +7,7 @@
 namespace teraranger_hub
 {
 
-Teraranger_hub_one::Teraranger_hub_one()
+TerarangerHubOne::TerarangerHubOne()
 {
   // Get paramters
   ros::NodeHandle private_node_handle_("~");
@@ -42,7 +42,7 @@ Teraranger_hub_one::Teraranger_hub_one()
 
   // Set callback function for the serial ports
   serial_data_callback_function_ =
-      boost::bind(&Teraranger_hub_one::serialDataCallback, this, _1);
+      boost::bind(&TerarangerHubOne::serialDataCallback, this, _1);
   serial_port_->setSerialCallbackFunction(&serial_data_callback_function_);
 
   // Connect serial port
@@ -72,11 +72,11 @@ Teraranger_hub_one::Teraranger_hub_one()
 
   // Dynamic reconfigure
   dyn_param_server_callback_function_ =
-      boost::bind(&Teraranger_hub_one::dynParamCallback, this, _1, _2);
+      boost::bind(&TerarangerHubOne::dynParamCallback, this, _1, _2);
   dyn_param_server_.setCallback(dyn_param_server_callback_function_);
 }
 
-Teraranger_hub_one::~Teraranger_hub_one() {}
+TerarangerHubOne::~TerarangerHubOne() {}
 
 uint8_t crc8(uint8_t *p, uint8_t len)
 {
@@ -100,7 +100,7 @@ float two_chars_to_float(uint8_t c1, uint8_t c2)
   return res;
 }
 
-void Teraranger_hub_one::serialDataCallback(uint8_t single_character)
+void TerarangerHubOne::serialDataCallback(uint8_t single_character)
 {
   static uint8_t input_buffer[BUFFER_SIZE];
   static int buffer_ctr = 0;
@@ -176,22 +176,22 @@ void Teraranger_hub_one::serialDataCallback(uint8_t single_character)
   input_buffer[buffer_ctr++] = 'T';
 }
 
-void Teraranger_hub_one::setMode(const char *c) { serial_port_->sendChar(c, 3); }
+void TerarangerHubOne::setMode(const char *c) { serial_port_->sendChar(c, 3); }
 
-void Teraranger_hub_one::dynParamCallback(
-    const teraranger_hub::teraranger_hub_oneConfig &config, uint32_t level)
+void TerarangerHubOne::dynParamCallback(
+    const teraranger_one_cfg::TerarangerHubOneConfig &config, uint32_t level)
 {
-  if (config.Mode == teraranger_hub::teraranger_hub_one_Fast)
+  if (config.Mode == teraranger_one_cfg::TerarangerHubOne_Fast)
   {
     setMode(FAST_MODE);
   }
 
-  if (config.Mode == teraranger_hub::teraranger_hub_one_Precise)
+  if (config.Mode == teraranger_one_cfg::TerarangerHubOne_Precise)
   {
     setMode(PRECISE_MODE);
   }
 
-  if (config.Mode == teraranger_hub::teraranger_hub_one_Outdoor)
+  if (config.Mode == teraranger_one_cfg::TerarangerHubOne_Outdoor)
   {
     setMode(OUTDOOR_MODE);
   }
@@ -201,7 +201,7 @@ void Teraranger_hub_one::dynParamCallback(
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "teraranger_hub_one");
-  teraranger_hub::Teraranger_hub_one teraranger_one;
+  teraranger_hub::TerarangerHubOne teraranger_one;
   ros::spin();
 
   return 0;
