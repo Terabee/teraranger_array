@@ -25,6 +25,19 @@ static const char LONG_RANGE_MODE[] = {(char)0x00, (char)0x21, (char)0x03, (char
 static const char BINARY_MODE[] = {(char)0x00, (char)0x11, (char)0x02, (char)0x4C};
 static const char TEXT_MODE[] = {(char)0x00, (char)0x11, (char)0x01, (char)0x45};
 
+static const float MIN_RANGE = 0.05;
+static const float MAX_RANGE = 2.0;
+static const float FIELD_OF_VIEW = 0.2967;
+
+static const uint8_t SENSOR_COUNT = 8;
+static const uint8_t BITMASK_POS = 18; //Position of bitmask in message frame
+
+static const uint8_t REPLY_MSG_LEN = 5;
+static const char REPLY_CHAR = 'R'; //First character of Multiflex response message
+
+static const uint8_t MF_MSG_LEN = 20;
+static const uint8_t MF_CHAR = 'M'; //First character of Multiflex message
+
 static const uint8_t crc_table[] = {0x00, 0x07, 0x0e, 0x09, 0x1c, 0x1b, 0x12, 0x15, 0x38, 0x3f, 0x36, 0x31, 0x24, 0x23,
                                     0x2a, 0x2d, 0x70, 0x77, 0x7e, 0x79, 0x6c, 0x6b, 0x62, 0x65, 0x48, 0x4f, 0x46, 0x41,
                                     0x54, 0x53, 0x5a, 0x5d, 0xe0, 0xe7, 0xee, 0xe9, 0xfc, 0xfb, 0xf2, 0xf5, 0xd8, 0xdf,
