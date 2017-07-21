@@ -90,7 +90,7 @@ void TerarangerHubMultiflex::parseCommand(uint8_t *input_buffer, uint8_t len)
 		sensors[i].header.frame_id = ros::names::append(ns_, frame_id);
 	}
 
-	int16_t crc = crc8(input_buffer, 19);
+	uint8_t crc = crc8(input_buffer, 19);
 
 	if (crc == input_buffer[19])
 	{
