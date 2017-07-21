@@ -74,10 +74,10 @@ public:
   std::string ns_;
 
 private:
-  float field_of_view;
-  float max_range;
-  float min_range;
-  int number_of_sensor;
+  const float field_of_view = 0.0593;
+  const float max_range = 14.0;
+  const float min_range = 0.2;
+  const uint8_t number_of_sensors = 8;
   std::string frame_id;
 
   teraranger_hub::RangeArray measure;
