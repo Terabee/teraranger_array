@@ -1,8 +1,9 @@
 #include <ros/console.h>
 #include <string>
-
 #include <teraranger_hub/RangeArray.h>
 #include <teraranger_hub/teraranger_one.h>
+#include <teraranger_hub/helper_lib.h>
+
 
 namespace teraranger_hub
 {
@@ -72,28 +73,6 @@ TerarangerHubOne::TerarangerHubOne()
 
 TerarangerHubOne::~TerarangerHubOne() {}
 
-uint8_t crc8(uint8_t *p, uint8_t len)
-{
-  uint16_t i;
-  uint16_t crc = 0x0;
-
-  while (len--)
-  {
-    i = (crc ^ *p++) & 0xFF;
-    crc = (crc_table[i] ^ (crc << 8)) & 0xFF;
-  }
-  return crc & 0xFF;
-}
-
-float two_chars_to_float(uint8_t c1, uint8_t c2)
-{
-  int16_t current_range = c1 << 8;
-  current_range |= c2;
-
-  float res = (float)current_range;
-  return res;
-}
-
 void TerarangerHubOne::serialDataCallback(uint8_t single_character)
 {
   static uint8_t input_buffer[BUFFER_SIZE];
@@ -112,7 +91,7 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
     if (buffer_ctr == 19)
     {
       // end of feed, calculate
-      int16_t crc = crc8(input_buffer, 18);
+      int16_t crc = HelperLib::crc8(input_buffer, 18);
 
       if (crc == input_buffer[18])
       {
@@ -124,7 +103,7 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
           measure.ranges.at(i).header.seq = seq_ctr++;
 
           // Doesn't go out of range because of fixed buffer size as long as the number of sensor is not above 8
-          float float_range = two_chars_to_float(input_buffer[2 * (i + 1)], input_buffer[2 * (i + 1) + 1]);
+          float float_range = HelperLib::two_chars_to_float(input_buffer[2 * (i + 1)], input_buffer[2 * (i + 1) + 1]);
 
           if ((float_range * 0.001 < min_range) && (float_range > 0))
           { //check for hardware cut-off
