@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <teraranger_hub/teraranger_one.h>
+#include <teraranger_hub/helper_lib.h>
 
 class HubParserTest : public ::testing::Test{
 protected:
@@ -7,7 +8,7 @@ protected:
 };
 
 TEST_F(HubParserTest, crc8Test){
-  int16_t crc = teraranger_hub::crc8(input_buffer, 18);
+  int16_t crc = teraranger_hub::HelperLib::crc8(input_buffer, 18);
   EXPECT_EQ(crc, input_buffer[18]);
 }
 
