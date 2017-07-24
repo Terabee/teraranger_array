@@ -29,6 +29,7 @@ class HelperLib
 {
     public:
         static uint8_t crc8(uint8_t *p, uint8_t len);
+        static float two_chars_to_float(uint8_t c1, uint8_t c2);
 };
 } // namespace teraranger_hub
 

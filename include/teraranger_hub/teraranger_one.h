@@ -23,8 +23,6 @@ static const char BINARY_MODE[] = "BBB";
 static const char TEXT_MODE[] = "TTT";
 static const char FORCE_8_SENSORS[] = "CFF";
 
-float two_chars_to_float(uint8_t c1, uint8_t c2);
-
 class TerarangerHubOne
 {
 public:

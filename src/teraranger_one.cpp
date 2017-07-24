@@ -73,15 +73,6 @@ TerarangerHubOne::TerarangerHubOne()
 
 TerarangerHubOne::~TerarangerHubOne() {}
 
-float two_chars_to_float(uint8_t c1, uint8_t c2)
-{
-  int16_t current_range = c1 << 8;
-  current_range |= c2;
-
-  float res = (float)current_range;
-  return res;
-}
-
 void TerarangerHubOne::serialDataCallback(uint8_t single_character)
 {
   static uint8_t input_buffer[BUFFER_SIZE];
@@ -112,7 +103,7 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
           measure.ranges.at(i).header.seq = seq_ctr++;
 
           // Doesn't go out of range because of fixed buffer size as long as the number of sensor is not above 8
-          float float_range = two_chars_to_float(input_buffer[2 * (i + 1)], input_buffer[2 * (i + 1) + 1]);
+          float float_range = HelperLib::two_chars_to_float(input_buffer[2 * (i + 1)], input_buffer[2 * (i + 1) + 1]);
 
           if ((float_range * 0.001 < min_range) && (float_range > 0))
           { //check for hardware cut-off

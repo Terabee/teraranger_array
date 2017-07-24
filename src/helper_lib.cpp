@@ -14,4 +14,13 @@ namespace teraranger_hub
         }
         return crc & 0xFF;
     }
+
+    float HelperLib::two_chars_to_float(uint8_t c1, uint8_t c2)
+    {
+        int16_t current_range = c1 << 8;
+        current_range |= c2;
+
+        float res = (float)current_range;
+        return res;
+    }
 } //namespace teraranger_hub

@@ -13,7 +13,7 @@ TEST_F(HubParserTest, crc8Test){
 }
 
 TEST_F(HubParserTest, parsingTest){
-  float result = teraranger_hub::two_chars_to_float(input_buffer[2],input_buffer[3]);
+  float result = teraranger_hub::HelperLib::two_chars_to_float(input_buffer[2],input_buffer[3]);
   ASSERT_FLOAT_EQ(result, 2215);
 }
 
