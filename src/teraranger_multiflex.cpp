@@ -2,7 +2,7 @@
 #include <sstream>
 #include <iomanip>
 #include <teraranger_hub/teraranger_multiflex.h>
-#include <teraranger_hub/crc_lib.h>
+#include <teraranger_hub/helper_lib.h>
 #include <ros/console.h>
 
 namespace teraranger_hub
@@ -73,7 +73,7 @@ void TerarangerHubMultiflex::parseCommand(uint8_t *input_buffer, uint8_t len)
 		sensors[i].header.frame_id = ros::names::append(ns_, frame_id);
 	}
 
-	uint8_t crc = Crc::crc8(input_buffer, len);
+	uint8_t crc = HelperLib::crc8(input_buffer, len);
 
 	if (crc == input_buffer[len])
 	{
@@ -212,7 +212,7 @@ void TerarangerHubMultiflex::setSensorBitMask(int *sensor_bit_mask_ptr)
 	// calculate crc
 
 	uint8_t command[4] = {0x00, 0x52, 0x03, bit_mask_hex};
-	int8_t crc = Crc::crc8(command, 4);
+	int8_t crc = HelperLib::crc8(command, 4);
 
 	//send command
 	char full_command[5] = {0x00, 0x52, 0x03, (char)bit_mask_hex, (char)crc};

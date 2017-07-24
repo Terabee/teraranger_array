@@ -1,8 +1,8 @@
-#include <teraranger_hub/crc_lib.h>
+#include <teraranger_hub/helper_lib.h>
 
 namespace teraranger_hub
 {
-    uint8_t Crc::crc8(uint8_t *p, uint8_t len)
+    uint8_t HelperLib::crc8(uint8_t *p, uint8_t len)
     {
         uint16_t i;
         uint16_t crc = 0x0;

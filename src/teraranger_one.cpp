@@ -2,7 +2,7 @@
 #include <string>
 #include <teraranger_hub/RangeArray.h>
 #include <teraranger_hub/teraranger_one.h>
-#include <teraranger_hub/crc_lib.h>
+#include <teraranger_hub/helper_lib.h>
 
 
 namespace teraranger_hub
@@ -100,7 +100,7 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
     if (buffer_ctr == 19)
     {
       // end of feed, calculate
-      int16_t crc = Crc::crc8(input_buffer, 18);
+      int16_t crc = HelperLib::crc8(input_buffer, 18);
 
       if (crc == input_buffer[18])
       {
