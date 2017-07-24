@@ -36,13 +36,13 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(teraranger_one src/teraranger_one.cpp src/serial_port.cpp)
+add_executable(teraranger_one src/teraranger_one.cpp src/serial_port.cpp src/crc_lib.cpp)
 target_link_libraries(teraranger_one ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 add_dependencies(teraranger_one ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(teraranger_one ${${PROJECT_NAME}_EXPORTED_TARGETS})
 add_dependencies(teraranger_one ${PROJECT_NAME}_gencfg)
 
-add_executable(teraranger_multiflex src/teraranger_multiflex.cpp src/serial_port.cpp)
+add_executable(teraranger_multiflex src/teraranger_multiflex.cpp src/serial_port.cpp src/crc_lib.cpp)
 target_link_libraries(teraranger_multiflex ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 add_dependencies(teraranger_multiflex ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(teraranger_multiflex ${${PROJECT_NAME}_EXPORTED_TARGETS})
@@ -56,12 +56,12 @@ install( TARGETS
 
 
  if(CATKIN_ENABLE_TESTING)
-    add_library(${PROJECT_NAME}_LIB src/teraranger_one.cpp src/serial_port.cpp)
+    add_library(${PROJECT_NAME}_LIB src/teraranger_one.cpp src/serial_port.cpp src/crc_lib.cpp)
     target_link_libraries(${PROJECT_NAME}_LIB ${catkin_LIBRARIES} ${Boost_LIBRARIES})
     add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_generate_messages_cpp)
     add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_gencfg)
 
-    catkin_add_gtest(teraranger_one_test test/test_teraranger_one.cpp)
+    catkin_add_gtest(teraranger_one_test test/test_teraranger_one.cpp src/crc_lib.cpp)
     add_dependencies(teraranger_one_test ${${PROJECT_NAME}_EXPORTED_TARGETS})
     target_link_libraries(teraranger_one_test ${Boost_LIBRARIES} ${GTEST_LIBRARIES} ${PROJECT_NAME}_LIB)
 endif()
