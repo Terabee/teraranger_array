@@ -53,7 +53,7 @@ private:
   const float max_range = 14.0;
   const float min_range = 0.2;
   const uint8_t number_of_sensors = 8;
-  std::string frame_id;
+  std::string frame_id = "base_range_";
 
   teraranger_hub::RangeArray measure;
 };
