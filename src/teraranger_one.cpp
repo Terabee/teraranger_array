@@ -15,7 +15,7 @@ TerarangerHubOne::TerarangerHubOne()
   private_node_handle_.param("portname", portname_,
                              std::string("/dev/ttyACM0"));
 
-  for (uint8_t i = 0; i < number_of_sensors; i++)
+  for (int i = 0; i < number_of_sensors; i++)
   {
     sensor_msgs::Range range;
     range.field_of_view = field_of_view;
