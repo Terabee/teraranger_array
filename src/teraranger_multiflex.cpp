@@ -69,20 +69,16 @@ uint8_t TerarangerHubMultiflex::crc8(uint8_t *p, uint8_t len)
 
 void TerarangerHubMultiflex::parseCommand(uint8_t *input_buffer, uint8_t len)
 {
-
-	static float min_range = 0.05;
-	static float max_range = 2.0;
-	static float field_of_view = 0.2967;
-	static int int_min_range = (int)min_range * 1000;
-	static int int_max_range = (int)max_range * 1000;
+	static int int_min_range = (int)(MIN_RANGE * 1000);
+	static int int_max_range = (int)(MAX_RANGE * 1000);
 	static int seq_ctr = 0;
 
-	sensor_msgs::Range sensors[8];
-	for (int i = 0; i < 8; i++)
+	sensor_msgs::Range sensors[SENSOR_COUNT];
+	for (uint8_t i = 0; i < SENSOR_COUNT; i++)
 	{
-		sensors[i].field_of_view = field_of_view;
-		sensors[i].max_range = max_range;
-		sensors[i].min_range = min_range;
+		sensors[i].field_of_view = FIELD_OF_VIEW;
+		sensors[i].max_range = MAX_RANGE;
+		sensors[i].min_range = MIN_RANGE;
 		sensors[i].radiation_type = sensor_msgs::Range::INFRARED;
 
 		std::string frame = "base_range_";
@@ -90,22 +86,22 @@ void TerarangerHubMultiflex::parseCommand(uint8_t *input_buffer, uint8_t len)
 		sensors[i].header.frame_id = ros::names::append(ns_, frame_id);
 	}
 
-	int16_t crc = crc8(input_buffer, 19);
+	uint8_t crc = crc8(input_buffer, len);
 
-	if (crc == input_buffer[19])
+	if (crc == input_buffer[len])
 	{
 
-		int16_t ranges[8];
-		for (int i = 0; i < 8; i++)
+		int16_t ranges[SENSOR_COUNT];
+		for (int i = 0; i < SENSOR_COUNT; i++)
 		{
 			ranges[i] = input_buffer[i * 2 + 2] << 8;
 			ranges[i] |= input_buffer[i * 2 + 3];
 		}
 
-		uint8_t bitmask = input_buffer[18];
+		uint8_t bitmask = input_buffer[BITMASK_POS];
 		uint8_t bit_compare = 1;
 
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < SENSOR_COUNT; i++)
 		{
 			if ((bitmask & bit_compare) == bit_compare)
 			{
@@ -153,26 +149,26 @@ void TerarangerHubMultiflex::serialDataCallback(uint8_t single_character)
 {
 	static uint8_t input_buffer[BUFFER_SIZE];
 	static int buffer_ctr = 0;
-	static int size_frame = 5;
-	static char first_char = 'R';
+	static int size_frame = REPLY_MSG_LEN;
+	static char first_char = REPLY_CHAR;
 
-	if (single_character == 'M' && buffer_ctr == 0)
+	if (single_character == MF_CHAR && buffer_ctr == 0)
 	{
-		size_frame = 20;
-		first_char = 'M';
+		size_frame = MF_MSG_LEN;
+		first_char = MF_CHAR;
 		input_buffer[buffer_ctr] = single_character;
 		buffer_ctr++;
 	}
 
-	else if (single_character == 'R' && buffer_ctr == 0)
+	else if (single_character == REPLY_CHAR && buffer_ctr == 0)
 	{
-		size_frame = 5;
-		first_char = 'R';
+		size_frame = REPLY_MSG_LEN;
+		first_char = REPLY_CHAR;
 		input_buffer[buffer_ctr] = single_character;
 		buffer_ctr++;
 	}
 
-	else if (first_char == 'R' && buffer_ctr < size_frame)
+	else if (first_char == REPLY_CHAR && buffer_ctr < size_frame)
 	{
 		input_buffer[buffer_ctr] = single_character;
 		buffer_ctr++;
@@ -180,21 +176,21 @@ void TerarangerHubMultiflex::serialDataCallback(uint8_t single_character)
 		if (buffer_ctr == size_frame)
 		{
 			std::string str = arrayToString(input_buffer, size_frame);
-			ROS_DEBUG_STREAM("Respond frame reveived... : " << str);
+			ROS_DEBUG_STREAM("Respond frame received... : " << str);
 			// reset
 			buffer_ctr = 0;
 			// clear struct
 			bzero(&input_buffer, BUFFER_SIZE);
 		}
 	}
-	else if (first_char == 'M' && buffer_ctr < size_frame)
+	else if (first_char == MF_CHAR && buffer_ctr < size_frame)
 	{
 		input_buffer[buffer_ctr] = single_character;
 		buffer_ctr++;
 		if (buffer_ctr == size_frame)
 		{
 			std::string str = arrayToString(input_buffer, size_frame);
-			ROS_DEBUG_STREAM("Frame reveived... : " << str);
+			ROS_DEBUG_STREAM("Frame received... : " << str);
 
 			parseCommand(input_buffer, 19);
 			// reset
@@ -221,7 +217,7 @@ void TerarangerHubMultiflex::setSensorBitMask(int *sensor_bit_mask_ptr)
 {
 
 	uint8_t bit_mask_hex = 0x00;
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < SENSOR_COUNT; i++)
 	{
 		bit_mask_hex |= *(sensor_bit_mask_ptr + 7 - i) << (7 - i);
 	}
@@ -255,7 +251,7 @@ void TerarangerHubMultiflex::dynParamCallback(const teraranger_mutliflex_cfg::Te
 
 		setSensorBitMask(sensor_bit_mask_ptr);
 
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < SENSOR_COUNT; i++)
 		{
 			ROS_INFO("Sensor %d is set to %d", i, sensor_bit_mask[i]);
 		}
