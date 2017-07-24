@@ -13,14 +13,8 @@ TerarangerHubOne::TerarangerHubOne()
   ros::NodeHandle private_node_handle_("~");
   private_node_handle_.param("portname", portname_,
                              std::string("/dev/ttyACM0"));
-  //Initialize local parameters and measurement array
-  field_of_view = 0.0593;
-  max_range = 14.0;
-  min_range = 0.2;
-  number_of_sensor = 8;
-  frame_id = "base_range_";
 
-  for (size_t i = 0; i < number_of_sensor; i++)
+  for (uint8_t i = 0; i < number_of_sensors; i++)
   {
     sensor_msgs::Range range;
     range.field_of_view = field_of_view;
