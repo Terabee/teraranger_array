@@ -119,6 +119,8 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
           }
           measure.ranges.at(i).range = float_range;
         }
+        measure.header.seq = (int) seq_ctr / 8; 
+        measure.header.stamp = ros::Time::now();
         range_publisher_.publish(measure);
       }
       else
