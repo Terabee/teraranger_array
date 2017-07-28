@@ -58,7 +58,7 @@ TerarangerHubOne::TerarangerHubOne()
     range.radiation_type = sensor_msgs::Range::INFRARED;
     range.range = 0.0;
     range.header.frame_id =
-        ns_ + '_'+ frame_id + boost::lexical_cast<std::string>(i));
+        ns_ + '_'+ frame_id + boost::lexical_cast<std::string>(i);
 
     measure.ranges.push_back(range);
   }
