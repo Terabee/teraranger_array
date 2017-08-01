@@ -63,11 +63,10 @@ TerarangerHubOne::TerarangerHubOne()
 
   // set the right frame depending of the namespace
   if (ns_ == ""){
-    measure.header.frame_id = "base_" + ns_;
+    measure.header.frame_id = "base_hub";
   }
   else{
-    measure.header.frame_id = "base_hub";
-
+    measure.header.frame_id = "base_" + ns_;
   }
 
   // Dynamic reconfigure
