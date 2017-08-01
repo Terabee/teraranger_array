@@ -12,7 +12,11 @@ find_package(catkin REQUIRED COMPONENTS
 )
 find_package(Boost REQUIRED COMPONENTS system thread)
 
-generate_dynamic_reconfigure_options(cfg/TerarangerHubOne.cfg cfg/TerarangerHubMultiflex.cfg)
+generate_dynamic_reconfigure_options(
+cfg/TerarangerHubOne.cfg
+cfg/TerarangerHubMultiflex.cfg
+cfg/TerarangerHubEvo.cfg
+)
 
 add_message_files(
     FILES
@@ -48,9 +52,16 @@ add_dependencies(teraranger_multiflex ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(teraranger_multiflex ${${PROJECT_NAME}_EXPORTED_TARGETS})
 add_dependencies(teraranger_multiflex ${PROJECT_NAME}_gencfg)
 
+add_executable(teraranger_evo src/teraranger_evo.cpp src/serial_port.cpp src/helper_lib.cpp)
+target_link_libraries(teraranger_evo ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+add_dependencies(teraranger_evo ${catkin_EXPORTED_TARGETS})
+add_dependencies(teraranger_evo tr_hub_parser_gencfg)
+add_dependencies(teraranger_evo ${PROJECT_NAME}_generate_message_cpp)
+
 install( TARGETS
   teraranger_one
   teraranger_multiflex
+  teraranger_evo
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   )
 

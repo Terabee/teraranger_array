@@ -10,11 +10,11 @@ namespace teraranger_hub
 
 TerarangerHubOne::TerarangerHubOne()
 {
-  // Get paramters
+  // Get parameters and namespace
   ros::NodeHandle private_node_handle_("~");
   private_node_handle_.param("portname", portname_,
                              std::string("/dev/ttyACM0"));
-                             ns_ = ros::this_node::getNamespace();
+  ns_ = ros::this_node::getNamespace();
   ns_ = ros::names::clean(ns_);
   ROS_INFO("node namespace: [%s]", ns_.c_str());
 
@@ -62,7 +62,6 @@ TerarangerHubOne::TerarangerHubOne()
     else{
       range.header.frame_id = ns_.erase(0,1) + '_'+ frame_id + boost::lexical_cast<std::string>(i);
     }
-    
     measure.ranges.push_back(range);
   }
   // set the right RangeArray frame depending of the namespace

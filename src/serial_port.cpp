@@ -88,7 +88,7 @@ void SerialPort::serialThread()
     {
       (*serial_callback_function)(single_character);
     }
-    ros::Duration(0.0001).sleep();
+    ros::Duration(0.0000333).sleep(); //Limit serial read speed to ~30kHz which correspond to max frame lentgh (38 chars) multiply by max rate (700Hz)
   }
   return;
 }
