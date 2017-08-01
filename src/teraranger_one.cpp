@@ -55,13 +55,17 @@ TerarangerHubOne::TerarangerHubOne()
     range.min_range = min_range;
     range.radiation_type = sensor_msgs::Range::INFRARED;
     range.range = 0.0;
-    range.header.frame_id =
-        ns_ + '_'+ frame_id + boost::lexical_cast<std::string>(i);
-
+    // set the right range frame depending of the namespace
+    if (ns_ == ""){
+      range.header.frame_id = frame_id + boost::lexical_cast<std::string>(i);
+    }
+    else{
+      range.header.frame_id = ns_.erase(0,1) + '_'+ frame_id + boost::lexical_cast<std::string>(i);
+    }
+    
     measure.ranges.push_back(range);
   }
-
-  // set the right frame depending of the namespace
+  // set the right RangeArray frame depending of the namespace
   if (ns_ == ""){
     measure.header.frame_id = "base_hub";
   }
