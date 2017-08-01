@@ -3,6 +3,7 @@
 
 #include <teraranger_hub/RangeArray.h>
 #include <teraranger_hub/teraranger_evo.h>
+#include <teraranger_hub/helper_lib.h>
 
 namespace teraranger_hub {
 
@@ -64,7 +65,7 @@ TerarangerHubEvo::TerarangerHubEvo() {
     setMode(ENABLE_CMD, 5);
     setMode(BINARY_MODE, 4);
     setMode(TOWER_MODE, 4);
-    setMode(RATE_ASAP, 5);  
+    setMode(RATE_ASAP, 5);
 
     // Dynamic reconfigure
     dyn_param_server_callback_function_ =
@@ -73,25 +74,6 @@ TerarangerHubEvo::TerarangerHubEvo() {
   }
 
   TerarangerHubEvo::~TerarangerHubEvo() {}
-
-  uint8_t crc8(uint8_t *p, uint8_t len) {
-    uint16_t i;
-    uint16_t crc = 0x0;
-
-    while (len--) {
-      i = (crc ^ *p++) & 0xFF;
-      crc = (crc_table[i] ^ (crc << 8)) & 0xFF;
-    }
-    return crc & 0xFF;
-  }
-
-  float two_chars_to_float(uint8_t c1, uint8_t c2){
-    int16_t current_range = c1 << 8;
-    current_range |= c2;
-
-    float res = (float)current_range;
-    return res;
-  }
 
   void TerarangerHubEvo::setMode(const char *c, int length) {
     serial_port_->sendChar(c, length);
