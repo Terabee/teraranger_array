@@ -66,7 +66,7 @@ TerarangerHubOne::TerarangerHubOne()
     measure.header.frame_id = "base_hub";
   }
   else{
-    measure.header.frame_id = "base_" + ns_;
+    measure.header.frame_id = "base_" + ns_.erase(0,1);// Remove first slash
   }
 
   // Dynamic reconfigure
