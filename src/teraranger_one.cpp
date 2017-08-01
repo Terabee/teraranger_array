@@ -14,6 +14,9 @@ TerarangerHubOne::TerarangerHubOne()
   ros::NodeHandle private_node_handle_("~");
   private_node_handle_.param("portname", portname_,
                              std::string("/dev/ttyACM0"));
+                             ns_ = ros::this_node::getNamespace();
+  ns_ = ros::names::clean(ns_);
+  ROS_INFO("node namespace: [%s]", ns_.c_str());
 
   // Publishers
   range_publisher_ = nh_.advertise<teraranger_hub::RangeArray>("teraranger_hub_one", 8);
@@ -40,11 +43,6 @@ TerarangerHubOne::TerarangerHubOne()
   ROS_INFO("[%s] portname: %s", ros::this_node::getName().c_str(),
            portname_.c_str());
 
-  ns_ = ros::this_node::getNamespace();
-  ns_ = ros::names::clean(ns_);
-  std::string str = ns_.c_str();
-  ROS_INFO("node namespace: [%s]", ns_.c_str());
-
   // Set operation Mode
   setMode(BINARY_MODE);
 
@@ -62,7 +60,15 @@ TerarangerHubOne::TerarangerHubOne()
 
     measure.ranges.push_back(range);
   }
-  measure.header.frame_id = "base_" + ns_;
+
+  // set the right frame depending of the namespace
+  if (ns_ == ""){
+    measure.header.frame_id = "base_" + ns_;
+  }
+  else{
+    measure.header.frame_id = "base_hub";
+
+  }
 
   // Dynamic reconfigure
   dyn_param_server_callback_function_ =
