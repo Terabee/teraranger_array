@@ -1,8 +1,9 @@
 #include <ros/console.h>
 #include <string>
-
 #include <teraranger_hub/RangeArray.h>
 #include <teraranger_hub/teraranger_one.h>
+#include <teraranger_hub/helper_lib.h>
+
 
 namespace teraranger_hub
 {
@@ -13,26 +14,9 @@ TerarangerHubOne::TerarangerHubOne()
   ros::NodeHandle private_node_handle_("~");
   private_node_handle_.param("portname", portname_,
                              std::string("/dev/ttyACM0"));
-  //Initialize local parameters and measurement array
-  field_of_view = 0.0593;
-  max_range = 14.0;
-  min_range = 0.2;
-  number_of_sensor = 8;
-  frame_id = "base_range_";
-
-  for (size_t i = 0; i < number_of_sensor; i++)
-  {
-    sensor_msgs::Range range;
-    range.field_of_view = field_of_view;
-    range.max_range = max_range;
-    range.min_range = min_range;
-    range.radiation_type = sensor_msgs::Range::INFRARED;
-    range.range = 0.0;
-    range.header.frame_id =
-        ros::names::append(ns_, frame_id + boost::lexical_cast<std::string>(i));
-
-    measure.ranges.push_back(range);
-  }
+                             ns_ = ros::this_node::getNamespace();
+  ns_ = ros::names::clean(ns_);
+  ROS_INFO("node namespace: [%s]", ns_.c_str());
 
   // Publishers
   range_publisher_ = nh_.advertise<teraranger_hub::RangeArray>("teraranger_hub_one", 8);
@@ -59,16 +43,35 @@ TerarangerHubOne::TerarangerHubOne()
   ROS_INFO("[%s] portname: %s", ros::this_node::getName().c_str(),
            portname_.c_str());
 
-  ns_ = ros::this_node::getNamespace();
-  ns_ = ros::names::clean(ns_);
-  std::string str = ns_.c_str();
-  ROS_INFO("node namespace: [%s]", ns_.c_str());
-
   // Set operation Mode
   setMode(BINARY_MODE);
 
-  // Force using 8 sensors
-  // setMode(FORCE_8_SENSORS);
+  // Initialize data structure
+  for (int i = 0; i < number_of_sensors; i++)
+  {
+    sensor_msgs::Range range;
+    range.field_of_view = field_of_view;
+    range.max_range = max_range;
+    range.min_range = min_range;
+    range.radiation_type = sensor_msgs::Range::INFRARED;
+    range.range = 0.0;
+    // set the right range frame depending of the namespace
+    if (ns_ == ""){
+      range.header.frame_id = frame_id + boost::lexical_cast<std::string>(i);
+    }
+    else{
+      range.header.frame_id = ns_.erase(0,1) + '_'+ frame_id + boost::lexical_cast<std::string>(i);
+    }
+    
+    measure.ranges.push_back(range);
+  }
+  // set the right RangeArray frame depending of the namespace
+  if (ns_ == ""){
+    measure.header.frame_id = "base_hub";
+  }
+  else{
+    measure.header.frame_id = "base_" + ns_.erase(0,1);// Remove first slash
+  }
 
   // Dynamic reconfigure
   dyn_param_server_callback_function_ =
@@ -77,28 +80,6 @@ TerarangerHubOne::TerarangerHubOne()
 }
 
 TerarangerHubOne::~TerarangerHubOne() {}
-
-uint8_t crc8(uint8_t *p, uint8_t len)
-{
-  uint16_t i;
-  uint16_t crc = 0x0;
-
-  while (len--)
-  {
-    i = (crc ^ *p++) & 0xFF;
-    crc = (crc_table[i] ^ (crc << 8)) & 0xFF;
-  }
-  return crc & 0xFF;
-}
-
-float two_chars_to_float(uint8_t c1, uint8_t c2)
-{
-  int16_t current_range = c1 << 8;
-  current_range |= c2;
-
-  float res = (float)current_range;
-  return res;
-}
 
 void TerarangerHubOne::serialDataCallback(uint8_t single_character)
 {
@@ -118,7 +99,7 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
     if (buffer_ctr == 19)
     {
       // end of feed, calculate
-      int16_t crc = crc8(input_buffer, 18);
+      int16_t crc = HelperLib::crc8(input_buffer, 18);
 
       if (crc == input_buffer[18])
       {
@@ -130,7 +111,7 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
           measure.ranges.at(i).header.seq = seq_ctr++;
 
           // Doesn't go out of range because of fixed buffer size as long as the number of sensor is not above 8
-          float float_range = two_chars_to_float(input_buffer[2 * (i + 1)], input_buffer[2 * (i + 1) + 1]);
+          float float_range = HelperLib::two_chars_to_float(input_buffer[2 * (i + 1)], input_buffer[2 * (i + 1) + 1]);
 
           if ((float_range * 0.001 < min_range) && (float_range > 0))
           { //check for hardware cut-off
@@ -146,6 +127,8 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
           }
           measure.ranges.at(i).range = float_range;
         }
+        measure.header.seq = (int) seq_ctr / 8;
+        measure.header.stamp = ros::Time::now();
         range_publisher_.publish(measure);
       }
       else
