@@ -5,14 +5,19 @@
 #include <teraranger_hub/teraranger_evo.h>
 #include <teraranger_hub/helper_lib.h>
 
-namespace teraranger_hub {
+namespace teraranger_hub
+{
 
-TerarangerHubEvo::TerarangerHubEvo() {
-
-    // Get parameters
+TerarangerHubEvo::TerarangerHubEvo()
+{
+    // Get parameters and namespace
     ros::NodeHandle private_node_handle_("~");
     private_node_handle_.param("portname", portname_,
                                std::string("/dev/ttyACM0"));
+    ns_ = ros::this_node::getNamespace();
+    ns_ = ros::names::clean(ns_);
+    ROS_INFO("node namespace: [%s]", ns_.c_str());
+
     // Publishers
     range_publisher_ = nh_.advertise<teraranger_hub::RangeArray>("teraranger_evo", 8);
 
@@ -35,11 +40,6 @@ TerarangerHubEvo::TerarangerHubEvo() {
     ROS_INFO("[%s] portname: %s", ros::this_node::getName().c_str(),
              portname_.c_str());
 
-    ns_ = ros::this_node::getNamespace();
-    ns_ = ros::names::clean(ns_);
-    std::string str = ns_.c_str();
-    ROS_INFO("node namespace: [%s]", ns_.c_str());
-
     //Initialize local parameters and measurement array
     field_of_view = 0.0593;
     max_range = 14.0;
@@ -48,18 +48,31 @@ TerarangerHubEvo::TerarangerHubEvo() {
     frame_id = "base_range_";
 
     // Initialize rangeArray
-    for (size_t i=0; i < number_of_sensor; i++) {
+    for (size_t i=0; i < number_of_sensor; i++)
+    {
      sensor_msgs::Range range;
      range.field_of_view = field_of_view;
      range.max_range = max_range;
      range.min_range = min_range;
      range.radiation_type = sensor_msgs::Range::INFRARED;
      range.range = 0.0;
-     range.header.frame_id =
-         ros::names::append(ns_, frame_id + boost::lexical_cast<std::string>(i));
-
+     // set the right range frame depending of the namespace
+     if (ns_ == ""){
+       range.header.frame_id = frame_id + boost::lexical_cast<std::string>(i);
+     }
+     else{
+       range.header.frame_id = ns_.erase(0,1) + '_'+ frame_id + boost::lexical_cast<std::string>(i);
+     }
      measure.ranges.push_back(range);
-    }
+   }
+
+   // set the right RangeArray frame depending of the namespace
+   if (ns_ == ""){
+     measure.header.frame_id = "base_hub";
+   }
+   else{
+     measure.header.frame_id = "base_" + ns_.erase(0,1);// Remove first slash
+   }
 
     // This line is needed to start measurements on the hub
     setMode(ENABLE_CMD, 5);
@@ -166,6 +179,8 @@ TerarangerHubEvo::TerarangerHubEvo() {
             }
             measure.ranges.at(i).range = float_range;
           }
+          measure.header.seq = (int) seq_ctr / 8;
+          measure.header.stamp = ros::Time::now();
           range_publisher_.publish(measure);
       } else {
         ROS_DEBUG("[%s] crc missmatch", ros::this_node::getName().c_str());
