@@ -133,6 +133,39 @@ TerarangerHubEvo::TerarangerHubEvo()
       setMode(RATE_50, 5);
     }
 
+    // Set the IMU mode dynamically
+    if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_OFF){
+      setMode(IMU_OFF,4);
+    }
+    if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_QUAT){
+      setMode(IMU_QUAT,4);
+    }
+    if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_EULER){
+      setMode(IMU_EULER,4);
+    }
+    if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_QUATLIN){
+      setMode(IMU_QUATLIN,4);
+    }
+
+    //Set the sequence mode dynamically
+    if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Crosstalk){
+      setMode(CROSSTALK_MODE,4);
+    }
+    if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Non_crosstalk){
+      setMode(NONCROSSTALK_MODE,4);
+    }
+    if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Tower_mode){
+      setMode(TOWER_MODE,4);      
+    }
+
+    //Set VCP state dynamically
+    if(config.Enable_VCP){
+      setMode(ENABLE_CMD, 5);
+    }
+    else{
+      setMode(DISABLE_CMD, 5);
+    }
+    
   }
 
   void TerarangerHubEvo::serialDataCallback(uint8_t single_character) {
