@@ -160,7 +160,7 @@ TerarangerHubEvo::TerarangerHubEvo()
     }
     else if (buffer_ctr == RANGES_FRAME_LENGTH) {
       //Processing full range frame
-      int16_t crc = HelperLib::crc8(input_buffer, 19);
+      uint8_t crc = HelperLib::crc8(input_buffer, 19);
 
       if (crc == input_buffer[RANGE_CRC_POS]) {
           //ROS_DEBUG("Frame of size %d : %s ", buffer_ctr, input_buffer);
