@@ -41,7 +41,7 @@ TerarangerHubEvo::TerarangerHubEvo()
              portname_.c_str());
 
     //Initialize local parameters and measurement array
-    field_of_view = 0.0593;
+    field_of_view = 0.03491;
     max_range = 14.0;
     min_range = 0.2;
     number_of_sensor = 8;
