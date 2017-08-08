@@ -80,6 +80,7 @@ void SerialPort::setSerialCallbackFunction(boost::function<void(uint8_t)> *f)
 void SerialPort::serialThread()
 {
   uint8_t single_character;
+  float poll_delay = 1/SERIAL_POLL_RATE;
 
   // Non read
   while (!serial_thread_should_exit_ && ros::ok())
@@ -88,7 +89,7 @@ void SerialPort::serialThread()
     {
       (*serial_callback_function)(single_character);
     }
-    ros::Duration(0.0000333).sleep(); //Limit serial read speed to ~30kHz which correspond to max frame lentgh (38 chars) multiply by max rate (700Hz)
+    ros::Duration(poll_delay).sleep(); //Limit serial read speed to ~30kHz which correspond to max frame lentgh (38 chars) multiply by max rate (700Hz)
   }
   return;
 }
