@@ -10,24 +10,13 @@ namespace teraranger_hub
 
 TerarangerHubOne::TerarangerHubOne()
 {
-  // Get paramters
+  // Get parameters and namespace
   ros::NodeHandle private_node_handle_("~");
   private_node_handle_.param("portname", portname_,
                              std::string("/dev/ttyACM0"));
-
-  for (int i = 0; i < number_of_sensors; i++)
-  {
-    sensor_msgs::Range range;
-    range.field_of_view = field_of_view;
-    range.max_range = max_range;
-    range.min_range = min_range;
-    range.radiation_type = sensor_msgs::Range::INFRARED;
-    range.range = 0.0;
-    range.header.frame_id =
-        ros::names::append(ns_, frame_id + boost::lexical_cast<std::string>(i));
-
-    measure.ranges.push_back(range);
-  }
+  ns_ = ros::this_node::getNamespace();
+  ns_ = ros::names::clean(ns_);
+  ROS_INFO("node namespace: [%s]", ns_.c_str());
 
   // Publishers
   range_publisher_ = nh_.advertise<teraranger_hub::RangeArray>("teraranger_hub_one", 8);
@@ -54,16 +43,34 @@ TerarangerHubOne::TerarangerHubOne()
   ROS_INFO("[%s] portname: %s", ros::this_node::getName().c_str(),
            portname_.c_str());
 
-  ns_ = ros::this_node::getNamespace();
-  ns_ = ros::names::clean(ns_);
-  std::string str = ns_.c_str();
-  ROS_INFO("node namespace: [%s]", ns_.c_str());
-
   // Set operation Mode
   setMode(BINARY_MODE);
 
-  // Force using 8 sensors
-  // setMode(FORCE_8_SENSORS);
+  // Initialize data structure
+  for (int i = 0; i < number_of_sensors; i++)
+  {
+    sensor_msgs::Range range;
+    range.field_of_view = field_of_view;
+    range.max_range = max_range;
+    range.min_range = min_range;
+    range.radiation_type = sensor_msgs::Range::INFRARED;
+    range.range = 0.0;
+    // set the right range frame depending of the namespace
+    if (ns_ == ""){
+      range.header.frame_id = frame_id + boost::lexical_cast<std::string>(i);
+    }
+    else{
+      range.header.frame_id = ns_.erase(0,1) + '_'+ frame_id + boost::lexical_cast<std::string>(i);
+    }
+    measure.ranges.push_back(range);
+  }
+  // set the right RangeArray frame depending of the namespace
+  if (ns_ == ""){
+    measure.header.frame_id = "base_hub";
+  }
+  else{
+    measure.header.frame_id = "base_" + ns_.erase(0,1);// Remove first slash
+  }
 
   // Dynamic reconfigure
   dyn_param_server_callback_function_ =
@@ -119,6 +126,8 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
           }
           measure.ranges.at(i).range = float_range;
         }
+        measure.header.seq = (int) seq_ctr / 8;
+        measure.header.stamp = ros::Time::now();
         range_publisher_.publish(measure);
       }
       else

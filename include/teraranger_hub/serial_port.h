@@ -14,6 +14,8 @@
 
 #include <string>
 
+#define SERIAL_POLL_RATE 30000
+
 namespace teraranger_hub
 {
 
