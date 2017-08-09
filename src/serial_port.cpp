@@ -80,7 +80,7 @@ void SerialPort::setSerialCallbackFunction(boost::function<void(uint8_t)> *f)
 void SerialPort::serialThread()
 {
   uint8_t single_character;
-  float poll_delay = 1/SERIAL_POLL_RATE;
+  float poll_delay = 1 / SERIAL_POLL_RATE;
 
   // Non read
   while (!serial_thread_should_exit_ && ros::ok())
