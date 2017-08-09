@@ -4,7 +4,6 @@
 #include <teraranger_array/teraranger_one.h>
 #include <teraranger_array/helper_lib.h>
 
-
 namespace teraranger_array
 {
 
@@ -56,20 +55,24 @@ TerarangerHubOne::TerarangerHubOne()
     range.radiation_type = sensor_msgs::Range::INFRARED;
     range.range = 0.0;
     // set the right range frame depending of the namespace
-    if (ns_ == ""){
+    if (ns_ == "")
+    {
       range.header.frame_id = frame_id + boost::lexical_cast<std::string>(i);
     }
-    else{
-      range.header.frame_id = ns_.erase(0,1) + '_'+ frame_id + boost::lexical_cast<std::string>(i);
+    else
+    {
+      range.header.frame_id = ns_.erase(0, 1) + '_' + frame_id + boost::lexical_cast<std::string>(i);
     }
     measure.ranges.push_back(range);
   }
   // set the right RangeArray frame depending of the namespace
-  if (ns_ == ""){
+  if (ns_ == "")
+  {
     measure.header.frame_id = "base_hub";
   }
-  else{
-    measure.header.frame_id = "base_" + ns_.erase(0,1);// Remove first slash
+  else
+  {
+    measure.header.frame_id = "base_" + ns_.erase(0, 1); // Remove first slash
   }
 
   // Dynamic reconfigure
@@ -126,7 +129,7 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
           }
           measure.ranges.at(i).range = float_range;
         }
-        measure.header.seq = (int) seq_ctr / 8;
+        measure.header.seq = (int)seq_ctr / 8;
         measure.header.stamp = ros::Time::now();
         range_publisher_.publish(measure);
       }

@@ -19,8 +19,8 @@ cfg/TerarangerHubEvo.cfg
 )
 
 add_message_files(
-    FILES
-    RangeArray.msg
+  FILES
+  RangeArray.msg
 )
 generate_messages(
   DEPENDENCIES
@@ -65,16 +65,16 @@ install( TARGETS
   teraranger_multiflex
   teraranger_evo
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-  )
+)
 
 
  if(CATKIN_ENABLE_TESTING)
-    add_library(${PROJECT_NAME}_LIB src/teraranger_one.cpp src/serial_port.cpp src/helper_lib.cpp)
-    target_link_libraries(${PROJECT_NAME}_LIB ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-    add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_generate_messages_cpp)
-    add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_gencfg)
+  add_library(${PROJECT_NAME}_LIB src/teraranger_one.cpp src/serial_port.cpp src/helper_lib.cpp)
+  target_link_libraries(${PROJECT_NAME}_LIB ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+  add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_generate_messages_cpp)
+  add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_gencfg)
 
-    catkin_add_gtest(teraranger_one_test test/test_teraranger_one.cpp src/helper_lib.cpp)
-    add_dependencies(teraranger_one_test ${${PROJECT_NAME}_EXPORTED_TARGETS})
-    target_link_libraries(teraranger_one_test ${Boost_LIBRARIES} ${GTEST_LIBRARIES} ${PROJECT_NAME}_LIB)
+  catkin_add_gtest(teraranger_one_test test/test_teraranger_one.cpp src/helper_lib.cpp)
+  add_dependencies(teraranger_one_test ${${PROJECT_NAME}_EXPORTED_TARGETS})
+  target_link_libraries(teraranger_one_test ${Boost_LIBRARIES} ${GTEST_LIBRARIES} ${PROJECT_NAME}_LIB)
 endif()

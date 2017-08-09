@@ -146,7 +146,6 @@ void TerarangerHubMultiflex::serialDataCallback(uint8_t single_character)
 		input_buffer[buffer_ctr] = single_character;
 		buffer_ctr++;
 	}
-
 	else if (single_character == REPLY_CHAR && buffer_ctr == 0)
 	{
 		size_frame = REPLY_MSG_LEN;
@@ -154,7 +153,6 @@ void TerarangerHubMultiflex::serialDataCallback(uint8_t single_character)
 		input_buffer[buffer_ctr] = single_character;
 		buffer_ctr++;
 	}
-
 	else if (first_char == REPLY_CHAR && buffer_ctr < size_frame)
 	{
 		input_buffer[buffer_ctr] = single_character;
