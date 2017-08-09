@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <teraranger_hub/teraranger_one.h>
-#include <teraranger_hub/helper_lib.h>
+#include <teraranger_array/teraranger_one.h>
+#include <teraranger_array/helper_lib.h>
 
 class HubParserTest : public ::testing::Test{
 protected:
@@ -8,12 +8,12 @@ protected:
 };
 
 TEST_F(HubParserTest, crc8Test){
-  int16_t crc = teraranger_hub::HelperLib::crc8(input_buffer, 18);
+  int16_t crc = teraranger_array::HelperLib::crc8(input_buffer, 18);
   EXPECT_EQ(crc, input_buffer[18]);
 }
 
 TEST_F(HubParserTest, parsingTest){
-  float result = teraranger_hub::HelperLib::two_chars_to_float(input_buffer[2],input_buffer[3]);
+  float result = teraranger_array::HelperLib::two_chars_to_float(input_buffer[2],input_buffer[3]);
   ASSERT_FLOAT_EQ(result, 2215);
 }
 

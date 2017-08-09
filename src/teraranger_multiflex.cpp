@@ -1,11 +1,11 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
-#include <teraranger_hub/teraranger_multiflex.h>
-#include <teraranger_hub/helper_lib.h>
+#include <teraranger_array/teraranger_multiflex.h>
+#include <teraranger_array/helper_lib.h>
 #include <ros/console.h>
 
-namespace teraranger_hub
+namespace teraranger_array
 {
 
 TerarangerHubMultiflex::TerarangerHubMultiflex()
@@ -282,7 +282,7 @@ std::string TerarangerHubMultiflex::IntToString(int number)
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "teraranger_hub_multiflex");
-	teraranger_hub::TerarangerHubMultiflex multiflex;
+	teraranger_array::TerarangerHubMultiflex multiflex;
 	ros::spin();
 
 	return 0;

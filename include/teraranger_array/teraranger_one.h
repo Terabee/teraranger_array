@@ -7,12 +7,12 @@
 
 #include "serial_port.h"
 #include <dynamic_reconfigure/server.h>
-#include <teraranger_hub/TerarangerHubOneConfig.h>
-#include <teraranger_hub/RangeArray.h>
+#include <teraranger_array/TerarangerHubOneConfig.h>
+#include <teraranger_array/RangeArray.h>
 
 #define BUFFER_SIZE 19
 
-namespace teraranger_hub
+namespace teraranger_array
 {
 
 static const char PRECISE_MODE[] = "PPP";
@@ -55,9 +55,9 @@ private:
   const uint8_t number_of_sensors = 8;
   const std::string frame_id = "base_range_";
 
-  teraranger_hub::RangeArray measure;
+  teraranger_array::RangeArray measure;
 };
 
-} // namespace teraranger_hub
+} // namespace teraranger_array
 
 #endif // TERARANGER_HUB_ONE_H

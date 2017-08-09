@@ -1,6 +1,6 @@
-#include <teraranger_hub/helper_lib.h>
+#include <teraranger_array/helper_lib.h>
 
-namespace teraranger_hub
+namespace teraranger_array
 {
     uint8_t HelperLib::crc8(uint8_t *p, uint8_t len)
     {
@@ -23,4 +23,4 @@ namespace teraranger_hub
         float res = (float)current_range;
         return res;
     }
-} //namespace teraranger_hub
+} //namespace teraranger_array
