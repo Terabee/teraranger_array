@@ -12,6 +12,8 @@ find_package(catkin REQUIRED COMPONENTS
 )
 find_package(Boost REQUIRED COMPONENTS system thread)
 
+set(libserial_LIBRARIES /tmp/usr/local/lib/libserial.so)
+
 generate_dynamic_reconfigure_options(
 cfg/TerarangerHubOne.cfg
 cfg/TerarangerHubMultiflex.cfg
@@ -54,7 +56,7 @@ add_dependencies(teraranger_multiflex ${${PROJECT_NAME}_EXPORTED_TARGETS})
 add_dependencies(teraranger_multiflex ${PROJECT_NAME}_gencfg)
 
 add_executable(teraranger_evo src/teraranger_evo.cpp src/serial_port.cpp src/helper_lib.cpp)
-target_link_libraries(teraranger_evo ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(teraranger_evo ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${libserial_LIBRARIES})
 add_dependencies(teraranger_evo ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(teraranger_evo ${catkin_EXPORTED_TARGETS})
 add_dependencies(teraranger_evo ${PROJECT_NAME}_gencfg)
