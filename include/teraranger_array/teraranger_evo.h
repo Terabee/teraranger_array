@@ -8,8 +8,8 @@
 
 #include "serial_port.h"
 #include <dynamic_reconfigure/server.h>
-#include <teraranger_hub/TerarangerHubEvoConfig.h>
-#include <teraranger_hub/RangeArray.h>
+#include <teraranger_array/TerarangerHubEvoConfig.h>
+#include <teraranger_array/RangeArray.h>
 
 #define BUFFER_SIZE 31
 #define RANGES_FRAME_LENGTH 20
@@ -18,7 +18,7 @@
 #define IMU_EULER_FRAME_LENGHT 10
 #define IMU_QUATLIN_FRAME_LENGHT 18
 
-namespace teraranger_hub
+namespace teraranger_array
 {
 // Protocol commands
 static const char ENABLE_CMD[5] = {(char)0x00, (char)0x52, (char)0x02, (char)0x01, (char)0xDF};
@@ -79,9 +79,9 @@ private:
   int number_of_sensor;
   std::string frame_id;
 
-  teraranger_hub::RangeArray measure;
+  teraranger_array::RangeArray measure;
 };
 
-} // namespace teraranger_hub
+} // namespace teraranger_array
 
 #endif  // TERARANGER_EVO_H

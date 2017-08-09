@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 SET(CMAKE_CXX_STANDARD 11)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
-project(teraranger_hub)
+project(teraranger_array)
 
 find_package(catkin REQUIRED COMPONENTS
   message_generation

@@ -1,11 +1,11 @@
 #include <ros/console.h>
 #include <string>
 
-#include <teraranger_hub/RangeArray.h>
-#include <teraranger_hub/teraranger_evo.h>
-#include <teraranger_hub/helper_lib.h>
+#include <teraranger_array/RangeArray.h>
+#include <teraranger_array/teraranger_evo.h>
+#include <teraranger_array/helper_lib.h>
 
-namespace teraranger_hub
+namespace teraranger_array
 {
 
 TerarangerHubEvo::TerarangerHubEvo()
@@ -19,7 +19,7 @@ TerarangerHubEvo::TerarangerHubEvo()
     ROS_INFO("node namespace: [%s]", ns_.c_str());
 
     // Publishers
-    range_publisher_ = nh_.advertise<teraranger_hub::RangeArray>("teraranger_evo", 8);
+    range_publisher_ = nh_.advertise<teraranger_array::RangeArray>("teraranger_evo", 8);
 
     // Serial Port init
     serial_port_ = new SerialPort();
@@ -208,7 +208,7 @@ TerarangerHubEvo::TerarangerHubEvo()
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "teraranger_hub_evo");
-  teraranger_hub::TerarangerHubEvo node;
+  teraranger_array::TerarangerHubEvo node;
   ros::spin();
 
   return 0;

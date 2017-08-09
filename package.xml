@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>teraranger_hub</name>
+  <name>teraranger_array</name>
   <version>1.0.0</version>
-  <description>The teraranger_hub package</description>
+  <description>The teraranger_array package for TeraRanger Array Products (Multiflex, One, Evo)</description>
 
   <maintainer email="pierre-louis.kabaradjian@terabee.com">Pierre-Louis Kabaradjian</maintainer>
   <maintainer email="krzysztof.zurad@terabee.com">Krzysztof Zurad</maintainer>
@@ -13,7 +13,7 @@
   <license>GPL</license>
 
   <url type="website">http://wiki.ros.org/tr_hub_parser</url>
-  <url type="website">https://github.com/Terabee/tr_hub_parser</url>
+  <url type="website">https://github.com/Terabee/teraranger_array</url>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>message_generation</build_depend>

@@ -2,9 +2,9 @@
 #include <ros/console.h>
 #include <ros/ros.h>
 
-#include <teraranger_hub/serial_port.h>
+#include <teraranger_array/serial_port.h>
 
-namespace teraranger_hub
+namespace teraranger_array
 {
 
 SerialPort::SerialPort() : serial_callback_function()
@@ -94,4 +94,4 @@ void SerialPort::serialThread()
   return;
 }
 
-} // teraranger_hub
+} // teraranger_array

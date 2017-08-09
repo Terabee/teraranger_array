@@ -6,11 +6,11 @@
 #include <string>
 #include "serial_port.h"
 #include <dynamic_reconfigure/server.h>
-#include <teraranger_hub/TerarangerHubMultiflexConfig.h>
+#include <teraranger_array/TerarangerHubMultiflexConfig.h>
 
 #define BUFFER_SIZE 20
 
-namespace teraranger_hub
+namespace teraranger_array
 {
 
 // TODO: Re-enable if multiple modes are supported by Multiflex
@@ -67,6 +67,6 @@ public:
   std::string ns_;
 };
 
-} // namespace teraranger_hub
+} // namespace teraranger_array
 
 #endif // TERARANGER_HUB_MULTIFLEX_H_

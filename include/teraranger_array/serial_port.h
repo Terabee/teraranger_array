@@ -16,7 +16,7 @@
 
 #define SERIAL_POLL_RATE 30000
 
-namespace teraranger_hub
+namespace teraranger_array
 {
 
 class SerialPort
@@ -40,6 +40,6 @@ public:
   boost::function<void(uint8_t)> *serial_callback_function;
 };
 
-} // namespace teraranger_hub
+} // namespace teraranger_array
 
 #endif // TERARANGER_HUB_SERIAL_PORT_H
