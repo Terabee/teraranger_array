@@ -1,5 +1,4 @@
-#ifndef TERARANGER_EVO_H
-#define TERARANGER_EVO_H
+#pragma once
 
 #include <ros/ros.h>
 #include <sensor_msgs/Range.h>
@@ -83,5 +82,3 @@ private:
 };
 
 } // namespace teraranger_array
-
-#endif  // TERARANGER_EVO_H

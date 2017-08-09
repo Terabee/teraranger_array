@@ -1,5 +1,4 @@
-#ifndef TERARANGER_HELPER_LIB_H
-#define TERARANGER_HELPER_LIB_H
+#pragma once
 
 #include <stdint.h>
 
@@ -32,5 +31,3 @@ class HelperLib
         static float two_chars_to_float(uint8_t c1, uint8_t c2);
 };
 } // namespace teraranger_array
-
-#endif // TERARANGER_HELPER_LIB_H
