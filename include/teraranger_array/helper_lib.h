@@ -26,8 +26,8 @@ static const uint8_t crc_table[] = {0x00, 0x07, 0x0e, 0x09, 0x1c, 0x1b, 0x12, 0x
 
 class HelperLib
 {
-public:
-  static uint8_t crc8(uint8_t *p, uint8_t len);
-  static float two_chars_to_float(uint8_t c1, uint8_t c2);
+    public:
+        static uint8_t crc8(uint8_t *p, uint8_t len);
+        static float two_chars_to_float(uint8_t c1, uint8_t c2);
 };
 } // namespace teraranger_array
