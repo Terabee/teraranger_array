@@ -9,9 +9,21 @@ This package is a collection of nodes for TeraRanger array solutions:
 
 To clone and build the package in your workspace follow these steps:
 
+* If you have ssh key setup for your github account:
+
 ```
 cd ~/ros_ws/src
-git clone git@github.com:Terabee/teraranger_hub.git
+git clone git@github.com:Terabee/teraranger_array.git
+cd ~/ros_ws
+catkin_make
+source devel/setup.bash
+```
+
+* If you prefer to use https use this set of commands:
+
+```
+cd ~/ros_ws/src
+git clone https://github.com/Terabee/teraranger_array.git
 cd ~/ros_ws
 catkin_make
 source devel/setup.bash
@@ -23,7 +35,7 @@ TeraRanger Tower and TeraRanger Hub utilize **TeraRanger One** sensors for the d
 
 After your workspace is built and sourced:
 ```
-rosrun teraranger_hub teraranger_one _portname:=/dev/ttyACM0
+rosrun teraranger_array teraranger_one _portname:=/dev/ttyACM0
 ```
 
 ## Running TeraRanger Multiflex
@@ -31,7 +43,7 @@ rosrun teraranger_hub teraranger_one _portname:=/dev/ttyACM0
 To use TeraRanger Multiflex please execute the following command after building and sourcing your workspace:
 
 ```
-rosrun teraranger_hub teraranger_multiflex _portname:=/dev/ttyACM0
+rosrun teraranger_array teraranger_multiflex _portname:=/dev/ttyACM0
 ``` 
 
 ## Changing Sensor Configuration
