@@ -1,5 +1,4 @@
-#ifndef TERARANGER_HUB_SERIAL_PORT_H
-#define TERARANGER_HUB_SERIAL_PORT_H
+#pragma once
 
 #include <stdio.h>
 #include <string.h>
@@ -41,5 +40,3 @@ public:
 };
 
 } // namespace teraranger_array
-
-#endif // TERARANGER_HUB_SERIAL_PORT_H

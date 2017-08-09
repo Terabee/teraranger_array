@@ -1,5 +1,4 @@
-#ifndef TERARANGER_HUB_ONE_H
-#define TERARANGER_HUB_ONE_H
+#pragma once
 
 #include <ros/ros.h>
 #include <sensor_msgs/Range.h>
@@ -59,5 +58,3 @@ private:
 };
 
 } // namespace teraranger_array
-
-#endif // TERARANGER_HUB_ONE_H

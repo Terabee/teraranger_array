@@ -1,5 +1,4 @@
-#ifndef TERARANGER_HUB_MULTIFLEX_H_
-#define TERARANGER_HUB_MULTIFLEX_H_
+#pragma once
 
 #include <ros/ros.h>
 #include <sensor_msgs/Range.h>
@@ -68,5 +67,3 @@ public:
 };
 
 } // namespace teraranger_array
-
-#endif // TERARANGER_HUB_MULTIFLEX_H_
