@@ -16,7 +16,7 @@ TerarangerHubOne::TerarangerHubOne()
                              std::string("/dev/ttyACM0"));
   ns_ = ros::this_node::getNamespace();
   ns_ = ros::names::clean(ns_);
-  if (ns_ != "" && ns_[0] == '\\'){ // Remove first backslash if needed
+  if (ns_ != "" && ns_[0] == '/'){ // Remove first backslash if needed
     ns_.erase(0,1);
   }
   ROS_INFO("node namespace: [%s]", ns_.c_str());
