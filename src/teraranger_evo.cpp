@@ -224,6 +224,7 @@ void TerarangerHubEvo::spin()
     serialDataCallback(buffer[0]);
     ros::spinOnce();
   }
+  setMode(DISABLE_CMD, 5);
 }
 
 }
