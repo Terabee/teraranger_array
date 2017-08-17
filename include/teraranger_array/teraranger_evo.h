@@ -8,7 +8,7 @@
 #include <dynamic_reconfigure/server.h>
 #include <teraranger_array/TerarangerHubEvoConfig.h>
 #include <teraranger_array/RangeArray.h>
-#include <serial/serial.h>
+#include <wjwwood_serial/serial.h>
 
 #define BUFFER_SIZE 31
 #define RANGES_FRAME_LENGTH 20

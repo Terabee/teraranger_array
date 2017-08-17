@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 find_package(Boost REQUIRED COMPONENTS system thread)
 
-set(libserial_LIBRARIES /usr/local/lib/libserial.so)
+# set(libserial_LIBRARIES /usr/local/lib/libserial.so)
 
 generate_dynamic_reconfigure_options(
 cfg/TerarangerHubOne.cfg
@@ -37,11 +37,22 @@ catkin_package(
   DEPENDS Boost
 )
 
+set(serial_SRCS
+    src/wjwwood_serial/serial.cc
+    include/wjwwood_serial/serial.h
+    include/wjwwood_serial/v8stdint.h
+    src/wjwwood_serial/impl/unix.cc
+    src/wjwwood_serial/impl/list_ports/list_ports_linux.cc
+)
+
 include_directories(
   include
   ${Boost_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
 )
+
+add_library(libserial_LIBRARIES ${serial_SRCS})
+target_link_libraries(libserial_LIBRARIES rt pthread)
 
 add_executable(teraranger_one src/teraranger_one.cpp src/serial_port.cpp src/helper_lib.cpp)
 target_link_libraries(teraranger_one ${catkin_LIBRARIES} ${Boost_LIBRARIES})
@@ -56,7 +67,7 @@ add_dependencies(teraranger_multiflex ${${PROJECT_NAME}_EXPORTED_TARGETS})
 add_dependencies(teraranger_multiflex ${PROJECT_NAME}_gencfg)
 
 add_executable(teraranger_evo src/teraranger_evo.cpp src/serial_port.cpp src/helper_lib.cpp)
-target_link_libraries(teraranger_evo ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${libserial_LIBRARIES})
+target_link_libraries(teraranger_evo ${catkin_LIBRARIES} ${Boost_LIBRARIES} libserial_LIBRARIES)
 add_dependencies(teraranger_evo ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(teraranger_evo ${catkin_EXPORTED_TARGETS})
 add_dependencies(teraranger_evo ${PROJECT_NAME}_gencfg)
