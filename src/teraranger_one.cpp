@@ -16,6 +16,9 @@ TerarangerHubOne::TerarangerHubOne()
                              std::string("/dev/ttyACM0"));
   ns_ = ros::this_node::getNamespace();
   ns_ = ros::names::clean(ns_);
+  if (ns_ != "" && ns_[0] == '/'){ // Remove first backslash if needed
+    ns_.erase(0,1);
+  }
   ROS_INFO("node namespace: [%s]", ns_.c_str());
 
   // Publishers
@@ -60,7 +63,7 @@ TerarangerHubOne::TerarangerHubOne()
       range.header.frame_id = frame_id + boost::lexical_cast<std::string>(i);
     }
     else{
-      range.header.frame_id = ns_.erase(0,1) + '_'+ frame_id + boost::lexical_cast<std::string>(i);
+      range.header.frame_id = ns_ + '_'+ frame_id + boost::lexical_cast<std::string>(i);
     }
     measure.ranges.push_back(range);
   }
@@ -69,7 +72,7 @@ TerarangerHubOne::TerarangerHubOne()
     measure.header.frame_id = "base_hub";
   }
   else{
-    measure.header.frame_id = "base_" + ns_.erase(0,1);// Remove first slash
+    measure.header.frame_id = "base_" + ns_;// Remove first slash
   }
 
   // Dynamic reconfigure
