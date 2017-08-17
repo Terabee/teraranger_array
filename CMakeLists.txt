@@ -51,8 +51,8 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_library(libserial_LIBRARIES ${serial_SRCS})
-target_link_libraries(libserial_LIBRARIES rt pthread)
+add_library(serial_LIBRARIES ${serial_SRCS})
+target_link_libraries(serial_LIBRARIES rt pthread)
 
 add_executable(teraranger_one src/teraranger_one.cpp src/serial_port.cpp src/helper_lib.cpp)
 target_link_libraries(teraranger_one ${catkin_LIBRARIES} ${Boost_LIBRARIES})
@@ -67,11 +67,11 @@ add_dependencies(teraranger_multiflex ${${PROJECT_NAME}_EXPORTED_TARGETS})
 add_dependencies(teraranger_multiflex ${PROJECT_NAME}_gencfg)
 
 add_executable(teraranger_evo src/teraranger_evo.cpp src/serial_port.cpp src/helper_lib.cpp)
-target_link_libraries(teraranger_evo ${catkin_LIBRARIES} ${Boost_LIBRARIES} libserial_LIBRARIES)
+target_link_libraries(teraranger_evo ${catkin_LIBRARIES} ${Boost_LIBRARIES} serial_LIBRARIES)
 add_dependencies(teraranger_evo ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(teraranger_evo ${catkin_EXPORTED_TARGETS})
 add_dependencies(teraranger_evo ${PROJECT_NAME}_gencfg)
-
+add_dependencies(teraranger_evo serial_LIBRARIES)
 
 install( TARGETS
   teraranger_one
@@ -79,7 +79,6 @@ install( TARGETS
   teraranger_evo
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   )
-
 
  if(CATKIN_ENABLE_TESTING)
     add_library(${PROJECT_NAME}_LIB src/teraranger_one.cpp src/serial_port.cpp src/helper_lib.cpp)
