@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 find_package(Boost REQUIRED COMPONENTS system thread)
 
-set(libserial_LIBRARIES /tmp/usr/local/lib/libserial.so)
+set(libserial_LIBRARIES /usr/local/lib/libserial.so)
 
 generate_dynamic_reconfigure_options(
 cfg/TerarangerHubOne.cfg
