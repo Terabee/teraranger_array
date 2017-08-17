@@ -5,10 +5,10 @@
 #include <std_msgs/Char.h>
 #include <string>
 
-#include "serial_port.h"
 #include <dynamic_reconfigure/server.h>
 #include <teraranger_array/TerarangerHubEvoConfig.h>
 #include <teraranger_array/RangeArray.h>
+#include <serial/serial.h>
 
 #define BUFFER_SIZE 31
 #define RANGES_FRAME_LENGTH 20
@@ -59,6 +59,7 @@ public:
 
   bool loadParameters();
   void setMode(const char *c, int length);
+  void spin();
 
   ros::NodeHandle nh_;
   ros::Publisher range_publisher_;
@@ -66,7 +67,6 @@ public:
   dynamic_reconfigure::Server<teraranger_evo_cfg::TerarangerHubEvoConfig> dyn_param_server_;
   dynamic_reconfigure::Server<teraranger_evo_cfg::TerarangerHubEvoConfig>::CallbackType dyn_param_server_callback_function_;
 
-  SerialPort * serial_port_;
   boost::function<void(uint8_t)> serial_data_callback_function_;
 
   std::string portname_;
@@ -77,6 +77,7 @@ private:
   float min_range;
   int number_of_sensor;
   std::string frame_id;
+  serial::Serial serial_port_;
 
   teraranger_array::RangeArray measure;
 };
