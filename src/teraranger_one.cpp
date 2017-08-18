@@ -49,7 +49,7 @@ TerarangerHubOne::TerarangerHubOne()
   // Set operation Mode
   setMode(BINARY_MODE);
 
-  //Initialize const members
+  //Initialize  members
   field_of_view = 0.0593;
   max_range = 14.0;
   min_range = 0.2;
