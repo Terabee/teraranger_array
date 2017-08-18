@@ -48,11 +48,11 @@ public:
   std::string ns_;
 
 private:
-  const float field_of_view = 0.0593;
-  const float max_range = 14.0;
-  const float min_range = 0.2;
-  const uint8_t number_of_sensors = 8;
-  const std::string frame_id = "base_range_";
+  const float field_of_view;
+  const float max_range;
+  const float min_range;
+  const uint8_t number_of_sensors;
+  const std::string frame_id;
 
   teraranger_array::RangeArray measure;
 };
