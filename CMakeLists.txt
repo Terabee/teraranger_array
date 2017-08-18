@@ -55,10 +55,11 @@ add_library(serial_LIBRARIES ${serial_SRCS})
 target_link_libraries(serial_LIBRARIES rt pthread)
 
 add_executable(teraranger_one src/teraranger_one.cpp src/serial_port.cpp src/helper_lib.cpp)
-target_link_libraries(teraranger_one ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(teraranger_one ${catkin_LIBRARIES} ${Boost_LIBRARIES} serial_LIBRARIES)
 add_dependencies(teraranger_one ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(teraranger_one ${${PROJECT_NAME}_EXPORTED_TARGETS})
 add_dependencies(teraranger_one ${PROJECT_NAME}_gencfg)
+add_dependencies(teraranger_one serial_LIBRARIES)
 
 add_executable(teraranger_multiflex src/teraranger_multiflex.cpp src/serial_port.cpp src/helper_lib.cpp)
 target_link_libraries(teraranger_multiflex ${catkin_LIBRARIES} ${Boost_LIBRARIES})
