@@ -46,6 +46,13 @@ static const char RATE_250[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x05,
 static const char RATE_100[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x06,(char)0xDF};
 static const char RATE_50[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x07,(char)0xD8};
 
+enum imu_mode{
+  off,
+  quat,
+  euler,
+  quatlin
+}
+
 class TerarangerHubEvo
 {
 public:
@@ -78,6 +85,7 @@ private:
   int number_of_sensor;
   std::string frame_id;
   serial::Serial serial_port_;
+  imu_mode imu_status;
 
   teraranger_array::RangeArray measure;
 };

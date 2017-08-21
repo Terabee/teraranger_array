@@ -88,6 +88,8 @@ TerarangerHubEvo::TerarangerHubEvo()
     setMode(TOWER_MODE, 4);
     setMode(RATE_ASAP, 5);
     setMode(ENABLE_CMD, 5);
+    setMode(IMU_EULER,4);
+    imu_status = imu_mode.euler;
 
     // Dynamic reconfigure
     dyn_param_server_callback_function_ =
@@ -148,15 +150,19 @@ TerarangerHubEvo::TerarangerHubEvo()
     // Set the IMU mode dynamically
     if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_OFF){
       setMode(IMU_OFF,4);
+      imu_status = imu_mode.off;
     }
     if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_QUAT){
       setMode(IMU_QUAT,4);
+      imu_status = imu_mode.euler;
     }
     if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_EULER){
       setMode(IMU_EULER,4);
+      imu_status = imu_mode.euler;
     }
     if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_QUATLIN){
       setMode(IMU_QUATLIN,4);
+      imu_status = imu_mode.quatlin;
     }
 
     //Set the sequence mode dynamically
@@ -167,7 +173,7 @@ TerarangerHubEvo::TerarangerHubEvo()
       setMode(NONCROSSTALK_MODE,4);
     }
     if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Tower_mode){
-      setMode(TOWER_MODE,4);      
+      setMode(TOWER_MODE,4);
     }
 
     //Set VCP state dynamically
@@ -177,7 +183,7 @@ TerarangerHubEvo::TerarangerHubEvo()
     else{
       setMode(DISABLE_CMD, 5);
     }
-    
+
   }
 
   void TerarangerHubEvo::serialDataCallback(uint8_t single_character) {
