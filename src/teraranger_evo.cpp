@@ -100,8 +100,8 @@ TerarangerHubEvo::TerarangerHubEvo()
   setMode(TOWER_MODE, 4);
   setMode(RATE_ASAP, 5);
   setMode(ENABLE_CMD, 5);
-  setMode(IMU_EULER,4);
-  imu_status = euler;
+  setMode(IMU_QUAT,4);
+  imu_status = quat;
 
   // Dynamic reconfigure
   dyn_param_server_callback_function_ =
