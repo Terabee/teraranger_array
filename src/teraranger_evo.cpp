@@ -218,12 +218,12 @@ void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
 
   if (crc == input_buffer[RANGE_CRC_POS])
   {
-    //ROS_DEBUG("Frame of size %d : %s ", buffer_ctr, input_buffer);
     for (size_t i=0; i < measure.ranges.size(); i++)
     {
       measure.ranges.at(i).header.stamp = ros::Time::now();
       measure.ranges.at(i).header.seq = seq_ctr++;
 
+      // Convert bytes to range
       // Doesn't go out of range because of fixed buffer size as long as the number of sensor is not above 8
       char c1 = input_buffer[2 * (i + 1)];
       char c2 = input_buffer[2 * (i + 1) + 1];
