@@ -11,242 +11,321 @@ namespace teraranger_array
 
 TerarangerHubEvo::TerarangerHubEvo()
 {
-    // Get parameters and namespace
-    ros::NodeHandle private_node_handle_("~");
-    private_node_handle_.param("portname", portname_,
-                               std::string("/dev/ttyACM0"));
-    ns_ = ros::this_node::getNamespace();
-    ns_ = ros::names::clean(ns_);
-    if (ns_ != "" && ns_[0] == '/'){ // Remove first backslash if needed
-      ns_.erase(0,1);
-    }
-    ROS_INFO("node namespace: [%s]", ns_.c_str());
+  // Get parameters and namespace
+  ros::NodeHandle private_node_handle_("~");
+  private_node_handle_.param("portname", portname_,
+                             std::string("/dev/ttyACM0"));
+  ns_ = ros::this_node::getNamespace();
+  ns_ = ros::names::clean(ns_);
+  if (ns_ != "" && ns_[0] == '/')
+  { // Remove first backslash if needed
+    ns_.erase(0,1);
+  }
+  ROS_INFO("node namespace: [%s]", ns_.c_str());
 
-    // Publishers
-    range_publisher_ = nh_.advertise<teraranger_array::RangeArray>("teraranger_evo", 8);
+  // Publishers
+  range_publisher_ = nh_.advertise<teraranger_array::RangeArray>("teraranger_evo", 8);
 
-    // Serial Port init
-    serial_port_.setPort(portname_);
-    serial_port_.setBaudrate(115200);
-    serial_port_.setParity(serial::parity_none);
-    serial_port_.setStopbits(serial::stopbits_one);
-    serial_port_.setBytesize(serial::eightbits);
-    serial::Timeout to = serial::Timeout::simpleTimeout(1000);
-    serial_port_.setTimeout(to);
+  // Serial Port init
+  serial_port_.setPort(portname_);
+  serial_port_.setBaudrate(115200);
+  serial_port_.setParity(serial::parity_none);
+  serial_port_.setStopbits(serial::stopbits_one);
+  serial_port_.setBytesize(serial::eightbits);
+  serial::Timeout to = serial::Timeout::simpleTimeout(1000);
+  serial_port_.setTimeout(to);
 
-    serial_port_.open();
+  serial_port_.open();
 
-    if(!serial_port_.isOpen())
+  if(!serial_port_.isOpen())
+  {
+    ROS_ERROR("Could not open : %s ", portname_.c_str());
+    ros::shutdown();
+    return;
+  }
+
+  // Output loaded parameters to console for double checking
+  ROS_INFO("[%s] is up and running with the following parameters:",
+           ros::this_node::getName().c_str());
+  ROS_INFO("[%s] portname: %s", ros::this_node::getName().c_str(),
+           portname_.c_str());
+
+  //Initialize local parameters and measurement array
+  field_of_view = 0.03491;
+  max_range = 14.0;
+  min_range = 0.2;
+  number_of_sensor = 8;
+  frame_id = "base_range_";
+
+  // Initialize rangeArray
+  for (size_t i=0; i < number_of_sensor; i++)
+  {
+    sensor_msgs::Range range;
+    range.field_of_view = field_of_view;
+    range.max_range = max_range;
+    range.min_range = min_range;
+    range.radiation_type = sensor_msgs::Range::INFRARED;
+    range.range = 0.0;
+    // set the right range frame depending of the namespace
+    if (ns_ == "")
     {
-      ROS_ERROR("Could not open : %s ", portname_.c_str());
-      ros::shutdown();
-      return;
+     range.header.frame_id = frame_id + boost::lexical_cast<std::string>(i);
     }
-
-    // Output loaded parameters to console for double checking
-    ROS_INFO("[%s] is up and running with the following parameters:",
-             ros::this_node::getName().c_str());
-    ROS_INFO("[%s] portname: %s", ros::this_node::getName().c_str(),
-             portname_.c_str());
-
-    //Initialize local parameters and measurement array
-    field_of_view = 0.03491;
-    max_range = 14.0;
-    min_range = 0.2;
-    number_of_sensor = 8;
-    frame_id = "base_range_";
-
-    // Initialize rangeArray
-    for (size_t i=0; i < number_of_sensor; i++)
+    else
     {
-     sensor_msgs::Range range;
-     range.field_of_view = field_of_view;
-     range.max_range = max_range;
-     range.min_range = min_range;
-     range.radiation_type = sensor_msgs::Range::INFRARED;
-     range.range = 0.0;
-     // set the right range frame depending of the namespace
-     if (ns_ == ""){
-       range.header.frame_id = frame_id + boost::lexical_cast<std::string>(i);
-     }
-     else{
-       range.header.frame_id = ns_ + '_'+ frame_id + boost::lexical_cast<std::string>(i);
-     }
-     measure.ranges.push_back(range);
-   }
+     range.header.frame_id = ns_ + '_'+ frame_id + boost::lexical_cast<std::string>(i);
+    }
+    measure.ranges.push_back(range);
+  }
 
-   // set the right RangeArray frame depending of the namespace
-   if (ns_ == ""){
-     measure.header.frame_id = "base_hub";
-   }
-   else{
-     measure.header.frame_id = "base_" + ns_;// Remove first slash
-   }
+ // set the right RangeArray frame depending of the namespace
+ if (ns_ == "")
+ {
+   measure.header.frame_id = "base_hub";
+ }
+ else
+ {
+   measure.header.frame_id = "base_" + ns_;// Remove first slash
+ }
 
-    // This line is needed to start measurements on the hub
+  // This line is needed to start measurements on the hub
+  setMode(BINARY_MODE, 4);
+  setMode(TOWER_MODE, 4);
+  setMode(RATE_ASAP, 5);
+  setMode(ENABLE_CMD, 5);
+  setMode(IMU_EULER,4);
+  imu_status = euler;
+
+  // Dynamic reconfigure
+  dyn_param_server_callback_function_ =
+      boost::bind(&TerarangerHubEvo::dynParamCallback, this, _1, _2);
+  dyn_param_server_.setCallback(dyn_param_server_callback_function_);
+}
+
+TerarangerHubEvo::~TerarangerHubEvo() {}
+
+void TerarangerHubEvo::setMode(const char *c, int length)
+{
+  serial_port_.write((uint8_t*)c, length);
+  serial_port_.flushOutput();
+}
+
+void TerarangerHubEvo::dynParamCallback(
+    const teraranger_evo_cfg::TerarangerHubEvoConfig &config, uint32_t level)
+{
+
+  ROS_INFO("Dynamic reconfigure call");
+  // Set the mode dynamically
+  if (config.Mode == teraranger_evo_cfg::TerarangerHubEvo_Binary)
+  {
     setMode(BINARY_MODE, 4);
-    setMode(TOWER_MODE, 4);
+  }
+  if (config.Mode == teraranger_evo_cfg::TerarangerHubEvo_Text)
+  {
+    setMode(TEXT_MODE, 4);
+  }
+
+  if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Long_range)
+  {
+    setMode(LONG_RANGE, 4);
+  }
+  if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Short_range)
+  {
+    setMode(SHORT_RANGE, 4);
+  }
+
+  // Set the rate dynamically
+  if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_ASAP)
+  {
     setMode(RATE_ASAP, 5);
-    setMode(ENABLE_CMD, 5);
+  }
+  if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_700)
+  {
+    setMode(RATE_700, 5);
+  }
+  if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_600)
+  {
+    setMode(RATE_600, 5);
+  }
+  if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_500)
+  {
+    setMode(RATE_500, 5);
+  }
+  if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_250)
+  {
+    setMode(RATE_250, 5);
+  }
+  if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_100)
+  {
+    setMode(RATE_100, 5);
+  }
+  if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_50)
+  {
+    setMode(RATE_50, 5);
+  }
+
+  // Set the IMU mode dynamically
+  if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_OFF)
+  {
+    setMode(IMU_OFF,4);
+    imu_status = off;
+  }
+  if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_QUAT)
+  {
+    setMode(IMU_QUAT,4);
+    imu_status = quat;
+  }
+  if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_EULER)
+  {
     setMode(IMU_EULER,4);
-    imu_status = imu_mode.euler;
-
-    // Dynamic reconfigure
-    dyn_param_server_callback_function_ =
-        boost::bind(&TerarangerHubEvo::dynParamCallback, this, _1, _2);
-    dyn_param_server_.setCallback(dyn_param_server_callback_function_);
+    imu_status = euler;
+  }
+  if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_QUATLIN)
+  {
+    setMode(IMU_QUATLIN,4);
+    imu_status = quatlin;
   }
 
-  TerarangerHubEvo::~TerarangerHubEvo() {}
-
-  void TerarangerHubEvo::setMode(const char *c, int length) {
-    serial_port_.write((uint8_t*)c, length);
-
-    serial_port_.flushOutput();
+  //Set the sequence mode dynamically
+  if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Crosstalk)
+  {
+    setMode(CROSSTALK_MODE,4);
+  }
+  if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Non_crosstalk)
+  {
+    setMode(NONCROSSTALK_MODE,4);
+  }
+  if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Tower_mode)
+  {
+    setMode(TOWER_MODE,4);
   }
 
-  void TerarangerHubEvo::dynParamCallback(
-      const teraranger_evo_cfg::TerarangerHubEvoConfig &config, uint32_t level) {
-
-    ROS_INFO("Dynamic reconfigure call");
-    // Set the mode dynamically
-    if (config.Mode == teraranger_evo_cfg::TerarangerHubEvo_Binary) {
-      setMode(BINARY_MODE, 4);
-    }
-    if (config.Mode == teraranger_evo_cfg::TerarangerHubEvo_Text) {
-      setMode(TEXT_MODE, 4);
-    }
-
-    if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Long_range) {
-      setMode(LONG_RANGE, 4);
-    }
-    if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Short_range) {
-      setMode(SHORT_RANGE, 4);
-    }
-
-    // Set the rate dynamically
-    if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_ASAP){
-      setMode(RATE_ASAP, 5);
-    }
-    if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_700){
-      setMode(RATE_700, 5);
-    }
-    if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_600){
-      setMode(RATE_600, 5);
-    }
-    if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_500){
-      setMode(RATE_500, 5);
-    }
-    if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_250){
-      setMode(RATE_250, 5);
-    }
-    if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_100){
-      setMode(RATE_100, 5);
-    }
-    if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_50){
-      setMode(RATE_50, 5);
-    }
-
-    // Set the IMU mode dynamically
-    if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_OFF){
-      setMode(IMU_OFF,4);
-      imu_status = imu_mode.off;
-    }
-    if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_QUAT){
-      setMode(IMU_QUAT,4);
-      imu_status = imu_mode.euler;
-    }
-    if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_EULER){
-      setMode(IMU_EULER,4);
-      imu_status = imu_mode.euler;
-    }
-    if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_QUATLIN){
-      setMode(IMU_QUATLIN,4);
-      imu_status = imu_mode.quatlin;
-    }
-
-    //Set the sequence mode dynamically
-    if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Crosstalk){
-      setMode(CROSSTALK_MODE,4);
-    }
-    if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Non_crosstalk){
-      setMode(NONCROSSTALK_MODE,4);
-    }
-    if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Tower_mode){
-      setMode(TOWER_MODE,4);
-    }
-
-    //Set VCP state dynamically
-    if(config.Enable_VCP){
-      setMode(ENABLE_CMD, 5);
-    }
-    else{
-      setMode(DISABLE_CMD, 5);
-    }
-
+  //Set VCP state dynamically
+  if(config.Enable_VCP)
+  {
+    setMode(ENABLE_CMD, 5);
   }
+  else
+  {
+    setMode(DISABLE_CMD, 5);
+  }
+}
 
-  void TerarangerHubEvo::serialDataCallback(uint8_t single_character) {
-    static uint8_t input_buffer[BUFFER_SIZE];
-    static int buffer_ctr = 0;
-    static int seq_ctr = 0;
+void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
+{
+  //Processing full range frame
+  uint8_t crc = HelperLib::crc8(input_buffer, 19);
 
-    ROS_DEBUG("Buffer of size %d : %s | current char : %c", buffer_ctr, input_buffer, (char)single_character);
+  if (crc == input_buffer[RANGE_CRC_POS])
+  {
+    //ROS_DEBUG("Frame of size %d : %s ", buffer_ctr, input_buffer);
+    for (size_t i=0; i < measure.ranges.size(); i++)
+    {
+      measure.ranges.at(i).header.stamp = ros::Time::now();
+      measure.ranges.at(i).header.seq = seq_ctr++;
 
-    if (single_character == 'T' && buffer_ctr == 0) {
-      // Waiting for T
-      input_buffer[buffer_ctr++] = single_character;
-      return;
-    }
-    else if (single_character == 'H' && buffer_ctr == 1) {
-      // Waiting for H after a T
-      input_buffer[buffer_ctr++] = single_character;
-      return;
-    }
+      // Doesn't go out of range because of fixed buffer size as long as the number of sensor is not above 8
+      char c1 = input_buffer[2 * (i + 1)];
+      char c2 = input_buffer[2 * (i + 1) + 1];
+      ROS_DEBUG("c1 : %x, c2 : %x", (c1 & 0x0FF), (c2 & 0x0FF));
+      int16_t current_range = (c1 & 0x0FF) << 8;
+      current_range |= (c2 & 0x0FF);
 
-    // Gathering after-header range data
-    if (buffer_ctr > 1 && buffer_ctr < RANGES_FRAME_LENGTH) {
-      input_buffer[buffer_ctr++] = single_character;
-      return;
-    }
-    else if (buffer_ctr == RANGES_FRAME_LENGTH) {
-      //Processing full range frame
-      uint8_t crc = HelperLib::crc8(input_buffer, 19);
+      float float_range = (float)current_range;
+      ROS_DEBUG("Value int : %d | float : %f", current_range, float_range);
 
-      if (crc == input_buffer[RANGE_CRC_POS]) {
-          //ROS_DEBUG("Frame of size %d : %s ", buffer_ctr, input_buffer);
-
-          for (size_t i=0; i < measure.ranges.size(); i++) {
-            measure.ranges.at(i).header.stamp = ros::Time::now();
-            measure.ranges.at(i).header.seq = seq_ctr++;
-
-            // Doesn't go out of range because of fixed buffer size as long as the number of sensor is not above 8
-            char c1 = input_buffer[2 * (i + 1)];
-            char c2 = input_buffer[2 * (i + 1) + 1];
-            ROS_DEBUG("c1 : %x, c2 : %x", (c1 & 0x0FF), (c2 & 0x0FF));
-            int16_t current_range = (c1 & 0x0FF) << 8;
-            current_range |= (c2 & 0x0FF);
-
-            float float_range = (float)current_range;
-            ROS_DEBUG("Value int : %d | float : %f", current_range, float_range);
-
-            if (current_range <= 1 || current_range == 255) {
-              float_range = -1.0;
-            } else {
-              float_range = float_range * 0.001;
-            }
-            measure.ranges.at(i).range = float_range;
-          }
-          measure.header.seq = (int) seq_ctr / 8;
-          measure.header.stamp = ros::Time::now();
-          range_publisher_.publish(measure);
-      } else {
-        ROS_DEBUG("[%s] crc missmatch", ros::this_node::getName().c_str());
+      if (current_range <= 1 || current_range == 255)
+      {
+        float_range = -1.0;
       }
-    } else if (buffer_ctr > RANGES_FRAME_LENGTH){
+      else
+      {
+        float_range = float_range * 0.001;
+      }
+      measure.ranges.at(i).range = float_range;
+    }
+    measure.header.seq = (int) seq_ctr / 8;
+    measure.header.stamp = ros::Time::now();
+    range_publisher_.publish(measure);
+  }
+  else
+  {
+    ROS_DEBUG("[%s] crc missmatch", ros::this_node::getName().c_str());
+  }
+}
+
+void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
+{
+  //TODO
+}
+
+void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
+{
+  static uint8_t input_buffer[BUFFER_SIZE];
+  static int buffer_ctr = 0;
+  static int seq_ctr = 0;
+
+  ROS_DEBUG("Buffer of size %d : %s | current char : %c", buffer_ctr, input_buffer, (char)single_character);
+
+  if (buffer_ctr == 0)
+  {
+    if (single_character == 'T' || single_character == 'I')
+    {
+      // Waiting for T or an I
+      input_buffer[buffer_ctr++] = single_character;
+      return;
+    }
+  }
+  else if (buffer_ctr == 1)
+  {
+    if (single_character == 'H' || single_character == 'M')
+    {
+      // Waiting for H after a T or an M after an I
+      input_buffer[buffer_ctr++] = single_character;
+      return;
+    }
+  }
+
+  if (buffer_ctr > 1)
+  {
+    if (input_buffer[0] == 'T')// Parsing ranges
+    {
+      // Gathering after-header range data
+      if (buffer_ctr < RANGES_FRAME_LENGTH)
+      {
+        input_buffer[buffer_ctr++] = single_character;
+        return;
+      }
+      else if (buffer_ctr == RANGES_FRAME_LENGTH)
+      {
+        processRangeFrame(input_buffer, seq_ctr);
+      }
+      else if (buffer_ctr > RANGES_FRAME_LENGTH)
+      {
         ROS_DEBUG("[%s] : Buffer overflow, resetting buffer without "
                   "evaluating data",
                   ros::this_node::getName().c_str());
+      }
+    }
+    else if (input_buffer[0] == 'I')// Parsing Imu
+    {
+      // ROS_INFO("%d", imu_status);
+      // Gathering after-header imu data
+      if (buffer_ctr < IMU_EULER_FRAME_LENGHT)
+      {
+        input_buffer[buffer_ctr++] = single_character;
+        return;
+      }
+      else if (buffer_ctr == IMU_EULER_FRAME_LENGHT)
+      {
+        processImuFrame(input_buffer, seq_ctr);
+      }
+      else if (buffer_ctr > IMU_EULER_FRAME_LENGHT)
+      {
+        ROS_DEBUG("[%s] : Buffer overflow, resetting buffer without "
+                  "evaluating data",
+                  ros::this_node::getName().c_str());
+      }
     }
     // resetting buffer and ctr
     buffer_ctr = 0;
@@ -254,6 +333,7 @@ TerarangerHubEvo::TerarangerHubEvo()
 
     // Appending current char to hook next frame
     input_buffer[buffer_ctr++] = single_character;
+  }
 }
 
 void TerarangerHubEvo::spin()
@@ -268,7 +348,7 @@ void TerarangerHubEvo::spin()
   setMode(DISABLE_CMD, 5);
 }
 
-}
+}// end of namespace
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "teraranger_hub_evo");

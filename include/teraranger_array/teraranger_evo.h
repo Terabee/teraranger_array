@@ -51,7 +51,7 @@ enum imu_mode{
   quat,
   euler,
   quatlin
-}
+};
 
 class TerarangerHubEvo
 {
@@ -88,6 +88,9 @@ private:
   imu_mode imu_status;
 
   teraranger_array::RangeArray measure;
+
+  void processRangeFrame(uint8_t* input_buffer, int seq_ctr);
+  void processImuFrame(uint8_t* input_buffer, int seq_ctr);
 };
 
 } // namespace teraranger_array
