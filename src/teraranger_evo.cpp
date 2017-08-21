@@ -24,7 +24,8 @@ TerarangerHubEvo::TerarangerHubEvo()
   ROS_INFO("node namespace: [%s]", ns_.c_str());
 
   // Publishers
-  range_publisher_ = nh_.advertise<teraranger_array::RangeArray>("teraranger_evo", 8);
+  range_publisher_ = nh_.advertise<teraranger_array::RangeArray>("teraranger_evo/ranges", 10);
+  imu_publisher_ = nh_.advertise<sensor_msgs::Imu>("teraranger_evo/imu", 10);
 
   // Serial Port init
   serial_port_.setPort(portname_);
@@ -75,7 +76,7 @@ TerarangerHubEvo::TerarangerHubEvo()
     {
      range.header.frame_id = ns_ + '_'+ frame_id + boost::lexical_cast<std::string>(i);
     }
-    measure.ranges.push_back(range);
+    range_array_msg.ranges.push_back(range);
   }
 
   // Initialize IMU message
@@ -85,12 +86,12 @@ TerarangerHubEvo::TerarangerHubEvo()
   // set the right RangeArray and IMU frame depending of the namespace
   if (ns_ == "")
   {
-    measure.header.frame_id = "base_hub";
+    range_array_msg.header.frame_id = "base_hub";
     imu_msg.header.frame_id = "base_hub";
   }
   else
   {
-    measure.header.frame_id = "base_" + ns_;
+    range_array_msg.header.frame_id = "base_" + ns_;
     imu_msg.header.frame_id = "base_" + ns_;
   }
 
@@ -224,10 +225,10 @@ void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
 
   if (crc == input_buffer[RANGE_CRC_POS])
   {
-    for (size_t i=0; i < measure.ranges.size(); i++)
+    for (size_t i=0; i < range_array_msg.ranges.size(); i++)
     {
-      measure.ranges.at(i).header.stamp = ros::Time::now();
-      measure.ranges.at(i).header.seq = seq_ctr++;
+      range_array_msg.ranges.at(i).header.stamp = ros::Time::now();
+      range_array_msg.ranges.at(i).header.seq = seq_ctr++;
 
       // Convert bytes to range
       // Doesn't go out of range because of fixed buffer size as long as the number of sensor is not above 8
@@ -248,11 +249,11 @@ void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
       {
         float_range = float_range * 0.001;
       }
-      measure.ranges.at(i).range = float_range;
+      range_array_msg.ranges.at(i).range = float_range;
     }
-    measure.header.seq = (int) seq_ctr / 8;
-    measure.header.stamp = ros::Time::now();
-    range_publisher_.publish(measure);
+    range_array_msg.header.seq = (int) seq_ctr / 8;
+    range_array_msg.header.stamp = ros::Time::now();
+    range_publisher_.publish(range_array_msg);
   }
   else
   {
@@ -264,7 +265,7 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
 {
   if (imu_status == imu_mode::off)
   {
-
+    return;
   }
   else if (imu_status == imu_mode::quat)
   {
@@ -278,6 +279,9 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
   {
 
   }
+  imu_msg.header.seq = seq_ctr;
+  imu_msg.header.stamp = ros::Time::now();
+  imu_publisher_.publish(imu_msg);
 }
 
 void TerarangerHubEvo::serialDataCallback(uint8_t single_character)

@@ -71,6 +71,7 @@ public:
 
   ros::NodeHandle nh_;
   ros::Publisher range_publisher_;
+  ros::Publisher imu_publisher_;
 
   dynamic_reconfigure::Server<teraranger_evo_cfg::TerarangerHubEvoConfig> dyn_param_server_;
   dynamic_reconfigure::Server<teraranger_evo_cfg::TerarangerHubEvoConfig>::CallbackType dyn_param_server_callback_function_;
@@ -88,7 +89,7 @@ private:
   serial::Serial serial_port_;
   imu_mode imu_status;
 
-  teraranger_array::RangeArray measure;
+  teraranger_array::RangeArray range_array_msg;
 
   void processRangeFrame(uint8_t* input_buffer, int seq_ctr);
   void processImuFrame(uint8_t* input_buffer, int seq_ctr);
