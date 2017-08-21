@@ -88,8 +88,10 @@ private:
   std::string frame_id;
   serial::Serial serial_port_;
   imu_mode imu_status;
+  int current_imu_frame_length;
 
   teraranger_array::RangeArray range_array_msg;
+  sensor_msgs::Imu imu_msg;
 
   void processRangeFrame(uint8_t* input_buffer, int seq_ctr);
   void processImuFrame(uint8_t* input_buffer, int seq_ctr);

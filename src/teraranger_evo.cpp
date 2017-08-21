@@ -102,6 +102,7 @@ TerarangerHubEvo::TerarangerHubEvo()
   setMode(ENABLE_CMD, 5);
   setMode(IMU_QUAT,4);
   imu_status = quat;
+  current_imu_frame_length = IMU_QUAT_FRAME_LENGTH;
 
   // Dynamic reconfigure
   dyn_param_server_callback_function_ =
@@ -176,21 +177,25 @@ void TerarangerHubEvo::dynParamCallback(
   {
     setMode(IMU_OFF,4);
     imu_status = off;
+    current_imu_frame_length = 0;
   }
   if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_QUAT)
   {
     setMode(IMU_QUAT,4);
     imu_status = quat;
+    current_imu_frame_length = IMU_QUAT_FRAME_LENGTH;
   }
   if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_EULER)
   {
     setMode(IMU_EULER,4);
     imu_status = euler;
+    current_imu_frame_length = IMU_EULER_FRAME_LENGTH;
   }
   if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_QUATLIN)
   {
     setMode(IMU_QUATLIN,4);
     imu_status = quatlin;
+    current_imu_frame_length = IMU_QUATLIN_FRAME_LENGTH;
   }
 
   //Set the sequence mode dynamically
@@ -221,7 +226,6 @@ void TerarangerHubEvo::dynParamCallback(
 void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
 {
   //Processing full range frame
-  uint8_t crc = HelperLib::crc8(input_buffer, 19);
 
   if (crc == input_buffer[RANGE_CRC_POS])
   {
@@ -257,31 +261,64 @@ void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
   }
   else
   {
-    ROS_DEBUG("[%s] crc missmatch", ros::this_node::getName().c_str());
+    ROS_ERROR("[%s] Range frame crc missmatch", ros::this_node::getName().c_str());
   }
 }
 
 void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
 {
-  if (imu_status == imu_mode::off)
-  {
-    return;
-  }
-  else if (imu_status == imu_mode::quat)
-  {
+  int imu_length = (int)(current_imu_frame_length-4)/2;
+  int16_t imu[imu_length]; // create array with right number of 16bits values
+  uint8_t crc = 0;
+  ROS_DEBUG("Current buffer : %s", input_buffer);
+  crc = HelperLib::crc8(input_buffer, current_imu_frame_length-1);
+  ROS_DEBUG("IMU frame length : [%d]", current_imu_frame_length);
 
-  }
-  else if (imu_status == imu_mode::euler)
+  if (crc == input_buffer[current_imu_frame_length-1])
   {
+    for (int i = 0; i < imu_length; i++)
+    {
+        imu[i] = input_buffer[2*(i+1)+1] << 8;
+        imu[i] |= input_buffer[2*(i+1)+2];
+    }
 
+    if (imu_length == 3)// euler
+    {
+      imu_msg.orientation.x = imu[1]/16384.0;
+      imu_msg.orientation.y = imu[2]/16384.0;
+      imu_msg.orientation.z = imu[0]/16384.0;
+      imu_msg.orientation.w = 1;
+    }
+    else if(imu_length == 4)// quaternion
+    {
+      imu_msg.orientation.w = imu[0]/16384.0;
+      imu_msg.orientation.x = imu[3]/16384.0;
+      imu_msg.orientation.y = imu[2]/16384.0;
+      imu_msg.orientation.z = imu[1]/16384.0;
+    }
+    else if(imu_length == 7)// quaternion + lin. accel.
+    {
+      imu_msg.orientation.w = imu[0]/16384.0;
+      imu_msg.orientation.x = imu[3]/16384.0;
+      imu_msg.orientation.y = imu[2]/16384.0;
+      imu_msg.orientation.z = imu[1]/16384.0;
+
+      //linear acceleration
+      imu_msg.linear_acceleration.x = imu[6]/100.0;
+      imu_msg.linear_acceleration.y = imu[5]/100.0;
+      imu_msg.linear_acceleration.z = imu[4]/100.0;
+    }
+    imu_msg.linear_acceleration_covariance = {0.01, 0.0, 0.0,0.0,0.01,0.0,0.0,0.0,0.01};
+    imu_msg.orientation_covariance = {0.001, 0.0, 0.0, 0.0,0.001,0.0,0.0,0.0,0.001};
+
+    imu_msg.header.seq = seq_ctr;
+    imu_msg.header.stamp = ros::Time::now();
+    imu_publisher_.publish(imu_msg);
   }
-  else if (imu_status == imu_mode::quatlin)
+  else
   {
-
+    ROS_ERROR("[%s] Imu frame crc missmatch : computed was : %d and expected was: %d", ros::this_node::getName().c_str(), crc, (uint8_t)input_buffer[current_imu_frame_length-1]);
   }
-  imu_msg.header.seq = seq_ctr;
-  imu_msg.header.stamp = ros::Time::now();
-  imu_publisher_.publish(imu_msg);
 }
 
 void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
@@ -311,7 +348,7 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
     }
   }
 
-  if (buffer_ctr > 1)
+  else if (buffer_ctr > 1)
   {
     if (input_buffer[0] == 'T')// Parsing ranges
     {
@@ -336,16 +373,16 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
     {
       // ROS_INFO("%d", imu_status);
       // Gathering after-header imu data
-      if (buffer_ctr < IMU_EULER_FRAME_LENGHT)
+      if (buffer_ctr < current_imu_frame_length)
       {
         input_buffer[buffer_ctr++] = single_character;
         return;
       }
-      else if (buffer_ctr == IMU_EULER_FRAME_LENGHT)
+      else if (buffer_ctr == current_imu_frame_length)
       {
         processImuFrame(input_buffer, seq_ctr);
       }
-      else if (buffer_ctr > IMU_EULER_FRAME_LENGHT)
+      else if (buffer_ctr > current_imu_frame_length)
       {
         ROS_DEBUG("[%s] : Buffer overflow, resetting buffer without "
                   "evaluating data",
@@ -357,7 +394,10 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
     bzero(&input_buffer, BUFFER_SIZE);
 
     // Appending current char to hook next frame
-    input_buffer[buffer_ctr++] = single_character;
+    if (single_character == 'T' || single_character == 'I')
+    {
+      input_buffer[buffer_ctr++] = single_character;
+    }
   }
 }
 
