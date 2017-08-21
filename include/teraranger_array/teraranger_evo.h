@@ -3,6 +3,7 @@
 #include <ros/ros.h>
 #include <sensor_msgs/Range.h>
 #include <std_msgs/Char.h>
+#include <sensor_msgs/Imu.h>
 #include <string>
 
 #include <dynamic_reconfigure/server.h>
