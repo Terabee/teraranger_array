@@ -50,11 +50,11 @@ public:
   void spin();
 
 private:
-  const float field_of_view = 0.0593;
-  const float max_range = 14.0;
-  const float min_range = 0.2;
-  const uint8_t number_of_sensors = 8;
-  const std::string frame_id = "base_range_";
+  float field_of_view;
+  float max_range;
+  float min_range;
+  uint8_t number_of_sensors;
+  std::string frame_id;
 
   teraranger_array::RangeArray measure;
 };
