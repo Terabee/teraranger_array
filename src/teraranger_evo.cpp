@@ -99,10 +99,12 @@ TerarangerHubEvo::TerarangerHubEvo()
   setMode(BINARY_MODE, 4);
   setMode(TOWER_MODE, 4);
   setMode(RATE_ASAP, 5);
-  setMode(ENABLE_CMD, 5);
   setMode(IMU_QUAT,4);
   imu_status = quat;
   current_imu_frame_length = IMU_QUAT_FRAME_LENGTH;
+
+  // Enable output
+  setMode(ENABLE_CMD, 5);
 
   // Dynamic reconfigure
   dyn_param_server_callback_function_ =
