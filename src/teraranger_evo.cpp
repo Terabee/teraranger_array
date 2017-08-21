@@ -226,6 +226,7 @@ void TerarangerHubEvo::dynParamCallback(
 void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
 {
   //Processing full range frame
+  uint8_t crc = HelperLib::crc8(input_buffer, RANGES_FRAME_LENGTH-1);
 
   if (crc == input_buffer[RANGE_CRC_POS])
   {
