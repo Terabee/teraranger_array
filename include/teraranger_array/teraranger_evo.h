@@ -11,7 +11,7 @@
 #include <teraranger_array/RangeArray.h>
 #include <wjwwood_serial/serial.h>
 
-#define BUFFER_SIZE 31
+#define BUFFER_SIZE 38 //max frame length
 #define RANGES_FRAME_LENGTH 20
 #define RANGE_CRC_POS 19
 #define IMU_QUAT_FRAME_LENGHT 12

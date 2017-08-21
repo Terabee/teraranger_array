@@ -78,15 +78,21 @@ TerarangerHubEvo::TerarangerHubEvo()
     measure.ranges.push_back(range);
   }
 
- // set the right RangeArray frame depending of the namespace
- if (ns_ == "")
- {
-   measure.header.frame_id = "base_hub";
- }
- else
- {
-   measure.header.frame_id = "base_" + ns_;// Remove first slash
- }
+  // Initialize IMU message
+  sensor_msgs::Imu imu_msg;
+
+
+  // set the right RangeArray and IMU frame depending of the namespace
+  if (ns_ == "")
+  {
+    measure.header.frame_id = "base_hub";
+    imu_msg.header.frame_id = "base_hub";
+  }
+  else
+  {
+    measure.header.frame_id = "base_" + ns_;
+    imu_msg.header.frame_id = "base_" + ns_;
+  }
 
   // This line is needed to start measurements on the hub
   setMode(BINARY_MODE, 4);
@@ -98,7 +104,7 @@ TerarangerHubEvo::TerarangerHubEvo()
 
   // Dynamic reconfigure
   dyn_param_server_callback_function_ =
-      boost::bind(&TerarangerHubEvo::dynParamCallback, this, _1, _2);
+    boost::bind(&TerarangerHubEvo::dynParamCallback, this, _1, _2);
   dyn_param_server_.setCallback(dyn_param_server_callback_function_);
 }
 
@@ -256,7 +262,22 @@ void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
 
 void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
 {
-  //TODO
+  if (imu_status == imu_mode::off)
+  {
+
+  }
+  else if (imu_status == imu_mode::quat)
+  {
+
+  }
+  else if (imu_status == imu_mode::euler)
+  {
+
+  }
+  else if (imu_status == imu_mode::quatlin)
+  {
+
+  }
 }
 
 void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
