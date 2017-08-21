@@ -133,15 +133,6 @@ void TerarangerHubEvo::dynParamCallback(
     setMode(TEXT_MODE, 4);
   }
 
-  if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Long_range)
-  {
-    setMode(LONG_RANGE, 4);
-  }
-  if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Short_range)
-  {
-    setMode(SHORT_RANGE, 4);
-  }
-
   // Set the rate dynamically
   if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_ASAP)
   {
@@ -170,6 +161,16 @@ void TerarangerHubEvo::dynParamCallback(
   if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_50)
   {
     setMode(RATE_50, 5);
+  }
+
+  // Set range mode
+  if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Long_range)
+  {
+    setMode(LONG_RANGE, 4);
+  }
+  if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Short_range)
+  {
+    setMode(SHORT_RANGE, 4);
   }
 
   // Set the IMU mode dynamically
