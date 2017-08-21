@@ -30,8 +30,8 @@ static const char BINARY_MODE[4] = {(char)0x00, (char)0x11, (char)0x02, (char)0x
 static const char LONG_RANGE[4] = {(char)0x00, (char)0x21, (char)0x04, (char)0xA7}; // for long range evo
 static const char SHORT_RANGE[4] = {(char)0x00, (char)0x21, (char)0x02, (char)0xB5}; // for short range evo
 
-static const char CROSSTALK_MODE[4] = {(char)0x00, (char)0x31,(char)0x01,(char)0xB5}; // All sensors in parallel
-static const char NONCROSSTALK_MODE[4] = {(char)0x00, (char)0x31, (char)0x02, (char)0xE5}; // All sensors sequentially
+static const char CROSSTALK_MODE[4] = {(char)0x00, (char)0x31,(char)0x01,(char)0xEB}; // All sensors in parallel
+static const char NONCROSSTALK_MODE[4] = {(char)0x00, (char)0x31, (char)0x02, (char)0xE2}; // All sensors sequentially
 static const char TOWER_MODE[4] = {(char)0x00, (char)0x31, (char)0x03, (char)0xE5}; // 4 by 4 in a cross manner
 
 static const char IMU_OFF[4] = {(char)0x00, (char)0x41, (char)0x01, (char)0x49};
