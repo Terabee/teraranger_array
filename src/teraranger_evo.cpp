@@ -328,7 +328,7 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
   static int buffer_ctr = 0;
   static int seq_ctr = 0;
 
-  ROS_DEBUG("Buffer of size %d : %s | current char : %c", buffer_ctr, input_buffer, (char)single_character);
+  ROS_DEBUG("Buffer counter %d : %s | current char : %c", buffer_ctr, input_buffer, (char)single_character);
 
   if (buffer_ctr == 0)
   {
@@ -336,6 +336,7 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
     {
       // Waiting for T or an I
       input_buffer[buffer_ctr++] = single_character;
+      ROS_DEBUG("Waiting for T or I | current char : %c", (char)single_character);
       return;
     }
   }
@@ -345,6 +346,7 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
     {
       // Waiting for H after a T or an M after an I
       input_buffer[buffer_ctr++] = single_character;
+      ROS_DEBUG("Waiting for H or M | current char : %c", (char)single_character);
       return;
     }
   }
@@ -356,6 +358,7 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
       // Gathering after-header range data
       if (buffer_ctr < RANGES_FRAME_LENGTH)
       {
+        ROS_DEBUG("Gathering range data | current char : %c", (char)single_character);
         input_buffer[buffer_ctr++] = single_character;
         return;
       }
@@ -373,6 +376,8 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
     else if (input_buffer[0] == 'I')// Parsing Imu
     {
       // ROS_INFO("%d", imu_status);
+      //ROS_DEBUG("IMU frame length : [%d]", current_imu_frame_length);
+      ROS_DEBUG("Gathering imu data | current char : %c", (char)single_character);
       // Gathering after-header imu data
       if (buffer_ctr < current_imu_frame_length)
       {
@@ -390,6 +395,7 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
                   ros::this_node::getName().c_str());
       }
     }
+    ROS_DEBUG("Resetting buffer | current char : %c", (char)single_character);
     // resetting buffer and ctr
     buffer_ctr = 0;
     bzero(&input_buffer, BUFFER_SIZE);
