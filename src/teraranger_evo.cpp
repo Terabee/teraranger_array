@@ -211,16 +211,6 @@ void TerarangerHubEvo::dynParamCallback(
   {
     setMode(TOWER_MODE,4);
   }
-
-  // //Set VCP state dynamically
-  // if(config.Enable_VCP)
-  // {
-  //   setMode(ENABLE_CMD, 5);
-  // }
-  // else
-  // {
-  //   setMode(DISABLE_CMD, 5);
-  // }
 }
 
 void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
