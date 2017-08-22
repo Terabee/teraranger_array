@@ -117,102 +117,119 @@ TerarangerHubEvo::~TerarangerHubEvo() {}
 void TerarangerHubEvo::setMode(const char *c, int length)
 {
   serial_port_.write((uint8_t*)c, length);
-  // serial_port_.flushOutput();
+  serial_port_.flushOutput();
 }
 
 void TerarangerHubEvo::dynParamCallback(
     const teraranger_evo_cfg::TerarangerHubEvoConfig &config, uint32_t level)
 {
-
-  ROS_INFO("Dynamic reconfigure call");
-  // Set the mode dynamically
-  if (config.Mode == teraranger_evo_cfg::TerarangerHubEvo_Binary)
+  switch(level)
   {
-    setMode(BINARY_MODE, 4);
-  }
-  if (config.Mode == teraranger_evo_cfg::TerarangerHubEvo_Text)
-  {
-    setMode(TEXT_MODE, 4);
-  }
-
-  // Set the rate dynamically
-  if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_ASAP)
-  {
-    setMode(RATE_ASAP, 5);
-  }
-  if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_700)
-  {
-    setMode(RATE_700, 5);
-  }
-  if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_600)
-  {
-    setMode(RATE_600, 5);
-  }
-  if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_500)
-  {
-    setMode(RATE_500, 5);
-  }
-  if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_250)
-  {
-    setMode(RATE_250, 5);
-  }
-  if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_100)
-  {
-    setMode(RATE_100, 5);
-  }
-  if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_50)
-  {
-    setMode(RATE_50, 5);
-  }
-
-  // Set range mode
-  if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Long_range)
-  {
-    setMode(LONG_RANGE, 4);
-  }
-  if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Short_range)
-  {
-    setMode(SHORT_RANGE, 4);
-  }
-
-  // Set the IMU mode dynamically
-  if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_OFF)
-  {
-    setMode(IMU_OFF,4);
-    imu_status = off;
-    current_imu_frame_length = 0;
-  }
-  if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_QUAT)
-  {
-    setMode(IMU_QUAT,4);
-    imu_status = quat;
-    current_imu_frame_length = IMU_QUAT_FRAME_LENGTH;
-  }
-  if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_EULER)
-  {
-    setMode(IMU_EULER,4);
-    imu_status = euler;
-    current_imu_frame_length = IMU_EULER_FRAME_LENGTH;
-  }
-  if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_QUATLIN)
-  {
-    setMode(IMU_QUATLIN,4);
-    imu_status = quatlin;
-    current_imu_frame_length = IMU_QUATLIN_FRAME_LENGTH;
-  }
-
-  //Set the sequence mode dynamically
-  if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Crosstalk)
-  {
-    setMode(CROSSTALK_MODE,4);
-  }
-  if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Non_crosstalk)
-  {
-    setMode(NONCROSSTALK_MODE,4);
-  }
-  if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Tower_mode)
-  {
-    setMode(TOWER_MODE,4);
+    case -1:// Catching first reconfigure call
+      break;
+    case 0:// Set the mode dynamically
+      ROS_INFO("Reconfigure call: Output mode");
+      if (config.Output_Mode == teraranger_evo_cfg::TerarangerHubEvo_Binary)
+      {
+        setMode(BINARY_MODE, 4);
+      }
+      else if (config.Output_Mode == teraranger_evo_cfg::TerarangerHubEvo_Text)
+      {
+        setMode(TEXT_MODE, 4);
+      }
+      else ROS_ERROR("Invalid reconfigure option");
+      break;
+    case 1:// Set the rate dynamically
+      ROS_INFO("Reconfigure call: Rate");
+      if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_ASAP)
+      {
+        setMode(RATE_ASAP, 5);
+      }
+      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_700)
+      {
+        setMode(RATE_700, 5);
+      }
+      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_600)
+      {
+        setMode(RATE_600, 5);
+      }
+      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_500)
+      {
+        setMode(RATE_500, 5);
+      }
+      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_250)
+      {
+        setMode(RATE_250, 5);
+      }
+      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_100)
+      {
+        setMode(RATE_100, 5);
+      }
+      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_50)
+      {
+        setMode(RATE_50, 5);
+      }
+      else ROS_ERROR("Invalid reconfigure option");
+      break;
+    case 2:// Set range mode
+      ROS_INFO("Reconfigure call: Range mode");
+      if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Long_range)
+      {
+        setMode(LONG_RANGE, 4);
+      }
+      else if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Short_range)
+      {
+        setMode(SHORT_RANGE, 4);
+      }
+      else ROS_ERROR("Invalid reconfigure option");
+      break;
+    case 3:// Set the IMU mode dynamically
+      ROS_INFO("Reconfigure call: IMU mode");
+      if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_OFF)
+      {
+        setMode(IMU_OFF,4);
+        imu_status = off;
+        current_imu_frame_length = 0;
+      }
+      else if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_QUAT)
+      {
+        setMode(IMU_QUAT,4);
+        imu_status = quat;
+        current_imu_frame_length = IMU_QUAT_FRAME_LENGTH;
+      }
+      else if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_EULER)
+      {
+        setMode(IMU_EULER,4);
+        imu_status = euler;
+        current_imu_frame_length = IMU_EULER_FRAME_LENGTH;
+      }
+      else if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_QUATLIN)
+      {
+        setMode(IMU_QUATLIN,4);
+        imu_status = quatlin;
+        current_imu_frame_length = IMU_QUATLIN_FRAME_LENGTH;
+      }
+      else ROS_ERROR("Invalid reconfigure option");
+      break;
+    case 4://Set the sequence mode dynamically
+      ROS_INFO("Reconfigure call: Sequence mode");
+      if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Crosstalk)
+      {
+        setMode(CROSSTALK_MODE,4);
+      }
+      else if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Non_crosstalk)
+      {
+        setMode(NONCROSSTALK_MODE,4);
+      }
+      else if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Tower_mode)
+      {
+        setMode(TOWER_MODE,4);
+      }
+      else ROS_ERROR("Invalid reconfigure option");
+      break;
+    default:
+      ROS_ERROR("Invalid reconfigure level : %d", level);
+      break;
   }
 }
 
