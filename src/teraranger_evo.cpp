@@ -98,8 +98,10 @@ TerarangerHubEvo::TerarangerHubEvo()
   TerarangerHubEvo::~TerarangerHubEvo() {}
 
   void TerarangerHubEvo::setMode(const char *c, int length) {
-    serial_port_.write((uint8_t*)c, length);
-
+    if(!serial_port_.write((uint8_t*)c, length))
+    {
+      ROS_ERROR("Serial timeout on read");
+    }
     serial_port_.flushOutput();
   }
 
@@ -221,13 +223,15 @@ void TerarangerHubEvo::spin()
   static uint8_t buffer[1];
   while(ros::ok())
   {
-    serial_port_.read(buffer, 1);
+    if(!serial_port_.read(buffer, 1))
+    {
+      ROS_ERROR("Serial timeout on read");
+    }
     serialDataCallback(buffer[0]);
     ros::spinOnce();
   }
   setMode(DISABLE_CMD, 5);
 }
-
 }
 
 int main(int argc, char **argv) {
