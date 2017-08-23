@@ -81,6 +81,10 @@ TerarangerHubEvo::TerarangerHubEvo()
 
   // Initialize IMU message
   sensor_msgs::Imu imu_msg;
+  boost::array<float,9> lincov = {{0.01, 0.0, 0.0,0.0,0.01,0.0,0.0,0.0,0.01}}; // This is to avoid compiler warning
+  boost::array<float,9> oricov = {{0.001, 0.0, 0.0, 0.0,0.001,0.0,0.0,0.0,0.001}}; // This is to avoid compiler warning
+  imu_msg.linear_acceleration_covariance = lincov;
+  imu_msg.orientation_covariance = oricov;
 
 
   // set the right RangeArray and IMU frame depending of the namespace
@@ -319,12 +323,15 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
       imu_msg.linear_acceleration.y = imu[5]/100.0;
       imu_msg.linear_acceleration.z = imu[4]/100.0;
     }
-    imu_msg.linear_acceleration_covariance = {0.01, 0.0, 0.0,0.0,0.01,0.0,0.0,0.0,0.01};
-    imu_msg.orientation_covariance = {0.001, 0.0, 0.0, 0.0,0.001,0.0,0.0,0.0,0.001};
 
     imu_msg.header.seq = seq_ctr;
     imu_msg.header.stamp = ros::Time::now();
     imu_publisher_.publish(imu_msg);
+
+    //lResetting acceleration
+    imu_msg.linear_acceleration.x = 0.0;
+    imu_msg.linear_acceleration.y = 0.0;
+    imu_msg.linear_acceleration.z = 0.0;
   }
   else
   {
