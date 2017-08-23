@@ -9,10 +9,9 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
   dynamic_reconfigure
+  serial
 )
 find_package(Boost REQUIRED COMPONENTS system thread)
-
-# set(libserial_LIBRARIES /usr/local/lib/libserial.so)
 
 generate_dynamic_reconfigure_options(
 cfg/TerarangerHubOne.cfg
@@ -33,16 +32,8 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp sensor_msgs std_msgs message_runtime dynamic_reconfigure
+  CATKIN_DEPENDS roscpp sensor_msgs std_msgs message_runtime dynamic_reconfigure serial
   DEPENDS Boost
-)
-
-set(serial_SRCS
-    src/wjwwood_serial/serial.cc
-    include/wjwwood_serial/serial.h
-    include/wjwwood_serial/v8stdint.h
-    src/wjwwood_serial/impl/unix.cc
-    src/wjwwood_serial/impl/list_ports/list_ports_linux.cc
 )
 
 include_directories(
@@ -51,15 +42,11 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_library(serial_LIBRARIES ${serial_SRCS})
-target_link_libraries(serial_LIBRARIES rt pthread)
-
 add_executable(teraranger_one src/teraranger_one.cpp src/serial_port.cpp src/helper_lib.cpp)
-target_link_libraries(teraranger_one ${catkin_LIBRARIES} ${Boost_LIBRARIES} serial_LIBRARIES)
+target_link_libraries(teraranger_one ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 add_dependencies(teraranger_one ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(teraranger_one ${${PROJECT_NAME}_EXPORTED_TARGETS})
 add_dependencies(teraranger_one ${PROJECT_NAME}_gencfg)
-add_dependencies(teraranger_one serial_LIBRARIES)
 
 add_executable(teraranger_multiflex src/teraranger_multiflex.cpp src/serial_port.cpp src/helper_lib.cpp)
 target_link_libraries(teraranger_multiflex ${catkin_LIBRARIES} ${Boost_LIBRARIES})
@@ -68,11 +55,10 @@ add_dependencies(teraranger_multiflex ${${PROJECT_NAME}_EXPORTED_TARGETS})
 add_dependencies(teraranger_multiflex ${PROJECT_NAME}_gencfg)
 
 add_executable(teraranger_evo src/teraranger_evo.cpp src/serial_port.cpp src/helper_lib.cpp)
-target_link_libraries(teraranger_evo ${catkin_LIBRARIES} ${Boost_LIBRARIES} serial_LIBRARIES)
+target_link_libraries(teraranger_evo ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 add_dependencies(teraranger_evo ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(teraranger_evo ${catkin_EXPORTED_TARGETS})
 add_dependencies(teraranger_evo ${PROJECT_NAME}_gencfg)
-add_dependencies(teraranger_evo serial_LIBRARIES)
 
 install( TARGETS
   teraranger_one

@@ -7,7 +7,7 @@
 #include <dynamic_reconfigure/server.h>
 #include <teraranger_array/TerarangerHubOneConfig.h>
 #include <teraranger_array/RangeArray.h>
-#include <wjwwood_serial/serial.h>
+#include <serial/serial.h>
 
 #define BUFFER_SIZE 19
 

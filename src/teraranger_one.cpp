@@ -173,7 +173,10 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
 
 void TerarangerHubOne::setMode(const char *c)
 {
-  serial_port_.write((uint8_t*)c, 3);
+  if(!serial_port_.write((uint8_t*)c, 3))
+  {
+    ROS_ERROR("Timeout or error while writing serial");
+  }
   serial_port_.flushOutput();
 }
 
@@ -201,7 +204,10 @@ void TerarangerHubOne::spin()
   static uint8_t buffer[1];
   while(ros::ok())
   {
-    serial_port_.read(buffer, 1);
+    if(!serial_port_.read(buffer, 1))
+    {
+      ROS_ERROR("Timeout or error while reading serial");
+    }
     serialDataCallback(buffer[0]);
     ros::spinOnce();
   }
