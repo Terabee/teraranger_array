@@ -10,6 +10,9 @@
 #include <serial/serial.h>
 
 #define BUFFER_SIZE 19
+#define SERIAL_SPEED 115200
+#define SERIAL_TIMEOUT_MS 1000
+#define CMD_BYTE_LENGTH 3
 
 namespace teraranger_array
 {
