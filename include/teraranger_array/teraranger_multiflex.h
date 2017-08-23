@@ -3,9 +3,9 @@
 #include <ros/ros.h>
 #include <sensor_msgs/Range.h>
 #include <string>
-#include "serial_port.h"
 #include <dynamic_reconfigure/server.h>
 #include <teraranger_array/TerarangerHubMultiflexConfig.h>
+#include <serial/serial.h>
 
 #define BUFFER_SIZE 20
 
@@ -41,6 +41,7 @@ public:
 
   virtual ~TerarangerHubMultiflex();
   void serialDataCallback(uint8_t data);
+  void spin();
 
   void dynParamCallback(const teraranger_mutliflex_cfg::TerarangerHubMultiflexConfig &config, uint32_t level);
 
@@ -59,7 +60,7 @@ public:
   dynamic_reconfigure::Server<teraranger_mutliflex_cfg::TerarangerHubMultiflexConfig> dyn_param_server_;
   dynamic_reconfigure::Server<teraranger_mutliflex_cfg::TerarangerHubMultiflexConfig>::CallbackType dyn_param_server_callback_function_;
 
-  SerialPort *serial_port_;
+  serial::Serial serial_port_;
   boost::function<void(uint8_t)> serial_data_callback_function_;
 
   std::string portname_;
