@@ -27,11 +27,11 @@ TerarangerHubOne::TerarangerHubOne()
 
   // Serial Port init
   serial_port_.setPort(portname_);
-  serial_port_.setBaudrate(115200);
+  serial_port_.setBaudrate(SERIAL_SPEED);
   serial_port_.setParity(serial::parity_none);
   serial_port_.setStopbits(serial::stopbits_one);
   serial_port_.setBytesize(serial::eightbits);
-  serial::Timeout to = serial::Timeout::simpleTimeout(1000);
+  serial::Timeout to = serial::Timeout::simpleTimeout(SERIAL_TIMEOUT_MS);
   serial_port_.setTimeout(to);
 
   serial_port_.open();
@@ -173,7 +173,7 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
 
 void TerarangerHubOne::setMode(const char *c)
 {
-  if(!serial_port_.write((uint8_t*)c, 3))
+  if(!serial_port_.write((uint8_t*)c, CMD_BYTE_LENGTH))
   {
     ROS_ERROR("Timeout or error while writing serial");
   }

@@ -19,12 +19,11 @@ TerarangerHubMultiflex::TerarangerHubMultiflex()
 
 	// Create serial port
 	serial_port_.setPort(portname_);
-	serial_port_.setBaudrate(115200);
+	serial_port_.setBaudrate(SERIAL_SPEED);
 	serial_port_.setParity(serial::parity_none);
 	serial_port_.setStopbits(serial::stopbits_one);
 	serial_port_.setBytesize(serial::eightbits);
-	// Timeout to wait after a reconf
-	serial::Timeout to = serial::Timeout::simpleTimeout(2000);
+	serial::Timeout to = serial::Timeout::simpleTimeout(SERIAL_TIMEOUT_MS);
 	serial_port_.setTimeout(to);
 
 	serial_port_.open();
@@ -203,7 +202,7 @@ void TerarangerHubMultiflex::serialDataCallback(uint8_t single_character)
 
 void TerarangerHubMultiflex::setMode(const char *c)
 {
-  if(!serial_port_.write((uint8_t*)c, 4))
+  if(!serial_port_.write((uint8_t*)c, CMD_BYTE_LENGTH))
   {
     ROS_ERROR("Timeout or error while writing serial");
   }
