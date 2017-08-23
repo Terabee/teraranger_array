@@ -9,6 +9,10 @@
 
 #define BUFFER_SIZE 20
 
+#define SERIAL_SPEED 115200
+#define SERIAL_TIMEOUT_MS 2000 	// Value adapted to avoid timeout when reconfiguring
+#define CMD_BYTE_LENGTH 4
+
 namespace teraranger_array
 {
 

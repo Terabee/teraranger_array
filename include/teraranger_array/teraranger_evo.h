@@ -18,6 +18,9 @@
 #define IMU_EULER_FRAME_LENGTH 10
 #define IMU_QUATLIN_FRAME_LENGTH 18
 
+#define SERIAL_SPEED 115200
+#define SERIAL_TIMEOUT_MS 1000
+
 namespace teraranger_array
 {
 // Protocol commands
