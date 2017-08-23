@@ -438,11 +438,14 @@ void TerarangerHubEvo::spin()
   static uint8_t buffer[1];
   while(ros::ok())
   {
-    if(!serial_port_.read(buffer, 1))
+    if(serial_port_.read(buffer, 1))
+    {
+      serialDataCallback(buffer[0]);
+    }
+    else
     {
       ROS_ERROR("Timeout or error while reading serial");
     }
-    serialDataCallback(buffer[0]);
     ros::spinOnce();
   }
   setMode(DISABLE_CMD, 5);
