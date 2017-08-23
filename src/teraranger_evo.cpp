@@ -87,12 +87,12 @@ TerarangerHubEvo::TerarangerHubEvo()
   if (ns_ == "")
   {
     range_array_msg.header.frame_id = "base_hub";
-    imu_msg.header.frame_id = "base_hub";
+    imu_msg.header.frame_id = "hub_gyro_link";
   }
   else
   {
     range_array_msg.header.frame_id = "base_" + ns_;
-    imu_msg.header.frame_id = "base_" + ns_;
+    imu_msg.header.frame_id = ns_ + "_gyro_link";
   }
 
   // This line is needed to start measurements on the hub
