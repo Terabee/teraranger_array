@@ -4,10 +4,10 @@
 #include <sensor_msgs/Range.h>
 #include <string>
 
-#include "serial_port.h"
 #include <dynamic_reconfigure/server.h>
 #include <teraranger_array/TerarangerHubOneConfig.h>
 #include <teraranger_array/RangeArray.h>
+#include <serial/serial.h>
 
 #define BUFFER_SIZE 19
 
@@ -41,11 +41,13 @@ public:
   dynamic_reconfigure::Server<teraranger_one_cfg::TerarangerHubOneConfig> dyn_param_server_;
   dynamic_reconfigure::Server<teraranger_one_cfg::TerarangerHubOneConfig>::CallbackType dyn_param_server_callback_function_;
 
-  SerialPort *serial_port_;
+  serial::Serial serial_port_;
   boost::function<void(uint8_t)> serial_data_callback_function_;
 
   std::string portname_;
   std::string ns_;
+
+  void spin();
 
 private:
   float field_of_view;

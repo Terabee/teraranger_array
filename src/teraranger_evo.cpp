@@ -5,6 +5,7 @@
 #include <teraranger_array/teraranger_evo.h>
 #include <teraranger_array/helper_lib.h>
 
+
 namespace teraranger_array
 {
 
@@ -25,16 +26,21 @@ TerarangerHubEvo::TerarangerHubEvo()
     range_publisher_ = nh_.advertise<teraranger_array::RangeArray>("teraranger_evo", 8);
 
     // Serial Port init
-    serial_port_ = new SerialPort();
-    if (!serial_port_->connect(portname_)) {
+    serial_port_.setPort(portname_);
+    serial_port_.setBaudrate(115200);
+    serial_port_.setParity(serial::parity_none);
+    serial_port_.setStopbits(serial::stopbits_one);
+    serial_port_.setBytesize(serial::eightbits);
+    serial::Timeout to = serial::Timeout::simpleTimeout(1000);
+    serial_port_.setTimeout(to);
+
+    serial_port_.open();
+
+    if(!serial_port_.isOpen())
+    {
       ROS_ERROR("Could not open : %s ", portname_.c_str());
       ros::shutdown();
       return;
-    }
-    else {
-      serial_data_callback_function_ =
-          boost::bind(&TerarangerHubEvo::serialDataCallback, this, _1);
-      serial_port_->setSerialCallbackFunction(&serial_data_callback_function_);
     }
 
     // Output loaded parameters to console for double checking
@@ -78,10 +84,10 @@ TerarangerHubEvo::TerarangerHubEvo()
    }
 
     // This line is needed to start measurements on the hub
-    setMode(ENABLE_CMD, 5);
     setMode(BINARY_MODE, 4);
     setMode(TOWER_MODE, 4);
     setMode(RATE_ASAP, 5);
+    setMode(ENABLE_CMD, 5);
 
     // Dynamic reconfigure
     dyn_param_server_callback_function_ =
@@ -92,12 +98,17 @@ TerarangerHubEvo::TerarangerHubEvo()
   TerarangerHubEvo::~TerarangerHubEvo() {}
 
   void TerarangerHubEvo::setMode(const char *c, int length) {
-    serial_port_->sendChar(c, length);
+    if(!serial_port_.write((uint8_t*)c, length))
+    {
+      ROS_ERROR("Timeout or error while writing serial");
+    }
+    serial_port_.flushOutput();
   }
 
   void TerarangerHubEvo::dynParamCallback(
       const teraranger_evo_cfg::TerarangerHubEvoConfig &config, uint32_t level) {
 
+    ROS_INFO("Dynamic reconfigure call");
     // Set the mode dynamically
     if (config.Mode == teraranger_evo_cfg::TerarangerHubEvo_Binary) {
       setMode(BINARY_MODE, 4);
@@ -135,7 +146,6 @@ TerarangerHubEvo::TerarangerHubEvo()
     if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_50){
       setMode(RATE_50, 5);
     }
-
   }
 
   void TerarangerHubEvo::serialDataCallback(uint8_t single_character) {
@@ -207,12 +217,30 @@ TerarangerHubEvo::TerarangerHubEvo()
     // Appending current char to hook next frame
     input_buffer[buffer_ctr++] = single_character;
 }
+
+void TerarangerHubEvo::spin()
+{
+  static uint8_t buffer[1];
+  while(ros::ok())
+  {
+    if(serial_port_.read(buffer, 1))
+    {
+      serialDataCallback(buffer[0]);
+    }
+    else
+    {
+      ROS_ERROR("Timeout or error while reading serial");
+    }
+    ros::spinOnce();
+  }
+  setMode(DISABLE_CMD, 5);
+}
 }
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "teraranger_hub_evo");
   teraranger_array::TerarangerHubEvo node;
-  ros::spin();
+  node.spin();
 
   return 0;
 }

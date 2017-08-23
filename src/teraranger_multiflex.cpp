@@ -10,7 +10,7 @@ namespace teraranger_array
 
 TerarangerHubMultiflex::TerarangerHubMultiflex()
 {
-	// Get paramters
+	// Get parameters
 	ros::NodeHandle private_node_handle_("~");
 	private_node_handle_.param("portname", portname_, std::string("/dev/ttyACM0"));
 
@@ -18,15 +18,20 @@ TerarangerHubMultiflex::TerarangerHubMultiflex()
 	range_publisher_ = nh_.advertise<sensor_msgs::Range>("teraranger_hub_multiflex", 8);
 
 	// Create serial port
-	serial_port_ = new SerialPort();
+	serial_port_.setPort(portname_);
+	serial_port_.setBaudrate(115200);
+	serial_port_.setParity(serial::parity_none);
+	serial_port_.setStopbits(serial::stopbits_one);
+	serial_port_.setBytesize(serial::eightbits);
+	// Timeout to wait after a reconf
+	serial::Timeout to = serial::Timeout::simpleTimeout(2000);
+	serial_port_.setTimeout(to);
 
-	// Set callback function for the serial ports
-	serial_data_callback_function_ = boost::bind(&TerarangerHubMultiflex::serialDataCallback, this, _1);
-	serial_port_->setSerialCallbackFunction(&serial_data_callback_function_);
+	serial_port_.open();
 
-	// Connect serial port
-	if (!serial_port_->connect(portname_))
+	if(!serial_port_.isOpen())
 	{
+		ROS_ERROR("Could not open : %s ", portname_.c_str());
 		ros::shutdown();
 		return;
 	}
@@ -195,9 +200,14 @@ void TerarangerHubMultiflex::serialDataCallback(uint8_t single_character)
 		bzero(&input_buffer, BUFFER_SIZE);
 	}
 }
+
 void TerarangerHubMultiflex::setMode(const char *c)
 {
-	serial_port_->sendChar(c, 4);
+  if(!serial_port_.write((uint8_t*)c, 4))
+  {
+    ROS_ERROR("Timeout or error while writing serial");
+  }
+  serial_port_.flushOutput();
 }
 
 void TerarangerHubMultiflex::setSensorBitMask(int *sensor_bit_mask_ptr)
@@ -215,9 +225,13 @@ void TerarangerHubMultiflex::setSensorBitMask(int *sensor_bit_mask_ptr)
 	int8_t crc = HelperLib::crc8(command, 4);
 
 	//send command
-	char full_command[5] = {0x00, 0x52, 0x03, (char)bit_mask_hex, (char)crc};
+	char full_command[5] = {(char)0x00, (char)0x52, (char)0x03, (char)bit_mask_hex, (char)crc};
 
-	serial_port_->sendChar(full_command, 5);
+	if(!serial_port_.write((uint8_t*)full_command, 5))
+  {
+    ROS_ERROR("Timeout or error while sending command");
+  }
+  serial_port_.flushOutput();
 }
 
 void TerarangerHubMultiflex::dynParamCallback(const teraranger_mutliflex_cfg::TerarangerHubMultiflexConfig &config, uint32_t level)
@@ -277,13 +291,30 @@ std::string TerarangerHubMultiflex::IntToString(int number)
 	oss << number;
 	return oss.str();
 }
+
+void TerarangerHubMultiflex::spin()
+{
+  static uint8_t buffer[1];
+  while(ros::ok())
+  {
+    if(serial_port_.read(buffer, 1))
+    {
+			serialDataCallback(buffer[0]);
+    }
+		else
+		{
+			ROS_ERROR("Timeout or error while reading serial");
+		}
+    ros::spinOnce();
+  }
+}
 }
 
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "teraranger_hub_multiflex");
 	teraranger_array::TerarangerHubMultiflex multiflex;
-	ros::spin();
+	multiflex.spin();
 
 	return 0;
 }

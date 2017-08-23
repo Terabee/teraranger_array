@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
   dynamic_reconfigure
+  serial
 )
 find_package(Boost REQUIRED COMPONENTS system thread)
 
@@ -31,7 +32,7 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp sensor_msgs std_msgs message_runtime dynamic_reconfigure
+  CATKIN_DEPENDS roscpp sensor_msgs std_msgs message_runtime dynamic_reconfigure serial
   DEPENDS Boost
 )
 
@@ -59,14 +60,12 @@ add_dependencies(teraranger_evo ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(teraranger_evo ${catkin_EXPORTED_TARGETS})
 add_dependencies(teraranger_evo ${PROJECT_NAME}_gencfg)
 
-
 install( TARGETS
   teraranger_one
   teraranger_multiflex
   teraranger_evo
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   )
-
 
  if(CATKIN_ENABLE_TESTING)
     add_library(${PROJECT_NAME}_LIB src/teraranger_one.cpp src/serial_port.cpp src/helper_lib.cpp)

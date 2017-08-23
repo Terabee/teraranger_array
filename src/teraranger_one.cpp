@@ -1,5 +1,6 @@
 #include <ros/console.h>
 #include <string>
+
 #include <teraranger_array/RangeArray.h>
 #include <teraranger_array/teraranger_one.h>
 #include <teraranger_array/helper_lib.h>
@@ -24,16 +25,18 @@ TerarangerHubOne::TerarangerHubOne()
   // Publishers
   range_publisher_ = nh_.advertise<teraranger_array::RangeArray>("teraranger_hub_one", 8);
 
-  // Create serial port
-  serial_port_ = new SerialPort();
+  // Serial Port init
+  serial_port_.setPort(portname_);
+  serial_port_.setBaudrate(115200);
+  serial_port_.setParity(serial::parity_none);
+  serial_port_.setStopbits(serial::stopbits_one);
+  serial_port_.setBytesize(serial::eightbits);
+  serial::Timeout to = serial::Timeout::simpleTimeout(1000);
+  serial_port_.setTimeout(to);
 
-  // Set callback function for the serial ports
-  serial_data_callback_function_ =
-      boost::bind(&TerarangerHubOne::serialDataCallback, this, _1);
-  serial_port_->setSerialCallbackFunction(&serial_data_callback_function_);
+  serial_port_.open();
 
-  // Connect serial port
-  if (!serial_port_->connect(portname_))
+  if(!serial_port_.isOpen())
   {
     ROS_ERROR("Could not open : %s ", portname_.c_str());
     ros::shutdown();
@@ -168,7 +171,14 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
   input_buffer[buffer_ctr++] = 'T';
 }
 
-void TerarangerHubOne::setMode(const char *c) { serial_port_->sendChar(c, 3); }
+void TerarangerHubOne::setMode(const char *c)
+{
+  if(!serial_port_.write((uint8_t*)c, 3))
+  {
+    ROS_ERROR("Timeout or error while writing serial");
+  }
+  serial_port_.flushOutput();
+}
 
 void TerarangerHubOne::dynParamCallback(
     const teraranger_one_cfg::TerarangerHubOneConfig &config, uint32_t level)
@@ -188,13 +198,30 @@ void TerarangerHubOne::dynParamCallback(
     setMode(OUTDOOR_MODE);
   }
 }
+
+void TerarangerHubOne::spin()
+{
+  static uint8_t buffer[1];
+  while(ros::ok())
+  {
+    if(serial_port_.read(buffer, 1))
+    {
+      serialDataCallback(buffer[0]);
+    }
+    else
+    {
+      ROS_ERROR("Timeout or error while reading serial");
+    }
+    ros::spinOnce();
+  }
+}
 }
 
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "teraranger_hub_one");
   teraranger_array::TerarangerHubOne teraranger_one;
-  ros::spin();
+  teraranger_one.spin();
 
   return 0;
 }
