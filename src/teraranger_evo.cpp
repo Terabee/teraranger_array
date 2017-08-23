@@ -100,7 +100,7 @@ TerarangerHubEvo::TerarangerHubEvo()
   void TerarangerHubEvo::setMode(const char *c, int length) {
     if(!serial_port_.write((uint8_t*)c, length))
     {
-      ROS_ERROR("Serial timeout on read");
+      ROS_ERROR("Timeout or error while writing serial");
     }
     serial_port_.flushOutput();
   }
@@ -225,7 +225,7 @@ void TerarangerHubEvo::spin()
   {
     if(!serial_port_.read(buffer, 1))
     {
-      ROS_ERROR("Serial timeout on read");
+      ROS_ERROR("Timeout or error while reading serial");
     }
     serialDataCallback(buffer[0]);
     ros::spinOnce();
