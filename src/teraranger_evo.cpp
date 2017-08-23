@@ -293,21 +293,21 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
         imu[i] |= input_buffer[2*(i+1)+2];
     }
 
-    if (imu_length == 3)// euler
+    if (imu_status == euler)// euler
     {
       imu_msg.orientation.x = imu[1]/16384.0;
       imu_msg.orientation.y = imu[2]/16384.0;
       imu_msg.orientation.z = imu[0]/16384.0;
-      imu_msg.orientation.w = 1;
+      imu_msg.orientation.w = 1.0;
     }
-    else if(imu_length == 4)// quaternion
+    else if(imu_status == quat)// quaternion
     {
       imu_msg.orientation.w = imu[0]/16384.0;
       imu_msg.orientation.x = imu[3]/16384.0;
       imu_msg.orientation.y = imu[2]/16384.0;
       imu_msg.orientation.z = imu[1]/16384.0;
     }
-    else if(imu_length == 7)// quaternion + lin. accel.
+    else if(imu_status == quatlin)// quaternion + lin. accel.
     {
       imu_msg.orientation.w = imu[0]/16384.0;
       imu_msg.orientation.x = imu[3]/16384.0;
