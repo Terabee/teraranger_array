@@ -270,7 +270,7 @@ void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
       }
       range_array_msg.ranges.at(i).range = float_range;
     }
-    range_array_msg.header.seq = (int) seq_ctr / 8;
+    range_array_msg.header.seq = (int)seq_ctr/8;
     range_array_msg.header.stamp = ros::Time::now();
     range_publisher_.publish(range_array_msg);
   }
@@ -303,6 +303,11 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
       imu_msg.orientation.y = imu[2]/16384.0;
       imu_msg.orientation.z = imu[0]/16384.0;
       imu_msg.orientation.w = 1.0;
+
+      //Resetting acceleration
+      imu_msg.linear_acceleration.x = 0.0;
+      imu_msg.linear_acceleration.y = 0.0;
+      imu_msg.linear_acceleration.z = 0.0;
     }
     else if(imu_status == quat)// quaternion
     {
@@ -310,6 +315,11 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
       imu_msg.orientation.x = imu[3]/16384.0;
       imu_msg.orientation.y = imu[2]/16384.0;
       imu_msg.orientation.z = imu[1]/16384.0;
+
+      //Resetting acceleration
+      imu_msg.linear_acceleration.x = 0.0;
+      imu_msg.linear_acceleration.y = 0.0;
+      imu_msg.linear_acceleration.z = 0.0;
     }
     else if(imu_status == quatlin)// quaternion + lin. accel.
     {
@@ -327,11 +337,6 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
     imu_msg.header.seq = seq_ctr;
     imu_msg.header.stamp = ros::Time::now();
     imu_publisher_.publish(imu_msg);
-
-    //lResetting acceleration
-    imu_msg.linear_acceleration.x = 0.0;
-    imu_msg.linear_acceleration.y = 0.0;
-    imu_msg.linear_acceleration.z = 0.0;
   }
   else
   {
