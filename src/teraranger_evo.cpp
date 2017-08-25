@@ -300,10 +300,10 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
         imu[i] |= input_buffer[2*(i+1)+2];
     }
 
-    if (imu_status == euler)// euler
+    if (imu_status == euler)// euler YY PP RR
     {
-      imu_msg.orientation.x = imu[1]/16384.0;
-      imu_msg.orientation.y = imu[2]/16384.0;
+      imu_msg.orientation.x = imu[2]/16384.0;
+      imu_msg.orientation.y = imu[1]/16384.0;
       imu_msg.orientation.z = imu[0]/16384.0;
       imu_msg.orientation.w = 1.0;
 
@@ -312,29 +312,29 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
       imu_msg.linear_acceleration.y = 0.0;
       imu_msg.linear_acceleration.z = 0.0;
     }
-    else if(imu_status == quat)// quaternion
+    else if(imu_status == quat)// quaternion WW XX YY ZZ
     {
       imu_msg.orientation.w = imu[0]/16384.0;
-      imu_msg.orientation.x = imu[3]/16384.0;
+      imu_msg.orientation.x = imu[1]/16384.0;
       imu_msg.orientation.y = imu[2]/16384.0;
-      imu_msg.orientation.z = imu[1]/16384.0;
+      imu_msg.orientation.z = imu[3]/16384.0;
 
       //Resetting acceleration
       imu_msg.linear_acceleration.x = 0.0;
       imu_msg.linear_acceleration.y = 0.0;
       imu_msg.linear_acceleration.z = 0.0;
     }
-    else if(imu_status == quatlin)// quaternion + lin. accel.
+    else if(imu_status == quatlin)// quaternion WW XX YY ZZ + lin. accel. XX YY ZZ
     {
       imu_msg.orientation.w = imu[0]/16384.0;
-      imu_msg.orientation.x = imu[3]/16384.0;
+      imu_msg.orientation.x = imu[1]/16384.0;
       imu_msg.orientation.y = imu[2]/16384.0;
-      imu_msg.orientation.z = imu[1]/16384.0;
+      imu_msg.orientation.z = imu[3]/16384.0;
 
       //linear acceleration
-      imu_msg.linear_acceleration.x = imu[6]/100.0;
+      imu_msg.linear_acceleration.x = imu[4]/100.0;
       imu_msg.linear_acceleration.y = imu[5]/100.0;
-      imu_msg.linear_acceleration.z = imu[4]/100.0;
+      imu_msg.linear_acceleration.z = imu[6]/100.0;
     }
 
     imu_msg.header.seq = seq_ctr;
