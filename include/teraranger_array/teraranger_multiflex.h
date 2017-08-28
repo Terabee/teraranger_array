@@ -5,6 +5,7 @@
 #include <string>
 #include <dynamic_reconfigure/server.h>
 #include <teraranger_array/TerarangerHubMultiflexConfig.h>
+#include <teraranger_array/RangeArray.h>
 #include <serial/serial.h>
 
 #define BUFFER_SIZE 20
@@ -69,6 +70,8 @@ public:
 
   std::string portname_;
   std::string ns_;
+private:
+  teraranger_array::RangeArray range_array_msg;
 };
 
 } // namespace teraranger_array
