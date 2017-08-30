@@ -1,4 +1,5 @@
 #pragma once
+#include <limits>
 
 #include <ros/ros.h>
 #include <sensor_msgs/Range.h>

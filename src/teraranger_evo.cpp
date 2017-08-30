@@ -260,17 +260,25 @@ void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
       int16_t current_range = (c1 & 0x0FF) << 8;
       current_range |= (c2 & 0x0FF);
 
-      float float_range = (float)current_range;
+      float float_range;
+      if(current_range == 0 || current_range == 255)// Too close
+      {
+        float_range = -std::numeric_limits<float>::infinity();
+      }
+      else if(current_range == -1)// Out of range
+      {
+        float_range = std::numeric_limits<float>::infinity();
+      }
+      else if( current_range == 1)// Not connected
+      {
+        float_range = std::numeric_limits<float>::quiet_NaN();
+      }
+      else// Convert to meters
+      {
+        float_range = (float)current_range * 0.001;
+      }
       ROS_DEBUG("Value int : %d | float : %f", current_range, float_range);
 
-      if (current_range <= 1 || current_range == 255)
-      {
-        float_range = -1.0;
-      }
-      else
-      {
-        float_range = float_range * 0.001;
-      }
       range_array_msg.ranges.at(i).range = float_range;
     }
     range_array_msg.header.seq = (int)seq_ctr/8;
