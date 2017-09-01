@@ -117,26 +117,35 @@ void TerarangerHubMultiflex::parseCommand(uint8_t *input_buffer, uint8_t len)
 
     for (int i = 0; i < SENSOR_COUNT; i++)
     {
+      range_array_msg.ranges.at(i).header.stamp = ros::Time::now();
+      range_array_msg.ranges.at(i).header.seq = seq_ctr++;
+      float final_range;
       if ((bitmask & bit_compare) == bit_compare)
       {
-        if (ranges[i] < int_max_range && ranges[i] > int_min_range)
+        if(ranges[i] == OUT_OF_RANGE_VALUE)
         {
-          range_array_msg.ranges.at(i).header.stamp = ros::Time::now();
-          range_array_msg.ranges.at(i).header.seq = seq_ctr++;
-          range_array_msg.ranges.at(i).range = ranges[i] * 0.001; // convert to m
+          final_range = std::numeric_limits<float>::infinity();
+        }
+        else if (ranges[i] > int_max_range)
+        {
+          final_range = std::numeric_limits<float>::infinity(); // convert to m
+        }
+        else if(ranges[i] < int_min_range)
+        {
+          final_range = -std::numeric_limits<float>::infinity();
         }
         else
         {
-          range_array_msg.ranges.at(i).header.stamp = ros::Time::now();
-          range_array_msg.ranges.at(i).header.seq = seq_ctr++;
-          range_array_msg.ranges.at(i).range = -1; // convert to m
+          final_range = ranges[i] * 0.001; // convert to m
         }
       }
       else
       {
+        final_range = std::numeric_limits<float>::quiet_NaN();
         ROS_WARN_ONCE("Not all sensors activated set proper bitmask using rosrun rqt_reconfigure rqt_reconfigure");
       }
       bit_compare <<= 1;
+      range_array_msg.ranges.at(i).range = final_range;
     }
     range_array_msg.header.seq = (int)seq_ctr/8;
     range_array_msg.header.stamp = ros::Time::now();

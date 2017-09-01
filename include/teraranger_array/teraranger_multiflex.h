@@ -14,6 +14,8 @@
 #define SERIAL_TIMEOUT_MS 2000 	// Value adapted to avoid timeout when reconfiguring
 #define CMD_BYTE_LENGTH 4
 
+#define OUT_OF_RANGE_VALUE -1
+
 namespace teraranger_array
 {
 
