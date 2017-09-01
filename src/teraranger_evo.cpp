@@ -261,7 +261,7 @@ void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
       current_range |= (c2 & 0x0FF);
 
       // Checking for hardware extreme values
-      float float_range = (float)current_range * VALUE_TO_METER_FACTOR;;
+      float float_range = (float)current_range * VALUE_TO_METER_FACTOR;
       float final_range;
       if(current_range == TOO_CLOSE_VALUE || current_range == 255)// Too close, 255 is for short range
       {
