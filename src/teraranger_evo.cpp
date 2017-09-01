@@ -256,30 +256,41 @@ void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
       // Doesn't go out of range because of fixed buffer size as long as the number of sensor is not above 8
       char c1 = input_buffer[2 * (i + 1)];
       char c2 = input_buffer[2 * (i + 1) + 1];
-      ROS_DEBUG("c1 : %x, c2 : %x", (c1 & 0x0FF), (c2 & 0x0FF));
+      //ROS_DEBUG("c1 : %x, c2 : %x", (c1 & 0x0FF), (c2 & 0x0FF));
       int16_t current_range = (c1 & 0x0FF) << 8;
       current_range |= (c2 & 0x0FF);
 
-      float float_range;
-      if(current_range == 0 || current_range == 255)// Too close
+      // Checking for hardware extreme values
+      float float_range = (float)current_range * VALUE_TO_METER_FACTOR;;
+      float final_range;
+      if(current_range == TOO_CLOSE_VALUE || current_range == 255)// Too close, 255 is for short range
       {
-        float_range = -std::numeric_limits<float>::infinity();
+        final_range = -std::numeric_limits<float>::infinity();
       }
-      else if(current_range == -1)// Out of range
+      else if(current_range == OUT_OF_RANGE_VALUE)// Out of range
       {
-        float_range = std::numeric_limits<float>::infinity();
+        final_range = std::numeric_limits<float>::infinity();
       }
-      else if( current_range == 1)// Not connected
+      else if(current_range == INVALID_MEASURE_VALUE)// Not connected
       {
-        float_range = std::numeric_limits<float>::quiet_NaN();
+        final_range = std::numeric_limits<float>::quiet_NaN();
+      }
+      // Enforcing min and max range
+      else if(float_range > max_range)
+      {
+        final_range = std::numeric_limits<float>::infinity();
+      }
+      else if(float_range < min_range)
+      {
+        final_range = -std::numeric_limits<float>::infinity();
       }
       else// Convert to meters
       {
-        float_range = (float)current_range * 0.001;
+        final_range = float_range;
       }
-      ROS_DEBUG("Value int : %d | float : %f", current_range, float_range);
+      ROS_DEBUG("Value int : %d | float : %f | final_range : %f", current_range, float_range, final_range);
 
-      range_array_msg.ranges.at(i).range = float_range;
+      range_array_msg.ranges.at(i).range = final_range;
     }
     range_array_msg.header.seq = (int)seq_ctr/8;
     range_array_msg.header.stamp = ros::Time::now();
@@ -296,9 +307,9 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
   int imu_length = (int)(current_imu_frame_length-4)/2;
   int16_t imu[imu_length]; // create array with right number of 16bits values
   uint8_t crc = 0;
-  ROS_DEBUG("Current buffer : %s", input_buffer);
+  //ROS_DEBUG("Current buffer : %s", input_buffer);
   crc = HelperLib::crc8(input_buffer, current_imu_frame_length-1);
-  ROS_DEBUG("IMU frame length : [%d]", current_imu_frame_length);
+  //ROS_DEBUG("IMU frame length : [%d]", current_imu_frame_length);
 
   if (crc == input_buffer[current_imu_frame_length-1])
   {
@@ -361,7 +372,7 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
   static int buffer_ctr = 0;
   static int seq_ctr = 0;
 
-  ROS_DEBUG("Buffer counter %d : %s | current char : %c", buffer_ctr, input_buffer, (char)single_character);
+  //ROS_DEBUG("Buffer counter %d : %s | current char : %c", buffer_ctr, input_buffer, (char)single_character);
 
   if (buffer_ctr == 0)
   {
@@ -369,7 +380,7 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
     {
       // Waiting for T or an I
       input_buffer[buffer_ctr++] = single_character;
-      ROS_DEBUG("Waiting for T or I | current char : %c", (char)single_character);
+      //ROS_DEBUG("Waiting for T or I | current char : %c", (char)single_character);
       return;
     }
   }
@@ -379,7 +390,7 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
     {
       // Waiting for H after a T or an M after an I
       input_buffer[buffer_ctr++] = single_character;
-      ROS_DEBUG("Waiting for H or M | current char : %c", (char)single_character);
+      //ROS_DEBUG("Waiting for H or M | current char : %c", (char)single_character);
       return;
     }
   }
@@ -391,7 +402,7 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
       // Gathering after-header range data
       if (buffer_ctr < RANGES_FRAME_LENGTH)
       {
-        ROS_DEBUG("Gathering range data | current char : %c", (char)single_character);
+        //ROS_DEBUG("Gathering range data | current char : %c", (char)single_character);
         input_buffer[buffer_ctr++] = single_character;
         return;
       }
@@ -410,7 +421,7 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
     {
       // ROS_INFO("%d", imu_status);
       //ROS_DEBUG("IMU frame length : [%d]", current_imu_frame_length);
-      ROS_DEBUG("Gathering imu data | current char : %c", (char)single_character);
+      //ROS_DEBUG("Gathering imu data | current char : %c", (char)single_character);
       // Gathering after-header imu data
       if (buffer_ctr < current_imu_frame_length)
       {
@@ -428,7 +439,7 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
                   ros::this_node::getName().c_str());
       }
     }
-    ROS_DEBUG("Resetting buffer | current char : %c", (char)single_character);
+    //ROS_DEBUG("Resetting buffer | current char : %c", (char)single_character);
     // resetting buffer and ctr
     buffer_ctr = 0;
     bzero(&input_buffer, BUFFER_SIZE);
