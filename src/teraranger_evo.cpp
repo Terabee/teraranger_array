@@ -24,8 +24,8 @@ TerarangerHubEvo::TerarangerHubEvo()
   ROS_INFO("node namespace: [%s]", ns_.c_str());
 
   // Publishers
-  range_publisher_ = nh_.advertise<teraranger_array::RangeArray>("teraranger_evo/ranges", 10);
-  imu_publisher_ = nh_.advertise<sensor_msgs::Imu>("teraranger_evo/imu", 10);
+  range_publisher_ = nh_.advertise<teraranger_array::RangeArray>("ranges", 10);
+  imu_publisher_ = nh_.advertise<sensor_msgs::Imu>("imu", 10);
 
   // Serial Port init
   serial_port_.setPort(portname_);

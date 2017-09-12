@@ -23,7 +23,7 @@ TerarangerHubOne::TerarangerHubOne()
   ROS_INFO("node namespace: [%s]", ns_.c_str());
 
   // Publishers
-  range_publisher_ = nh_.advertise<teraranger_array::RangeArray>("teraranger_hub_one", 8);
+  range_publisher_ = nh_.advertise<teraranger_array::RangeArray>("ranges", 8);
 
   // Serial Port init
   serial_port_.setPort(portname_);
