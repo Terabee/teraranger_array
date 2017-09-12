@@ -15,7 +15,7 @@ TerarangerHubMultiflex::TerarangerHubMultiflex()
   private_node_handle_.param("portname", portname_, std::string("/dev/ttyACM0"));
 
   // Publishers
-  range_publisher_ = nh_.advertise<teraranger_array::RangeArray>("teraranger_hub_multiflex", 1);
+  range_publisher_ = nh_.advertise<teraranger_array::RangeArray>("ranges", 1);
 
   // Create serial port
   serial_port_.setPort(portname_);
