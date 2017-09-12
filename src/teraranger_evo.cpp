@@ -53,8 +53,8 @@ TerarangerHubEvo::TerarangerHubEvo()
 
   //Initialize local parameters and measurement array
   field_of_view = 0.03491;
-  max_range = 14.0;
-  min_range = 0.2;
+  max_range = 60.0;
+  min_range = 0.05;
   number_of_sensor = 8;
   frame_id = "base_range_";
 
