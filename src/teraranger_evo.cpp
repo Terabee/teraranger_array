@@ -183,10 +183,25 @@ void TerarangerHubEvo::dynParamCallback(
       if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Long_range)
       {
         setMode(LONG_RANGE, 4);
+        max_range = 60.0;
+        min_range = 0.05;
+        for (size_t i=0; i < number_of_sensor; i++)
+        {
+          range.max_range = max_range;
+          range.min_range = min_range;
+        }
+
       }
       else if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Short_range)
       {
         setMode(SHORT_RANGE, 4);
+        max_range = 2.00;
+        min_range = 0.00;
+        for (size_t i=0; i < number_of_sensor; i++)
+        {
+          range.max_range = max_range;
+          range.min_range = min_range;
+        }  
       }
       else ROS_ERROR("Invalid reconfigure option");
       break;
