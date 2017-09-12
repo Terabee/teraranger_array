@@ -14,6 +14,11 @@
 #define SERIAL_TIMEOUT_MS 1000
 #define CMD_BYTE_LENGTH 3
 
+#define OUT_OF_RANGE_VALUE 0
+#define TOO_CLOSE_VALUE 200
+#define INVALID_MEASURE_VALUE -1
+#define VALUE_TO_METER_FACTOR 0.001
+
 namespace teraranger_array
 {
 

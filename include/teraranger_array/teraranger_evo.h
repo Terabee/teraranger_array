@@ -1,4 +1,5 @@
 #pragma once
+#include <limits>
 
 #include <ros/ros.h>
 #include <sensor_msgs/Range.h>
@@ -20,6 +21,11 @@
 
 #define SERIAL_SPEED 115200
 #define SERIAL_TIMEOUT_MS 1000
+
+#define OUT_OF_RANGE_VALUE -1
+#define TOO_CLOSE_VALUE 0
+#define INVALID_MEASURE_VALUE 1
+#define VALUE_TO_METER_FACTOR 0.001
 
 namespace teraranger_array
 {
