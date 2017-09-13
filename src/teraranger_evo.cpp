@@ -80,7 +80,6 @@ TerarangerHubEvo::TerarangerHubEvo()
   }
 
   // Initialize IMU message
-  sensor_msgs::Imu imu_msg;
   boost::array<float,9> lincov = {{0.01, 0.0, 0.0,0.0,0.01,0.0,0.0,0.0,0.01}}; // This is to avoid compiler warning
   boost::array<float,9> oricov = {{0.001, 0.0, 0.0, 0.0,0.001,0.0,0.0,0.0,0.001}}; // This is to avoid compiler warning
   imu_msg.linear_acceleration_covariance = lincov;
