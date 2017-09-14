@@ -54,7 +54,7 @@ TerarangerHubEvo::TerarangerHubEvo()
   //Initialize local parameters and measurement array
   field_of_view = 0.03491;
   max_range = 60.0;
-  min_range = 0.05;
+  min_range = 0.5;
   number_of_sensor = 8;
   frame_id = "base_range_";
 
@@ -184,11 +184,11 @@ void TerarangerHubEvo::dynParamCallback(
       {
         setMode(LONG_RANGE, 4);
         max_range = 60.0;
-        min_range = 0.05;
+        min_range = 0.5;
         for (size_t i=0; i < number_of_sensor; i++)
         {
-          range.max_range = max_range;
-          range.min_range = min_range;
+          range_array_msg.ranges[i].max_range = max_range;
+          range_array_msg.ranges[i].min_range = min_range;
         }
 
       }
@@ -199,9 +199,9 @@ void TerarangerHubEvo::dynParamCallback(
         min_range = 0.00;
         for (size_t i=0; i < number_of_sensor; i++)
         {
-          range.max_range = max_range;
-          range.min_range = min_range;
-        }  
+          range_array_msg.ranges[i].max_range = max_range;
+          range_array_msg.ranges[i].min_range = min_range;
+        }
       }
       else ROS_ERROR("Invalid reconfigure option");
       break;
