@@ -1,5 +1,5 @@
 # ROS package for TeraRanger array solutions by Terabee
-
+[![Build Status](https://travis-ci.org/Terabee/teraranger_array.svg?branch=test%2Ftravis_ci)](https://travis-ci.org/Terabee/teraranger_array)
 This package is a collection of nodes for TeraRanger array solutions:
 * [TeraRanger Tower](http://www.teraranger.com/teraranger-tower/)
 * [TeraRanger Multiflex](http://www.teraranger.com/products/teraranger-multiflex/)
