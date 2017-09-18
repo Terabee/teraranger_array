@@ -2,8 +2,8 @@
 Changelog for package teraranger_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2017-09-18)
+------------------
 
 * Use ros-serial and remove old serial files
 * Standardize topic names
