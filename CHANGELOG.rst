@@ -2,10 +2,16 @@
 Changelog for package teraranger_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Change license to MIT
+* Update link
+* Contributors: Pierre-Louis Kabaradjian, Baptiste Potier
+
 1.0.1 (2017-09-20)
 ------------------
 * Update package.xml
-* Contributors: Kabaradjian PL
+* Contributors: Pierre-Louis Kabaradjian
 
 1.0.0 (2017-09-18)
 ------------------
@@ -18,4 +24,4 @@ Changelog for package teraranger_array
 * Refactor trone and multiflex drivers
 * Initial commit
 
-* Contributors: Kabaradjian PL, Krzysztof Zurad, Mateusz Sadowski, Potier Baptiste
+* Contributors: Pierre-Louis Kabaradjian, Krzysztof Zurad, Mateusz Sadowski, Baptiste Potier
