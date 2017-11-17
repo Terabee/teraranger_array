@@ -1,9 +1,9 @@
 # ROS package for TeraRanger array solutions by Terabee
 
 This package is a collection of nodes for TeraRanger array solutions:
-* [TeraRanger Tower](http://www.teraranger.com/teraranger-tower/)
-* [TeraRanger Multiflex](http://www.teraranger.com/products/teraranger-multiflex/)
-* [TeraRanger Hub](http://www.teraranger.com/products/teraranger-hub/)
+* [TeraRanger Tower](https://www.terabee.com/portfolio-item/teraranger-tower/)
+* [TeraRanger Multiflex](https://www.terabee.com/portfolio-item/teraranger-multiflex/)
+* [TeraRanger Hub](https://www.terabee.com/portfolio-item/teraranger-hub/)
 
 ## Building and running the package from source
 
@@ -62,8 +62,8 @@ rosrun rqt_reconfigure rqt_reconfigure
 
 | Information |
 | -------------- |
-|[Product page](http://www.teraranger.com/teraranger-tower/)| 
-|[Specification sheet](http://www.teraranger.com/wp-content/uploads/2016/03/Towerspecificationsheet.pdf)|
+|[Product page](https://www.terabee.com/portfolio-item/teraranger-tower/)| 
+|[Specification sheet](https://www.terabee.com/portfolio-item/teraranger-tower/#tower-specifications)|
 |[Online shop](http://www.teraranger.com/product/teraranger-tower/) |
 
 
@@ -74,6 +74,6 @@ rosrun rqt_reconfigure rqt_reconfigure
 
 | Information |
 | -------------- |
-|[Product page](http://www.teraranger.com/products/teraranger-multiflex/)| 
-|[Specification sheet](http://www.teraranger.com/wp-content/uploads/2017/04/MultiflexSpecificationSheet.pdf)|
+|[Product page](https://www.terabee.com/portfolio-item/teraranger-multiflex/)| 
+|[Specification sheet](https://www.terabee.com/portfolio-item/teraranger-multiflex/#teraranger-specifications)|
 |[Online shop](http://www.teraranger.com/product/teraranger-multiflex/) |

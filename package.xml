@@ -14,7 +14,7 @@
   <author email="mateusz.sadowski@terabee.com">Mateusz Sadowski</author>
   <author email="baptiste.potier@terabee.com">Baptiste Potier</author>
 
-  <license>GPL</license>
+  <license>MIT</license>
 
   <url type="website">http://wiki.ros.org/teraranger_array</url>
   <url type="website">https://github.com/Terabee/teraranger_array</url>
