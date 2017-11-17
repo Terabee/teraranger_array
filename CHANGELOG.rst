@@ -2,8 +2,8 @@
 Changelog for package teraranger_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2017-11-17)
+------------------
 * Change license to MIT
 * Update link
 * Contributors: Pierre-Louis Kabaradjian, Baptiste Potier
