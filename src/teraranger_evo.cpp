@@ -151,29 +151,17 @@ void TerarangerHubEvo::dynParamCallback(
       {
         setMode(RATE_ASAP, 5);
       }
-      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_700)
+      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_50)
       {
-        setMode(RATE_700, 5);
-      }
-      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_600)
-      {
-        setMode(RATE_600, 5);
-      }
-      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_500)
-      {
-        setMode(RATE_500, 5);
-      }
-      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_250)
-      {
-        setMode(RATE_250, 5);
+        setMode(RATE_50, 5);
       }
       else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_100)
       {
         setMode(RATE_100, 5);
       }
-      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_50)
+      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_250)
       {
-        setMode(RATE_50, 5);
+        setMode(RATE_250, 5);
       }
       else ROS_ERROR("Invalid reconfigure option");
       break;
