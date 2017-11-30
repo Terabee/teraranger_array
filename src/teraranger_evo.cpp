@@ -100,11 +100,11 @@ TerarangerHubEvo::TerarangerHubEvo()
 
   // This line is needed to start measurements on the hub
   setMode(BINARY_MODE, 4);
-  setMode(TOWER_MODE, 4);
   setMode(RATE_ASAP, 5);
   setMode(IMU_QUAT,4);
   imu_status = quat;
   current_imu_frame_length = IMU_QUAT_FRAME_LENGTH;
+  setMode(CROSSTALK_MODE, 4);
 
   // Enable output
   setMode(ENABLE_CMD, 5);
@@ -226,13 +226,9 @@ void TerarangerHubEvo::dynParamCallback(
       {
         setMode(CROSSTALK_MODE,4);
       }
-      else if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Non_crosstalk)
+      else if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Anti_crosstalk)
       {
         setMode(NONCROSSTALK_MODE,4);
-      }
-      else if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Tower_mode)
-      {
-        setMode(TOWER_MODE,4);
       }
       else ROS_ERROR("Invalid reconfigure option");
       break;
