@@ -223,34 +223,7 @@ void TerarangerHubEvo::dynParamCallback(
       }
       else ROS_ERROR("Invalid reconfigure option");
       break;
-    case 2:// Set range mode
-      ROS_INFO("[%s] Reconfigure call: Range mode", ros::this_node::getName().c_str());
-      if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Long_range)
-      {
-        setMode(LONG_RANGE, 4);
-        max_range = 60.0;
-        min_range = 0.5;
-        for (size_t i=0; i < number_of_sensor; i++)
-        {
-          range_array_msg.ranges[i].max_range = max_range;
-          range_array_msg.ranges[i].min_range = min_range;
-        }
-
-      }
-      else if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Short_range)
-      {
-        setMode(SHORT_RANGE, 4);
-        max_range = 2.00;
-        min_range = 0.00;
-        for (size_t i=0; i < number_of_sensor; i++)
-        {
-          range_array_msg.ranges[i].max_range = max_range;
-          range_array_msg.ranges[i].min_range = min_range;
-        }
-      }
-      else ROS_ERROR("[%s] Invalid reconfigure option", ros::this_node::getName().c_str());
-      break;
-    case 3:// Set the IMU mode dynamically
+    case 2:// Set the IMU mode dynamically
       ROS_INFO("[%s] Reconfigure call: IMU mode", ros::this_node::getName().c_str());
       if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_OFF)
       {
@@ -278,7 +251,7 @@ void TerarangerHubEvo::dynParamCallback(
       }
       else ROS_ERROR("[%s] Invalid reconfigure option", ros::this_node::getName().c_str());
       break;
-    case 4://Set the sequence mode dynamically
+    case 3://Set the sequence mode dynamically
       ROS_INFO("[%s] Reconfigure call: Sequence mode", ros::this_node::getName().c_str());
       if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Crosstalk)
       {
@@ -318,7 +291,7 @@ void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
       // Checking for hardware extreme values
       float float_range = (float)current_range * VALUE_TO_METER_FACTOR;
       float final_range;
-      if(current_range == TOO_CLOSE_VALUE || current_range == 255)// Too close, 255 is for short range
+      if(current_range == TOO_CLOSE_VALUE)// Too close
       {
         final_range = -std::numeric_limits<float>::infinity();
       }
