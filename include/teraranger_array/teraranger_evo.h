@@ -49,9 +49,9 @@ static const char IMU_EULER[4] = {(char)0x00, (char)0x41, (char)0x03, (char)0x47
 static const char IMU_QUATLIN[4] = {(char)0x00, (char)0x41, (char)0x04, (char)0x52};
 
 static const char RATE_ASAP[5] = {(char)0x00, (char)0x52, (char)0x03,(char)0x01, (char)0xCA};
-static const char RATE_50[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x07,(char)0xD8};
-static const char RATE_100[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x06,(char)0xDF};
-static const char RATE_250[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x05,(char)0xD6};
+static const char RATE_50[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x02,(char)0xC3};
+static const char RATE_100[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x03,(char)0xC4};
+static const char RATE_250[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x04,(char)0xD1};
 
 enum imu_mode{
   off,
