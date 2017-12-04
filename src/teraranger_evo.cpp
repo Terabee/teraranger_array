@@ -121,9 +121,67 @@ void TerarangerHubEvo::setMode(const char *c, int length)
 {
   if(!serial_port_.write((uint8_t*)c, length))
   {
-    ROS_ERROR("Timeout or error while writing serial");
+    ROS_ERROR("[%s] Timeout or error while writing to serial", ros::this_node::getName().c_str());
   }
   serial_port_.flushOutput();
+
+  uint8_t ack_buffer[ACK_LENGTH];
+  bool status = 0;
+
+  serial_port_.flushInput();
+  if(serial_port_.read(ack_buffer, ACK_LENGTH))
+  {
+    status = processAck(ack_buffer, (uint8_t*)c);
+  }
+  else
+  {
+    ROS_ERROR("[%s] Timeout or error while waiting for ACK", ros::this_node::getName().c_str());
+  }
+  if(status){
+    ROS_INFO("[%s] Command successful", ros::this_node::getName().c_str());
+  }
+  else
+  {
+    ROS_ERROR("[%s] Command not applied and/or not recognized", ros::this_node::getName().c_str());
+  }
+}
+
+bool TerarangerHubEvo::processAck(uint8_t* ack_buffer, const uint8_t* cmd)
+{
+  uint8_t crc = HelperLib::crc8(ack_buffer, ACK_LENGTH-1);
+
+  if (crc == ack_buffer[ACK_LENGTH-1])// Check is ACK frame is ok
+  {
+    if(ack_buffer[0] == ACK_HEADER)
+    {
+      if((cmd[1] >> 4) == ack_buffer[1])// See if the ack is from the same register as the command
+      {
+        if (ack_buffer[2] == ACK_VALUE)
+        {
+          return true;
+        }
+        else if (ack_buffer[2] == NACK_VALUE)
+        {
+          return false;
+        }
+      }
+      else
+      {
+        ROS_ERROR("[%s] Wrong ack register", ros::this_node::getName().c_str());
+        return false;
+      }
+    }
+    else
+    {
+      ROS_ERROR("[%s] Wrong ack header", ros::this_node::getName().c_str());
+      return false;
+    }
+  }
+  else
+  {
+    ROS_ERROR("[%s] ACK frame crc missmatch", ros::this_node::getName().c_str());
+    return false;
+  }
 }
 
 void TerarangerHubEvo::dynParamCallback(
@@ -134,7 +192,7 @@ void TerarangerHubEvo::dynParamCallback(
     case -1:// Catching first reconfigure call
       break;
     case 0:// Set the mode dynamically
-      ROS_INFO("Reconfigure call: Output mode");
+      ROS_INFO("[%s] Reconfigure call: Output mode", ros::this_node::getName().c_str());
       if (config.Output_Mode == teraranger_evo_cfg::TerarangerHubEvo_Binary)
       {
         setMode(BINARY_MODE, 4);
@@ -143,10 +201,10 @@ void TerarangerHubEvo::dynParamCallback(
       {
         setMode(TEXT_MODE, 4);
       }
-      else ROS_ERROR("Invalid reconfigure option");
+      else ROS_ERROR("[%s] Invalid reconfigure option", ros::this_node::getName().c_str());
       break;
     case 1:// Set the rate dynamically
-      ROS_INFO("Reconfigure call: Rate");
+      ROS_INFO("[%s] Reconfigure call: Rate", ros::this_node::getName().c_str());
       if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_ASAP)
       {
         setMode(RATE_ASAP, 5);
@@ -166,7 +224,7 @@ void TerarangerHubEvo::dynParamCallback(
       else ROS_ERROR("Invalid reconfigure option");
       break;
     case 2:// Set range mode
-      ROS_INFO("Reconfigure call: Range mode");
+      ROS_INFO("[%s] Reconfigure call: Range mode", ros::this_node::getName().c_str());
       if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Long_range)
       {
         setMode(LONG_RANGE, 4);
@@ -190,10 +248,10 @@ void TerarangerHubEvo::dynParamCallback(
           range_array_msg.ranges[i].min_range = min_range;
         }
       }
-      else ROS_ERROR("Invalid reconfigure option");
+      else ROS_ERROR("[%s] Invalid reconfigure option", ros::this_node::getName().c_str());
       break;
     case 3:// Set the IMU mode dynamically
-      ROS_INFO("Reconfigure call: IMU mode");
+      ROS_INFO("[%s] Reconfigure call: IMU mode", ros::this_node::getName().c_str());
       if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_OFF)
       {
         setMode(IMU_OFF,4);
@@ -218,10 +276,10 @@ void TerarangerHubEvo::dynParamCallback(
         imu_status = quatlin;
         current_imu_frame_length = IMU_QUATLIN_FRAME_LENGTH;
       }
-      else ROS_ERROR("Invalid reconfigure option");
+      else ROS_ERROR("[%s] Invalid reconfigure option", ros::this_node::getName().c_str());
       break;
     case 4://Set the sequence mode dynamically
-      ROS_INFO("Reconfigure call: Sequence mode");
+      ROS_INFO("[%s] Reconfigure call: Sequence mode", ros::this_node::getName().c_str());
       if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Crosstalk)
       {
         setMode(CROSSTALK_MODE,4);
@@ -233,7 +291,7 @@ void TerarangerHubEvo::dynParamCallback(
       else ROS_ERROR("Invalid reconfigure option");
       break;
     default:
-      ROS_ERROR("Invalid reconfigure level : %d", level);
+      ROS_ERROR("[%s] Invalid reconfigure level : %d", ros::this_node::getName().c_str(), level);
       break;
   }
 }
@@ -254,7 +312,6 @@ void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
       // Doesn't go out of range because of fixed buffer size as long as the number of sensor is not above 8
       char c1 = input_buffer[2 * (i + 1)];
       char c2 = input_buffer[2 * (i + 1) + 1];
-      //ROS_DEBUG("c1 : %x, c2 : %x", (c1 & 0x0FF), (c2 & 0x0FF));
       int16_t current_range = (c1 & 0x0FF) << 8;
       current_range |= (c2 & 0x0FF);
 
@@ -286,7 +343,7 @@ void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
       {
         final_range = float_range;
       }
-      ROS_DEBUG("Value int : %d | float : %f | final_range : %f", current_range, float_range, final_range);
+      ROS_DEBUG("[%s] Value int : %d | float : %f | final_range : %f", ros::this_node::getName().c_str(), current_range, float_range, final_range);
 
       range_array_msg.ranges.at(i).range = final_range;
     }
@@ -305,9 +362,8 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
   int imu_length = (int)(current_imu_frame_length-4)/2;
   int16_t imu[imu_length]; // create array with right number of 16bits values
   uint8_t crc = 0;
-  //ROS_DEBUG("Current buffer : %s", input_buffer);
+
   crc = HelperLib::crc8(input_buffer, current_imu_frame_length-1);
-  //ROS_DEBUG("IMU frame length : [%d]", current_imu_frame_length);
 
   if (crc == input_buffer[current_imu_frame_length-1])
   {
@@ -360,7 +416,7 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
   }
   else
   {
-    ROS_ERROR("[%s] Imu frame crc missmatch : computed was : %d and expected was: %d", ros::this_node::getName().c_str(), crc, (uint8_t)input_buffer[current_imu_frame_length-1]);
+    ROS_ERROR("[%s] Imu frame crc missmatch", ros::this_node::getName().c_str());
   }
 }
 
@@ -370,15 +426,12 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
   static int buffer_ctr = 0;
   static int seq_ctr = 0;
 
-  //ROS_DEBUG("Buffer counter %d : %s | current char : %c", buffer_ctr, input_buffer, (char)single_character);
-
   if (buffer_ctr == 0)
   {
     if (single_character == 'T' || single_character == 'I')
     {
       // Waiting for T or an I
       input_buffer[buffer_ctr++] = single_character;
-      //ROS_DEBUG("Waiting for T or I | current char : %c", (char)single_character);
       return;
     }
   }
@@ -388,7 +441,6 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
     {
       // Waiting for H after a T or an M after an I
       input_buffer[buffer_ctr++] = single_character;
-      //ROS_DEBUG("Waiting for H or M | current char : %c", (char)single_character);
       return;
     }
   }
@@ -400,7 +452,6 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
       // Gathering after-header range data
       if (buffer_ctr < RANGES_FRAME_LENGTH)
       {
-        //ROS_DEBUG("Gathering range data | current char : %c", (char)single_character);
         input_buffer[buffer_ctr++] = single_character;
         return;
       }
@@ -417,9 +468,6 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
     }
     else if (input_buffer[0] == 'I')// Parsing Imu
     {
-      // ROS_INFO("%d", imu_status);
-      //ROS_DEBUG("IMU frame length : [%d]", current_imu_frame_length);
-      //ROS_DEBUG("Gathering imu data | current char : %c", (char)single_character);
       // Gathering after-header imu data
       if (buffer_ctr < current_imu_frame_length)
       {
@@ -437,7 +485,6 @@ void TerarangerHubEvo::serialDataCallback(uint8_t single_character)
                   ros::this_node::getName().c_str());
       }
     }
-    //ROS_DEBUG("Resetting buffer | current char : %c", (char)single_character);
     // resetting buffer and ctr
     buffer_ctr = 0;
     bzero(&input_buffer, BUFFER_SIZE);
@@ -461,7 +508,7 @@ void TerarangerHubEvo::spin()
     }
     else
     {
-      ROS_ERROR("Timeout or error while reading serial");
+      ROS_ERROR("[%s] Timeout or error while reading serial", ros::this_node::getName().c_str());
     }
     ros::spinOnce();
   }

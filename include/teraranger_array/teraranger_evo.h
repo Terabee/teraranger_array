@@ -27,6 +27,11 @@
 #define INVALID_MEASURE_VALUE 1
 #define VALUE_TO_METER_FACTOR 0.001
 
+#define ACK_LENGTH 4
+#define ACK_HEADER 0x30
+#define NACK_VALUE 0xFF
+#define ACK_VALUE 0x00
+
 namespace teraranger_array
 {
 // Protocol commands
@@ -101,6 +106,7 @@ private:
 
   void processRangeFrame(uint8_t* input_buffer, int seq_ctr);
   void processImuFrame(uint8_t* input_buffer, int seq_ctr);
+  bool processAck(uint8_t* ack_buffer, const uint8_t* cmd);
 };
 
 } // namespace teraranger_array
