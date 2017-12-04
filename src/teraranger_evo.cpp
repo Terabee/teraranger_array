@@ -124,6 +124,64 @@ void TerarangerHubEvo::setMode(const char *c, int length)
     ROS_ERROR("Timeout or error while writing serial");
   }
   serial_port_.flushOutput();
+
+  uint8_t ack_buffer[ACK_LENGTH];
+  bool status = 0;
+
+  serial_port_.flushInput();
+  if(serial_port_.read(ack_buffer, ACK_LENGTH))
+  {
+    status = processAck(ack_buffer, (uint8_t*)c);
+  }
+  else
+  {
+    ROS_ERROR("[%s] Timeout or error while waiting for ACK", ros::this_node::getName().c_str());
+  }
+  if(status){
+    ROS_INFO("[%s] Command successful", ros::this_node::getName().c_str());
+  }
+  else
+  {
+    ROS_ERROR("[%s] Command not applied and/or not recognized", ros::this_node::getName().c_str());
+  }
+}
+
+bool TerarangerHubEvo::processAck(uint8_t* ack_buffer, const uint8_t* cmd)
+{
+  uint8_t crc = HelperLib::crc8(ack_buffer, ACK_LENGTH-1);
+
+  if (crc == ack_buffer[ACK_LENGTH-1])// Check is ACK frame is ok
+  {
+    if(ack_buffer[0] == ACK_HEADER)
+    {
+      if((cmd[1] >> 4) == ack_buffer[1])// See if the ack is from the same register as the command
+      {
+        if (ack_buffer[2] == ACK_VALUE)
+        {
+          return true;
+        }
+        else if (ack_buffer[2] == NACK_VALUE)
+        {
+          return false;
+        }
+      }
+      else
+      {
+        ROS_ERROR("[%s] Wrong ack register", ros::this_node::getName().c_str());
+        return false;
+      }
+    }
+    else
+    {
+      ROS_ERROR("[%s] Wrong ack header", ros::this_node::getName().c_str());
+      return false;
+    }
+  }
+  else
+  {
+    ROS_ERROR("[%s] ACK frame crc missmatch", ros::this_node::getName().c_str());
+    return false;
+  }
 }
 
 void TerarangerHubEvo::dynParamCallback(
