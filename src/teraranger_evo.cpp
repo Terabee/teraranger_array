@@ -100,11 +100,11 @@ TerarangerHubEvo::TerarangerHubEvo()
 
   // This line is needed to start measurements on the hub
   setMode(BINARY_MODE, 4);
-  setMode(TOWER_MODE, 4);
-  setMode(RATE_ASAP, 5);
-  setMode(IMU_QUAT,4);
-  imu_status = quat;
-  current_imu_frame_length = IMU_QUAT_FRAME_LENGTH;
+  setMode(CROSSTALK_MODE, 4);
+  setMode(RATE_100, 5);
+  setMode(IMU_OFF,4);
+  imu_status = off;
+  current_imu_frame_length = 0;
 
   // Enable output
   setMode(ENABLE_CMD, 5);
@@ -209,60 +209,21 @@ void TerarangerHubEvo::dynParamCallback(
       {
         setMode(RATE_ASAP, 5);
       }
-      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_700)
+      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_50)
       {
-        setMode(RATE_700, 5);
-      }
-      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_600)
-      {
-        setMode(RATE_600, 5);
-      }
-      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_500)
-      {
-        setMode(RATE_500, 5);
-      }
-      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_250)
-      {
-        setMode(RATE_250, 5);
+        setMode(RATE_50, 5);
       }
       else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_100)
       {
         setMode(RATE_100, 5);
       }
-      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_50)
+      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_250)
       {
-        setMode(RATE_50, 5);
+        setMode(RATE_250, 5);
       }
-      else ROS_ERROR("[%s] Invalid reconfigure option", ros::this_node::getName().c_str());
+      else ROS_ERROR("Invalid reconfigure option");
       break;
-    case 2:// Set range mode
-      ROS_INFO("[%s] Reconfigure call: Range mode", ros::this_node::getName().c_str());
-      if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Long_range)
-      {
-        setMode(LONG_RANGE, 4);
-        max_range = 60.0;
-        min_range = 0.5;
-        for (size_t i=0; i < number_of_sensor; i++)
-        {
-          range_array_msg.ranges[i].max_range = max_range;
-          range_array_msg.ranges[i].min_range = min_range;
-        }
-
-      }
-      else if (config.Range_mode == teraranger_evo_cfg::TerarangerHubEvo_Short_range)
-      {
-        setMode(SHORT_RANGE, 4);
-        max_range = 2.00;
-        min_range = 0.00;
-        for (size_t i=0; i < number_of_sensor; i++)
-        {
-          range_array_msg.ranges[i].max_range = max_range;
-          range_array_msg.ranges[i].min_range = min_range;
-        }
-      }
-      else ROS_ERROR("[%s] Invalid reconfigure option", ros::this_node::getName().c_str());
-      break;
-    case 3:// Set the IMU mode dynamically
+    case 2:// Set the IMU mode dynamically
       ROS_INFO("[%s] Reconfigure call: IMU mode", ros::this_node::getName().c_str());
       if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_OFF)
       {
@@ -290,21 +251,17 @@ void TerarangerHubEvo::dynParamCallback(
       }
       else ROS_ERROR("[%s] Invalid reconfigure option", ros::this_node::getName().c_str());
       break;
-    case 4://Set the sequence mode dynamically
+    case 3://Set the sequence mode dynamically
       ROS_INFO("[%s] Reconfigure call: Sequence mode", ros::this_node::getName().c_str());
       if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Crosstalk)
       {
         setMode(CROSSTALK_MODE,4);
       }
-      else if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Non_crosstalk)
+      else if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Anti_crosstalk)
       {
         setMode(NONCROSSTALK_MODE,4);
       }
-      else if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Tower_mode)
-      {
-        setMode(TOWER_MODE,4);
-      }
-      else ROS_ERROR("[%s] Invalid reconfigure option", ros::this_node::getName().c_str());
+      else ROS_ERROR("Invalid reconfigure option");
       break;
     default:
       ROS_ERROR("[%s] Invalid reconfigure level : %d", ros::this_node::getName().c_str(), level);
@@ -334,7 +291,7 @@ void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
       // Checking for hardware extreme values
       float float_range = (float)current_range * VALUE_TO_METER_FACTOR;
       float final_range;
-      if(current_range == TOO_CLOSE_VALUE || current_range == 255)// Too close, 255 is for short range
+      if(current_range == TOO_CLOSE_VALUE)// Too close
       {
         final_range = -std::numeric_limits<float>::infinity();
       }
