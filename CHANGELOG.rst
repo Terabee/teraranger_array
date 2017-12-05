@@ -2,6 +2,19 @@
 Changelog for package teraranger_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Clean dynamic reconfigure .cfg files
+* Remove unsupported modes
+* Add node namespace to every log message
+* Remove old debug messages
+* Add ack check when sending commands
+* Correct rate commands
+* Set defaults modes in both dynamic reconfigure and driver init
+* Disable custom firing mode
+* Remove unnecessary rates
+* Contributors: Pierre-Louis Kabaradjian
+
 1.1.0 (2017-11-17)
 ------------------
 * Change license to MIT
