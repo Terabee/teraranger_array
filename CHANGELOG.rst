@@ -2,8 +2,8 @@
 Changelog for package teraranger_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2017-12-05)
+------------------
 * Clean dynamic reconfigure .cfg files
 * Remove unsupported modes
 * Add node namespace to every log message
