@@ -348,9 +348,9 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
 
     if (imu_status == euler)// euler YY PP RR
     {
-      imu_msg.orientation.x = imu[2]/16384.0;
-      imu_msg.orientation.y = imu[1]/16384.0;
-      imu_msg.orientation.z = imu[0]/16384.0;
+      imu_msg.orientation.x = imu[2]/16.0;
+      imu_msg.orientation.y = imu[1]/16.0;
+      imu_msg.orientation.z = imu[0]/16.0;
       imu_msg.orientation.w = 1.0;
 
       //Resetting acceleration
