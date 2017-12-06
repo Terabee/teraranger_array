@@ -27,6 +27,6 @@ kinetic-builder:
     - catkin build
     - source devel/setup.bash
     - catkin_make run_tests && catkin_make test
-    - echo "Done with the tests"
+    - echo "Done with the tests."
   tags:
     - ros
