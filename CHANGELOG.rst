@@ -2,8 +2,8 @@
 Changelog for package teraranger_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.1 (2017-12-06)
+------------------
 * Correct wrong euler factor
 * Contributors: Pierre-Louis Kabaradjian
 
