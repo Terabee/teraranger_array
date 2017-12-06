@@ -2,6 +2,11 @@
 Changelog for package teraranger_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Correct wrong euler factor
+* Contributors: Pierre-Louis Kabaradjian
+
 1.2.0 (2017-12-05)
 ------------------
 * Clean dynamic reconfigure .cfg files
