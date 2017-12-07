@@ -24,8 +24,9 @@ TerarangerHubEvo::TerarangerHubEvo()
   ROS_INFO("node namespace: [%s]", ns_.c_str());
 
   // Publishers
-  range_publisher_ = nh_.advertise<teraranger_array::RangeArray>("ranges", 10);
-  imu_publisher_ = nh_.advertise<sensor_msgs::Imu>("imu", 10);
+  range_publisher_ = nh_.advertise<teraranger_array::RangeArray>("ranges", 1);
+  imu_publisher_ = nh_.advertise<sensor_msgs::Imu>("imu_quat", 1);
+  euler_publisher_ = nh_.advertise<geometry_msgs::Vector3Stamped>("imu_euler", 1);
 
   // Serial Port init
   serial_port_.setPort(portname_);
@@ -91,11 +92,13 @@ TerarangerHubEvo::TerarangerHubEvo()
   {
     range_array_msg.header.frame_id = "base_hub";
     imu_msg.header.frame_id = "hub_gyro_link";
+    euler_msg.header.frame_id = "hub_gyro_link";
   }
   else
   {
     range_array_msg.header.frame_id = "base_" + ns_;
     imu_msg.header.frame_id = ns_ + "_gyro_link";
+    euler_msg.header.frame_id = ns_ + "_gyro_link";
   }
 
   // This line is needed to start measurements on the hub
@@ -348,15 +351,14 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
 
     if (imu_status == euler)// euler YY PP RR
     {
-      imu_msg.orientation.x = imu[2]/16.0;
-      imu_msg.orientation.y = imu[1]/16.0;
-      imu_msg.orientation.z = imu[0]/16.0;
-      imu_msg.orientation.w = 1.0;
+      euler_msg.vector.x = imu[2]/16.0;
+      euler_msg.vector.y = imu[1]/16.0;
+      euler_msg.vector.z = imu[0]/16.0;
 
-      //Resetting acceleration
-      imu_msg.linear_acceleration.x = 0.0;
-      imu_msg.linear_acceleration.y = 0.0;
-      imu_msg.linear_acceleration.z = 0.0;
+      euler_msg.header.seq = seq_ctr;
+      euler_msg.header.stamp = ros::Time::now();
+      euler_publisher_.publish(euler_msg);
+
     }
     else if(imu_status == quat)// quaternion WW XX YY ZZ
     {
@@ -369,6 +371,10 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
       imu_msg.linear_acceleration.x = 0.0;
       imu_msg.linear_acceleration.y = 0.0;
       imu_msg.linear_acceleration.z = 0.0;
+
+      imu_msg.header.seq = seq_ctr;
+      imu_msg.header.stamp = ros::Time::now();
+      imu_publisher_.publish(imu_msg);
     }
     else if(imu_status == quatlin)// quaternion WW XX YY ZZ + lin. accel. XX YY ZZ
     {
@@ -381,11 +387,11 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
       imu_msg.linear_acceleration.x = imu[4]/100.0;
       imu_msg.linear_acceleration.y = imu[5]/100.0;
       imu_msg.linear_acceleration.z = imu[6]/100.0;
-    }
 
-    imu_msg.header.seq = seq_ctr;
-    imu_msg.header.stamp = ros::Time::now();
-    imu_publisher_.publish(imu_msg);
+      imu_msg.header.seq = seq_ctr;
+      imu_msg.header.stamp = ros::Time::now();
+      imu_publisher_.publish(imu_msg);
+    }
   }
   else
   {
