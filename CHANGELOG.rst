@@ -2,8 +2,8 @@
 Changelog for package teraranger_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.2 (2017-12-07)
+------------------
 * Reduce queue sizes to 1
 * Add separate topic for euler imu data
 * Contributors: Pierre-Louis Kabaradjian
