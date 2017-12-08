@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>teraranger_array</name>
-  <version>1.2.1</version>
+  <version>1.2.2</version>
   <description>The teraranger_array package for TeraRanger Array Products (Multiflex, One)</description>
 
   <maintainer email="pierre-louis.kabaradjian@terabee.com">Pierre-Louis Kabaradjian</maintainer>
@@ -23,6 +23,7 @@
   <build_depend>message_generation</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>sensor_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
   <build_depend>std_msgs</build_depend>
   <build_depend>dynamic_reconfigure</build_depend>
   <build_depend>rospy</build_depend>
@@ -33,6 +34,7 @@
   <run_depend>message_runtime</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>sensor_msgs</run_depend>
+  <run_depend>geometry_msgs</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>dynamic_reconfigure</run_depend>
   <run_depend>rospy</run_depend>
