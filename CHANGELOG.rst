@@ -2,8 +2,8 @@
 Changelog for package teraranger_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.3 (2017-12-08)
+------------------
 * Correct linear acceleration conversion factor to a more accurate one
 * Contributors: Pierre-Louis Kabaradjian
 
