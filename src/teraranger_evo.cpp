@@ -351,7 +351,7 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
 
     if (imu_status == euler)// euler YY PP RR
     {
-      euler_msg.vector.x = imu[2]/16.0;
+      euler_msg.vector.x = imu[2]/16.0;// conversion in degrees
       euler_msg.vector.y = imu[1]/16.0;
       euler_msg.vector.z = imu[0]/16.0;
 
@@ -362,7 +362,7 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
     }
     else if(imu_status == quat)// quaternion WW XX YY ZZ
     {
-      imu_msg.orientation.w = imu[0]/16384.0;
+      imu_msg.orientation.w = imu[0]/16384.0;// conversion in quaternions
       imu_msg.orientation.x = imu[1]/16384.0;
       imu_msg.orientation.y = imu[2]/16384.0;
       imu_msg.orientation.z = imu[3]/16384.0;
@@ -378,15 +378,15 @@ void TerarangerHubEvo::processImuFrame(uint8_t* input_buffer, int seq_ctr)
     }
     else if(imu_status == quatlin)// quaternion WW XX YY ZZ + lin. accel. XX YY ZZ
     {
-      imu_msg.orientation.w = imu[0]/16384.0;
+      imu_msg.orientation.w = imu[0]/16384.0;// conversion in quaternions
       imu_msg.orientation.x = imu[1]/16384.0;
       imu_msg.orientation.y = imu[2]/16384.0;
       imu_msg.orientation.z = imu[3]/16384.0;
 
       //linear acceleration
-      imu_msg.linear_acceleration.x = imu[4]/100.0;
-      imu_msg.linear_acceleration.y = imu[5]/100.0;
-      imu_msg.linear_acceleration.z = imu[6]/100.0;
+      imu_msg.linear_acceleration.x = imu[4]*0.00980665;// conversion from mg to m.s-2
+      imu_msg.linear_acceleration.y = imu[5]*0.00980665;
+      imu_msg.linear_acceleration.z = imu[6]*0.00980665;
 
       imu_msg.header.seq = seq_ctr;
       imu_msg.header.stamp = ros::Time::now();
