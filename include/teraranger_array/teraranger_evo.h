@@ -3,6 +3,7 @@
 
 #include <ros/ros.h>
 #include <sensor_msgs/Range.h>
+#include <geometry_msgs/Vector3Stamped.h>
 #include <std_msgs/Char.h>
 #include <sensor_msgs/Imu.h>
 #include <string>
@@ -79,6 +80,7 @@ public:
   ros::NodeHandle nh_;
   ros::Publisher range_publisher_;
   ros::Publisher imu_publisher_;
+  ros::Publisher euler_publisher_;
 
   dynamic_reconfigure::Server<teraranger_evo_cfg::TerarangerHubEvoConfig> dyn_param_server_;
   dynamic_reconfigure::Server<teraranger_evo_cfg::TerarangerHubEvoConfig>::CallbackType dyn_param_server_callback_function_;
@@ -99,6 +101,7 @@ private:
 
   teraranger_array::RangeArray range_array_msg;
   sensor_msgs::Imu imu_msg;
+  geometry_msgs::Vector3Stamped euler_msg;
 
   void processRangeFrame(uint8_t* input_buffer, int seq_ctr);
   void processImuFrame(uint8_t* input_buffer, int seq_ctr);
