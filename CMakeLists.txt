@@ -11,13 +11,14 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   dynamic_reconfigure
   serial
+  multiple_asynchronous_timers
 )
 find_package(Boost REQUIRED COMPONENTS system thread)
 
 generate_dynamic_reconfigure_options(
-cfg/TerarangerHubOne.cfg
-cfg/TerarangerHubMultiflex.cfg
-cfg/TerarangerHubEvo.cfg
+  cfg/TerarangerHubOne.cfg
+  cfg/TerarangerHubMultiflex.cfg
+  cfg/TerarangerHubEvo.cfg
 )
 
 add_message_files(
@@ -33,7 +34,7 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp sensor_msgs std_msgs message_runtime dynamic_reconfigure serial geometry_msgs
+  CATKIN_DEPENDS roscpp sensor_msgs std_msgs message_runtime dynamic_reconfigure serial geometry_msgs multiple_asynchronous_timers
   DEPENDS Boost
 )
 
@@ -44,7 +45,7 @@ include_directories(
 )
 
 add_executable(teraranger_one src/teraranger_one.cpp src/helper_lib.cpp)
-target_link_libraries(teraranger_one ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(teraranger_one ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${multiple_asynchronous_timers_LIBRARIES})
 add_dependencies(teraranger_one ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(teraranger_one ${${PROJECT_NAME}_EXPORTED_TARGETS})
 add_dependencies(teraranger_one ${PROJECT_NAME}_gencfg)
@@ -70,7 +71,7 @@ install( TARGETS
 
  if(CATKIN_ENABLE_TESTING)
     add_library(${PROJECT_NAME}_LIB src/teraranger_one.cpp src/helper_lib.cpp)
-    target_link_libraries(${PROJECT_NAME}_LIB ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME}_LIB ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${multiple_asynchronous_timers_LIBRARIES})
     add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_generate_messages_cpp)
     add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_gencfg)
 

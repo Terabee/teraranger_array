@@ -8,6 +8,7 @@
 #include <teraranger_array/TerarangerHubOneConfig.h>
 #include <teraranger_array/RangeArray.h>
 #include <serial/serial.h>
+#include <multiple_asynchronous_timers/AsyncTimerArray.h>
 
 #define BUFFER_SIZE 19
 #define SERIAL_SPEED 115200
