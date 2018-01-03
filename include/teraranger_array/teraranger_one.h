@@ -20,6 +20,8 @@
 #define INVALID_MEASURE_VALUE -1
 #define VALUE_TO_METER_FACTOR 0.001
 
+#define NB_SENSORS 8
+
 namespace teraranger_array
 {
 
@@ -66,6 +68,10 @@ private:
   std::string frame_id;
 
   teraranger_array::RangeArray measure;
+
+  AsyncTimerArray* sensor_timers = nullptr;
+  std::vector<bool> required_sensors_mask_;
+  int nan_timeout_;
 };
 
 } // namespace teraranger_array

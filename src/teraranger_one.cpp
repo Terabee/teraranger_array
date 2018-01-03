@@ -22,6 +22,11 @@ TerarangerHubOne::TerarangerHubOne()
   }
   ROS_INFO("node namespace: [%s]", ns_.c_str());
 
+  private_node_handle_.param("nan_timeout", nan_timeout_, 2000);
+  std::vector<bool> default_mask = {false, false, false, false, false, false, false, false};
+  private_node_handle_.param<std::vector<bool>>("required_sensors_mask", required_sensors_mask_, default_mask);
+  // std::cout << required_sensors_mask_[0] << std::endl;
+
   // Publishers
   range_publisher_ = nh_.advertise<teraranger_array::RangeArray>("ranges", 8);
 
@@ -56,7 +61,7 @@ TerarangerHubOne::TerarangerHubOne()
   field_of_view = 0.0593;
   max_range = 14.0;
   min_range = 0.2;
-  number_of_sensors = 8;
+  number_of_sensors = NB_SENSORS;
   frame_id = "base_range_";
 
   // Initialize data structure
@@ -84,6 +89,9 @@ TerarangerHubOne::TerarangerHubOne()
   else{
     measure.header.frame_id = "base_" + ns_;// Remove first slash
   }
+
+  // Initialize timeout timers
+  sensor_timers = new AsyncTimerArray(NB_SENSORS, nan_timeout_, 25);
 
   // Dynamic reconfigure
   dyn_param_server_callback_function_ =
