@@ -121,7 +121,7 @@ void TerarangerHubOne::validate_sensor(int sensor_id)
 
 void TerarangerHubOne::invalidate_sensor(int sensor_id)
 {
-  if(required_sensors_mask_[sensor_id])
+  if(required_sensors_mask_[sensor_id] && !(this->sensor_timers->is_running(sensor_id)))
   {
     this->sensor_timers->start(sensor_id);
   }
