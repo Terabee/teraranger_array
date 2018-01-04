@@ -25,10 +25,6 @@ TerarangerHubOne::TerarangerHubOne()
   private_node_handle_.param("nan_timeout_ms", nan_timeout_, 2000);
   std::vector<bool> default_mask = {false, false, false, false, false, false, false, false};
   private_node_handle_.param<std::vector<bool>>("required_sensors_mask", required_sensors_mask_, default_mask);
-  for(size_t i = 0; i < required_sensors_mask_.size(); i++)
-  {
-    std::cout << required_sensors_mask_[i] << std::endl;
-  }
 
   // Publishers
   range_publisher_ = nh_.advertise<teraranger_array::RangeArray>("ranges", 8);
