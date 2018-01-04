@@ -131,7 +131,8 @@ void TerarangerHubOne::check_timers()
 {
   if(this->sensor_timers->any_timer_expired())
   {
-    ROS_WARN("Some required sensors have been reporting invalid measurements for more than %d milliseconds. Please take precautions", nan_timeout_);
+    ROS_ERROR("Some required sensors have been reporting invalid measurements for more than %d milliseconds. Shutting down driver...", nan_timeout_);
+    ros::shutdown();
   }
 }
 
@@ -281,7 +282,8 @@ void TerarangerHubOne::spin()
     ros::spinOnce();
   }
 }
-}
+
+}// End of namespace teraranger_array
 
 int main(int argc, char **argv)
 {
