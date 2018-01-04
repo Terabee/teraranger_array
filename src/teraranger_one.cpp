@@ -131,7 +131,7 @@ void TerarangerHubOne::check_timers()
 {
   if(this->sensor_timers->any_timer_expired())
   {
-    ROS_WARN("Some required sensors have been reporting invalid measurements for more than [%d] milliseconds. Please take precautions", nan_timeout_);
+    ROS_WARN("Some required sensors have been reporting invalid measurements for more than %d milliseconds. Please take precautions", nan_timeout_);
   }
 }
 
