@@ -22,7 +22,7 @@ TerarangerHubOne::TerarangerHubOne()
   }
   ROS_INFO("node namespace: [%s]", ns_.c_str());
 
-  private_node_handle_.param("nan_timeout", nan_timeout_, 2000);
+  private_node_handle_.param("nan_timeout_ms", nan_timeout_, 2000);
   std::vector<bool> default_mask = {false, false, false, false, false, false, false, false};
   private_node_handle_.param<std::vector<bool>>("required_sensors_mask", required_sensors_mask_, default_mask);
   for(size_t i = 0; i < required_sensors_mask_.size(); i++)
@@ -131,7 +131,7 @@ void TerarangerHubOne::check_timers()
 {
   if(this->sensor_timers->any_timer_expired())
   {
-    ROS_WARN("Some required sensors have been reporting invalid measurements for more than [%d] seconds. Please take precautions", nan_timeout_/1000);
+    ROS_WARN("Some required sensors have been reporting invalid measurements for more than [%d] milliseconds. Please take precautions", nan_timeout_);
   }
 }
 
@@ -207,6 +207,7 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
         measure.header.seq = (int) seq_ctr / 8;
         measure.header.stamp = ros::Time::now();
         range_publisher_.publish(measure);
+        check_timers();
       }
       else
       {

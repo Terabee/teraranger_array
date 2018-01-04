@@ -1,5 +1,6 @@
 <launch>
   <node pkg="teraranger_array" type="teraranger_one" name="hub_one" output="screen">
+    <param name="nan_timeout_ms" value=1500>
     <rosparam>
       required_sensors_mask: [true,false,true,false,true,false,true,false]
     </rosparam>
