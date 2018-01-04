@@ -25,7 +25,10 @@ TerarangerHubOne::TerarangerHubOne()
   private_node_handle_.param("nan_timeout", nan_timeout_, 2000);
   std::vector<bool> default_mask = {false, false, false, false, false, false, false, false};
   private_node_handle_.param<std::vector<bool>>("required_sensors_mask", required_sensors_mask_, default_mask);
-  // std::cout << required_sensors_mask_[0] << std::endl;
+  for(size_t i = 0; i < required_sensors_mask_.size(); i++)
+  {
+    std::cout << required_sensors_mask_[i] << std::endl;
+  }
 
   // Publishers
   range_publisher_ = nh_.advertise<teraranger_array::RangeArray>("ranges", 8);
@@ -101,6 +104,37 @@ TerarangerHubOne::TerarangerHubOne()
 
 TerarangerHubOne::~TerarangerHubOne() {}
 
+void TerarangerHubOne::validate_sensor(int sensor_id)
+{
+  if(required_sensors_mask_[sensor_id])
+  {
+    if(this->sensor_timers->is_expired(sensor_id))
+    {
+      this->sensor_timers->reset_expired(sensor_id);
+    }
+    if(this->sensor_timers->is_running(sensor_id))
+    {
+      this->sensor_timers->cancel(sensor_id);
+    }
+  }
+}
+
+void TerarangerHubOne::invalidate_sensor(int sensor_id)
+{
+  if(required_sensors_mask_[sensor_id])
+  {
+    this->sensor_timers->start(sensor_id);
+  }
+}
+
+void TerarangerHubOne::check_timers()
+{
+  if(this->sensor_timers->any_timer_expired())
+  {
+    ROS_WARN("Some required sensors have been reporting invalid measurements for more than [%d] seconds. Please take precautions", nan_timeout_/1000);
+  }
+}
+
 void TerarangerHubOne::serialDataCallback(uint8_t single_character)
 {
   static uint8_t input_buffer[BUFFER_SIZE];
@@ -142,14 +176,17 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
           if(current_range == TOO_CLOSE_VALUE)// Too close, 255 is for short range
           {
             final_range = -std::numeric_limits<float>::infinity();
+            validate_sensor(i);
           }
           else if(current_range == OUT_OF_RANGE_VALUE)// Out of range
           {
             final_range = std::numeric_limits<float>::infinity();
+            validate_sensor(i);
           }
           else if(current_range == INVALID_MEASURE_VALUE)// Not connected
           {
             final_range = std::numeric_limits<float>::quiet_NaN();
+            invalidate_sensor(i);
           }
           // Enforcing min and max range
           else if(float_range > max_range)
@@ -163,6 +200,7 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
           else// Convert to meters
           {
             final_range = float_range;
+            validate_sensor(i);
           }
           measure.ranges.at(i).range = final_range;
         }

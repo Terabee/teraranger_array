@@ -1,0 +1,7 @@
+<launch>
+  <node pkg="teraranger_array" type="teraranger_one" name="hub_one" output="screen">
+    <rosparam>
+      required_sensors_mask: [true,false,true,false,true,false,true,false]
+    </rosparam>
+  </node>
+</launch>

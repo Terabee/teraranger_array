@@ -72,6 +72,9 @@ private:
   AsyncTimerArray* sensor_timers = nullptr;
   std::vector<bool> required_sensors_mask_;
   int nan_timeout_;
+  void validate_sensor(int sensor_id);
+  void invalidate_sensor(int sensor_id);
+  void check_timers();
 };
 
 } // namespace teraranger_array
