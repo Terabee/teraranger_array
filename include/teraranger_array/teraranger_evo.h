@@ -12,6 +12,7 @@
 #include <teraranger_array/TerarangerHubEvoConfig.h>
 #include <teraranger_array/RangeArray.h>
 #include <serial/serial.h>
+#include <multiple_asynchronous_timers/AsyncTimerArray.h>
 
 #define BUFFER_SIZE 38 //max frame length
 #define RANGES_FRAME_LENGTH 20
@@ -32,6 +33,8 @@
 #define ACK_HEADER 0x30
 #define NACK_VALUE 0xFF
 #define ACK_VALUE 0x00
+
+#define NB_SENSORS 8
 
 namespace teraranger_array
 {
@@ -68,7 +71,6 @@ public:
   TerarangerHubEvo();
   virtual ~TerarangerHubEvo();
 
-
   void serialDataCallback(uint8_t data);
 
   void dynParamCallback(const teraranger_evo_cfg::TerarangerHubEvoConfig &config, uint32_t level);
@@ -89,6 +91,7 @@ public:
 
   std::string portname_;
   std::string ns_;
+
 private:
   float field_of_view ;
   float max_range;
@@ -106,6 +109,13 @@ private:
   void processRangeFrame(uint8_t* input_buffer, int seq_ctr);
   void processImuFrame(uint8_t* input_buffer, int seq_ctr);
   bool processAck(uint8_t* ack_buffer, const uint8_t* cmd);
+
+  AsyncTimerArray* sensor_timers = nullptr;
+  std::vector<bool> required_sensors_mask_;
+  int nan_timeout_;
+  void validate_sensor(int sensor_id);
+  void invalidate_sensor(int sensor_id);
+  void check_timers();
 };
 
 } // namespace teraranger_array

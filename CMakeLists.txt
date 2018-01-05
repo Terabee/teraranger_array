@@ -57,7 +57,7 @@ add_dependencies(teraranger_multiflex ${${PROJECT_NAME}_EXPORTED_TARGETS})
 add_dependencies(teraranger_multiflex ${PROJECT_NAME}_gencfg)
 
 add_executable(teraranger_evo src/teraranger_evo.cpp src/helper_lib.cpp)
-target_link_libraries(teraranger_evo ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(teraranger_evo ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${multiple_asynchronous_timers_LIBRARIES})
 add_dependencies(teraranger_evo ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(teraranger_evo ${catkin_EXPORTED_TARGETS})
 add_dependencies(teraranger_evo ${PROJECT_NAME}_gencfg)
