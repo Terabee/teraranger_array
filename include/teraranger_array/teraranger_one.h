@@ -24,6 +24,8 @@
 
 #define NB_SENSORS 8
 
+class RangeDiag;
+
 namespace teraranger_array
 {
 
@@ -79,6 +81,9 @@ private:
   void check_timers();
 
   diagnostic_updater::Updater updater_;
+  double min_topic_freq;
+  double max_topic_freq;
+  RangeDiag* rd;
   void init_diagnostics();
 };
 
