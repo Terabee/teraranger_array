@@ -9,6 +9,8 @@
 #include <teraranger_array/RangeArray.h>
 #include <serial/serial.h>
 #include <multiple_asynchronous_timers/AsyncTimerArray.h>
+#include <diagnostic_updater/diagnostic_updater.h>
+#include <diagnostic_updater/publisher.h>
 
 #define BUFFER_SIZE 19
 #define SERIAL_SPEED 115200
@@ -75,6 +77,9 @@ private:
   void validate_sensor(int sensor_id);
   void invalidate_sensor(int sensor_id);
   void check_timers();
+
+  diagnostic_updater::Updater updater_;
+  void init_diagnostics();
 };
 
 } // namespace teraranger_array
