@@ -43,23 +43,22 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(teraranger_one src/teraranger_one.cpp src/helper_lib.cpp)
-target_link_libraries(teraranger_one ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-add_dependencies(teraranger_one ${PROJECT_NAME}_generate_messages_cpp)
-add_dependencies(teraranger_one ${${PROJECT_NAME}_EXPORTED_TARGETS})
-add_dependencies(teraranger_one ${PROJECT_NAME}_gencfg)
+add_executable(teraranger_one src/teraranger_one.cpp)
+target_link_libraries(teraranger_one ${PROJECT_NAME}_LIB)
+add_dependencies(teraranger_one ${PROJECT_NAME}_LIB)
 
-add_executable(teraranger_multiflex src/teraranger_multiflex.cpp src/helper_lib.cpp)
-target_link_libraries(teraranger_multiflex ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-add_dependencies(teraranger_multiflex ${PROJECT_NAME}_generate_messages_cpp)
-add_dependencies(teraranger_multiflex ${${PROJECT_NAME}_EXPORTED_TARGETS})
-add_dependencies(teraranger_multiflex ${PROJECT_NAME}_gencfg)
+add_executable(teraranger_multiflex src/teraranger_multiflex.cpp)
+target_link_libraries(teraranger_multiflex ${PROJECT_NAME}_LIB)
+add_dependencies(teraranger_multiflex ${PROJECT_NAME}_LIB)
 
-add_executable(teraranger_evo src/teraranger_evo.cpp src/helper_lib.cpp)
-target_link_libraries(teraranger_evo ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-add_dependencies(teraranger_evo ${PROJECT_NAME}_generate_messages_cpp)
-add_dependencies(teraranger_evo ${catkin_EXPORTED_TARGETS})
-add_dependencies(teraranger_evo ${PROJECT_NAME}_gencfg)
+add_executable(teraranger_evo src/teraranger_evo.cpp)
+target_link_libraries(teraranger_evo ${PROJECT_NAME}_LIB)
+add_dependencies(teraranger_evo ${PROJECT_NAME}_LIB)
+
+add_library(${PROJECT_NAME}_LIB src/helper_lib.cpp)
+target_link_libraries(${PROJECT_NAME}_LIB ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_gencfg)
 
 install( TARGETS
   teraranger_one
@@ -69,11 +68,6 @@ install( TARGETS
   )
 
  if(CATKIN_ENABLE_TESTING)
-    add_library(${PROJECT_NAME}_LIB src/teraranger_one.cpp src/helper_lib.cpp)
-    target_link_libraries(${PROJECT_NAME}_LIB ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-    add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_generate_messages_cpp)
-    add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_gencfg)
-
     catkin_add_gtest(teraranger_one_test test/test_teraranger_one.cpp src/helper_lib.cpp)
     add_dependencies(teraranger_one_test ${${PROJECT_NAME}_EXPORTED_TARGETS})
     target_link_libraries(teraranger_one_test ${Boost_LIBRARIES} ${GTEST_LIBRARIES} ${PROJECT_NAME}_LIB)
