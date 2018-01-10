@@ -57,8 +57,8 @@ add_executable(teraranger_evo src/teraranger_evo.cpp)
 target_link_libraries(teraranger_evo ${PROJECT_NAME}_LIB)
 add_dependencies(teraranger_evo ${PROJECT_NAME}_LIB)
 
-add_library(${PROJECT_NAME}_LIB src/helper_lib.cpp)
-target_link_libraries(${PROJECT_NAME}_LIB ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+add_library(${PROJECT_NAME}_LIB src/tr_diagnostics.cpp src/helper_lib.cpp)
+target_link_libraries(${PROJECT_NAME}_LIB ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${multiple_asynchronous_timers_LIBRARIES})
 add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(${PROJECT_NAME}_LIB ${PROJECT_NAME}_gencfg)
 
