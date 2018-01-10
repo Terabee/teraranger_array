@@ -68,7 +68,7 @@ install( TARGETS
   )
 
  if(CATKIN_ENABLE_TESTING)
-    catkin_add_gtest(teraranger_one_test test/test_teraranger_one.cpp src/helper_lib.cpp)
+    catkin_add_gtest(teraranger_one_test test/test_teraranger_one.cpp)
     add_dependencies(teraranger_one_test ${${PROJECT_NAME}_EXPORTED_TARGETS})
-    target_link_libraries(teraranger_one_test ${Boost_LIBRARIES} ${GTEST_LIBRARIES} ${PROJECT_NAME}_LIB)
+    target_link_libraries(teraranger_one_test ${GTEST_LIBRARIES} ${PROJECT_NAME}_LIB)
 endif()
