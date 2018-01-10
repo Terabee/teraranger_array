@@ -5,31 +5,6 @@
 #include <teraranger_array/teraranger_one.h>
 #include <teraranger_array/helper_lib.h>
 
-class RangeDiag
-{
-public:
-  AsyncTimerArray* ata_;
-  RangeDiag(AsyncTimerArray* ata)
-  {
-    ata_ = ata;
-  }
-  void checkNaN(diagnostic_updater::DiagnosticStatusWrapper &stat)
-  {
-    if (ata_->any_timer_expired())
-    {
-      stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "Some required sensors have been nan for longer than allowed");
-    }
-    else if (ata_->any_timer_running())
-    {
-      stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Some required sensors have been giving nan");
-    }
-    else
-    {
-      stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Required sensors are OK");
-    }
-  }
-};
-
 namespace teraranger_array
 {
 
@@ -122,27 +97,28 @@ TerarangerHubOne::TerarangerHubOne()
       boost::bind(&TerarangerHubOne::dynParamCallback, this, _1, _2);
   dyn_param_server_.setCallback(dyn_param_server_callback_function_);
 
+  // Initialize diagnostic variables
+  range_diag.setAta(sensor_timers);
   min_topic_freq = 5;
   max_topic_freq = 300;
-  RangeDiag* rd = new RangeDiag(sensor_timers);
+  double tolerance = 0.1;
+  double window = 10;
+  double min_acceptable = -1;
+  double max_acceptable = 5;
+  topic_diag = new diagnostic_updater::TopicDiagnostic("ranges", updater_,
+    diagnostic_updater::FrequencyStatusParam(&min_topic_freq, &max_topic_freq, tolerance, window),
+    diagnostic_updater::TimeStampStatusParam(min_acceptable, max_acceptable)
+  );
   init_diagnostics();
 }
 
 void TerarangerHubOne::init_diagnostics()
 {
+  updater_.setHardwareID("none");
   updater_.broadcast(0, "Initializing diagnostics");
 
-  // Topic diagnostics
-  double tolerance = 0.1;
-  double window = 10;
-  double min_acceptable = -1;
-  double max_acceptable = 5;
-
-  diagnostic_updater::TopicDiagnostic pub1_freq("ranges", updater_,
-    diagnostic_updater::FrequencyStatusParam(&min_topic_freq, &max_topic_freq, tolerance, window), diagnostic_updater::TimeStampStatusParam(min_acceptable, max_acceptable));
-
   // Nan check
-  updater_.add("Method updater", rd, &RangeDiag::checkNaN);
+  updater_.add(range_diag);
 }
 
 TerarangerHubOne::~TerarangerHubOne() {}
@@ -251,6 +227,7 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
         measure.header.seq = (int) seq_ctr / 8;
         measure.header.stamp = ros::Time::now();
         range_publisher_.publish(measure);
+        topic_diag->tick(measure.header.stamp);
         check_timers();
       }
       else

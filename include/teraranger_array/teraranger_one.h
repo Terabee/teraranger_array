@@ -9,8 +9,8 @@
 #include <teraranger_array/RangeArray.h>
 #include <serial/serial.h>
 #include <multiple_asynchronous_timers/AsyncTimerArray.h>
-#include <diagnostic_updater/diagnostic_updater.h>
-#include <diagnostic_updater/publisher.h>
+#include <teraranger_array/tr_diagnostics.h>
+
 
 #define BUFFER_SIZE 19
 #define SERIAL_SPEED 115200
@@ -23,8 +23,6 @@
 #define VALUE_TO_METER_FACTOR 0.001
 
 #define NB_SENSORS 8
-
-class RangeDiag;
 
 namespace teraranger_array
 {
@@ -83,7 +81,8 @@ private:
   diagnostic_updater::Updater updater_;
   double min_topic_freq;
   double max_topic_freq;
-  RangeDiag* rd;
+  RangeDiag range_diag;
+  diagnostic_updater::TopicDiagnostic * topic_diag;
   void init_diagnostics();
 };
 
