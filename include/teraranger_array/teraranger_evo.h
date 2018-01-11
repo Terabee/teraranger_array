@@ -1,17 +1,10 @@
 #pragma once
-#include <limits>
-
-#include <ros/ros.h>
-#include <sensor_msgs/Range.h>
 #include <geometry_msgs/Vector3Stamped.h>
-#include <std_msgs/Char.h>
 #include <sensor_msgs/Imu.h>
-#include <string>
+#include <std_msgs/Char.h>
 
-#include <dynamic_reconfigure/server.h>
+#include <teraranger_array/teraranger_core.h>
 #include <teraranger_array/TerarangerHubEvoConfig.h>
-#include <teraranger_array/RangeArray.h>
-#include <serial/serial.h>
 #include <multiple_asynchronous_timers/AsyncTimerArray.h>
 
 #define BUFFER_SIZE 38 //max frame length

@@ -1,12 +1,9 @@
 #pragma once
+#include <sstream>
+#include <iomanip>
 
-#include <ros/ros.h>
-#include <sensor_msgs/Range.h>
-#include <string>
-#include <dynamic_reconfigure/server.h>
+#include <teraranger_array/teraranger_core.h>
 #include <teraranger_array/TerarangerHubMultiflexConfig.h>
-#include <teraranger_array/RangeArray.h>
-#include <serial/serial.h>
 
 #define BUFFER_SIZE 20
 

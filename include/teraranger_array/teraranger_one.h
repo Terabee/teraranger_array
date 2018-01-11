@@ -1,13 +1,6 @@
 #pragma once
-
-#include <ros/ros.h>
-#include <sensor_msgs/Range.h>
-#include <string>
-
-#include <dynamic_reconfigure/server.h>
+#include <teraranger_array/teraranger_core.h>
 #include <teraranger_array/TerarangerHubOneConfig.h>
-#include <teraranger_array/RangeArray.h>
-#include <serial/serial.h>
 #include <multiple_asynchronous_timers/AsyncTimerArray.h>
 
 #define BUFFER_SIZE 19

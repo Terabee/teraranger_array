@@ -1,10 +1,4 @@
-#include <ros/console.h>
-#include <string>
-
-#include <teraranger_array/RangeArray.h>
 #include <teraranger_array/teraranger_evo.h>
-#include <teraranger_array/helper_lib.h>
-
 
 namespace teraranger_array
 {

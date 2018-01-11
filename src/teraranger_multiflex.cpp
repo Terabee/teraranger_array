@@ -1,9 +1,4 @@
-#include <string>
-#include <sstream>
-#include <iomanip>
 #include <teraranger_array/teraranger_multiflex.h>
-#include <teraranger_array/helper_lib.h>
-#include <ros/console.h>
 
 namespace teraranger_array
 {
