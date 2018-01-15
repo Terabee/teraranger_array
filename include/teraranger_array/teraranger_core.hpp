@@ -64,6 +64,11 @@ class RosDynReconfWrapper
     virtual void dynParamCallback(const C &config, uint32_t level) = 0;
 };
 
+// TODO Add generic serial class [NO ROS INSIDE]
+// TODO Add generic range sensor [NO ROS INSIDE]
+// TODO Separate no-ros classes in another package
+// TODO Separate templates classes in another package
+
 // Hierarchy test
 // #include <teraranger_array/TerarangerHubOneConfig.h>
 class TerarangerOneRosDriver : public RosSimplePublisher<sensor_msgs::Range>//, public RosDynReconfWrapper<teraranger_one_cfg::TerarangerHubOneConfig>
