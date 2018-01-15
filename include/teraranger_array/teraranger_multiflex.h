@@ -2,7 +2,7 @@
 #include <sstream>
 #include <iomanip>
 
-#include <teraranger_array/teraranger_core.h>
+#include <teraranger_array/teraranger_core.hpp>
 #include <teraranger_array/TerarangerHubMultiflexConfig.h>
 
 #define BUFFER_SIZE 20

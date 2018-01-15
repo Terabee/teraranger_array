@@ -1,5 +1,5 @@
 #pragma once
-#include <teraranger_array/teraranger_core.h>
+#include <teraranger_array/teraranger_core.hpp>
 #include <teraranger_array/TerarangerHubOneConfig.h>
 #include <multiple_asynchronous_timers/AsyncTimerArray.h>
 

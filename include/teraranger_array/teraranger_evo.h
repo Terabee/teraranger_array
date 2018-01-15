@@ -3,7 +3,7 @@
 #include <sensor_msgs/Imu.h>
 #include <std_msgs/Char.h>
 
-#include <teraranger_array/teraranger_core.h>
+#include <teraranger_array/teraranger_core.hpp>
 #include <teraranger_array/TerarangerHubEvoConfig.h>
 #include <multiple_asynchronous_timers/AsyncTimerArray.h>
 
