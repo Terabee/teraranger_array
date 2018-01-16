@@ -34,7 +34,7 @@ class RosSimplePublisher : public RosSimpleNode
     M msg_;
     std::string topic_name_;
     ros::Publisher publisher_;
-    void spin(){while(ros::ok()) ros::spinOnce();}
+    virtual void spin(){while(ros::ok()) ros::spinOnce();}
     virtual void init_msg() = 0;
 
   public:
