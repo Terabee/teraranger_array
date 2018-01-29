@@ -306,15 +306,6 @@ void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
       {
         final_range = std::numeric_limits<float>::quiet_NaN();
       }
-      // Enforcing min and max range
-      else if(float_range > max_range)
-      {
-        final_range = std::numeric_limits<float>::infinity();
-      }
-      else if(float_range < min_range)
-      {
-        final_range = -std::numeric_limits<float>::infinity();
-      }
       else// Convert to meters
       {
         final_range = float_range;
