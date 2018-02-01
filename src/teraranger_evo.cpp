@@ -511,6 +511,7 @@ void TerarangerHubEvo::spin()
     ros::spinOnce();
   }
   setMode(DISABLE_CMD, 5);
+  serial_port_.close();
 }
 
 }// end of namespace
