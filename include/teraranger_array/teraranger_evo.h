@@ -106,6 +106,15 @@ private:
   void processRangeFrame(uint8_t* input_buffer, int seq_ctr);
   void processImuFrame(uint8_t* input_buffer, int seq_ctr);
   bool processAck(uint8_t* ack_buffer, const uint8_t* cmd);
+
+  void reconfigure_output(
+    const teraranger_evo_cfg::TerarangerHubEvoConfig &config);
+  void reconfigure_rate(
+    const teraranger_evo_cfg::TerarangerHubEvoConfig &config);
+  void reconfigure_imu(
+    const teraranger_evo_cfg::TerarangerHubEvoConfig &config);
+  void reconfigure_sequence(
+    const teraranger_evo_cfg::TerarangerHubEvoConfig &config);
 };
 
 } // namespace teraranger_array
