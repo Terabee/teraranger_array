@@ -122,6 +122,7 @@ TerarangerHubEvo::~TerarangerHubEvo() {}
 
 void TerarangerHubEvo::setMode(const char *c, int length)
 {
+  serial_port_.flushInput();
   if(!serial_port_.write((uint8_t*)c, length))
   {
     ROS_ERROR("[%s] Timeout or error while writing to serial", ros::this_node::getName().c_str());
@@ -131,7 +132,6 @@ void TerarangerHubEvo::setMode(const char *c, int length)
   uint8_t ack_buffer[ACK_LENGTH];
   bool status = 0;
 
-  serial_port_.flushInput();
   if(serial_port_.read(ack_buffer, ACK_LENGTH))
   {
     status = processAck(ack_buffer, (uint8_t*)c);
