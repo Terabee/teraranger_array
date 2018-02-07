@@ -50,8 +50,9 @@ rosrun teraranger_array teraranger_one _portname:=/dev/ttyACM0
 
 ## Running TeraRanger Multiflex
 
-To use TeraRanger Multiflex please execute the following command after building and sourcing your workspace:
+To use TeraRanger Multiflex please run **teraranger_multiflex** node.
 
+After your workspace is built and sourced:
 ```
 rosrun teraranger_array teraranger_multiflex _portname:=/dev/ttyACM0
 ```
@@ -89,8 +90,7 @@ rosrun rqt_reconfigure rqt_reconfigure
 
 ### TeraRanger Multiflex
 
-<img src="http://www.teraranger.com/wp-content/uploads/2017/01/multiflx-on-kobuki.jpg" width="300"/>
-
+<img src="https://www.terabee.com/wp-content/uploads/2017/08/DSC0311-Editar-3.jpg" width="300"/>
 
 | Information |
 | -------------- |
