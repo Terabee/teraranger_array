@@ -54,8 +54,6 @@ TerarangerHubEvo::TerarangerHubEvo()
 
   //Initialize local parameters and measurement array
   field_of_view = 0.03491;
-  max_range = 60.0;
-  min_range = 0.5;
   number_of_sensor = 8;
   frame_id = "base_range_";
 
@@ -64,8 +62,8 @@ TerarangerHubEvo::TerarangerHubEvo()
   {
     sensor_msgs::Range range;
     range.field_of_view = field_of_view;
-    range.max_range = max_range;
-    range.min_range = min_range;
+    range.max_range = EVO_60M_MAX;
+    range.min_range = EVO_60M_MIN;
     range.radiation_type = sensor_msgs::Range::INFRARED;
     range.range = 0.0;
     // set the right range frame depending of the namespace
@@ -122,6 +120,7 @@ TerarangerHubEvo::~TerarangerHubEvo() {}
 
 void TerarangerHubEvo::setMode(const char *c, int length)
 {
+  serial_port_.flushInput();
   if(!serial_port_.write((uint8_t*)c, length))
   {
     ROS_ERROR("[%s] Timeout or error while writing to serial", ros::this_node::getName().c_str());
@@ -131,7 +130,6 @@ void TerarangerHubEvo::setMode(const char *c, int length)
   uint8_t ack_buffer[ACK_LENGTH];
   bool status = 0;
 
-  serial_port_.flushInput();
   if(serial_port_.read(ack_buffer, ACK_LENGTH))
   {
     status = processAck(ack_buffer, (uint8_t*)c);
@@ -187,84 +185,212 @@ bool TerarangerHubEvo::processAck(uint8_t* ack_buffer, const uint8_t* cmd)
   }
 }
 
+void TerarangerHubEvo::reconfigure_output(
+  const teraranger_evo_cfg::TerarangerHubEvoConfig &config)
+{
+  ROS_INFO("[%s] Reconfigure call: Output mode", ros::this_node::getName().c_str());
+  if (config.Output_Mode == teraranger_evo_cfg::TerarangerHubEvo_Binary)
+  {
+    setMode(BINARY_MODE, 4);
+  }
+  else if (config.Output_Mode == teraranger_evo_cfg::TerarangerHubEvo_Text)
+  {
+    setMode(TEXT_MODE, 4);
+  }
+  else ROS_ERROR("[%s] Invalid reconfigure option", ros::this_node::getName().c_str());
+}
+
+void TerarangerHubEvo::reconfigure_rate(
+  const teraranger_evo_cfg::TerarangerHubEvoConfig &config)
+{
+  ROS_INFO("[%s] Reconfigure call: Rate", ros::this_node::getName().c_str());
+  if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_ASAP)
+  {
+    setMode(RATE_ASAP, 5);
+  }
+  else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_50)
+  {
+    setMode(RATE_50, 5);
+  }
+  else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_100)
+  {
+    setMode(RATE_100, 5);
+  }
+  else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_250)
+  {
+    setMode(RATE_250, 5);
+  }
+  else ROS_ERROR("[%s] Invalid reconfigure option", ros::this_node::getName().c_str());
+}
+
+void TerarangerHubEvo::reconfigure_imu(
+  const teraranger_evo_cfg::TerarangerHubEvoConfig &config)
+{
+  ROS_INFO("[%s] Reconfigure call: IMU mode", ros::this_node::getName().c_str());
+  if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_OFF)
+  {
+    setMode(IMU_OFF,4);
+    imu_status = off;
+    current_imu_frame_length = 0;
+  }
+  else if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_QUAT)
+  {
+    setMode(IMU_QUAT,4);
+    imu_status = quat;
+    current_imu_frame_length = IMU_QUAT_FRAME_LENGTH;
+  }
+  else if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_EULER)
+  {
+    setMode(IMU_EULER,4);
+    imu_status = euler;
+    current_imu_frame_length = IMU_EULER_FRAME_LENGTH;
+  }
+  else if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_QUATLIN)
+  {
+    setMode(IMU_QUATLIN,4);
+    imu_status = quatlin;
+    current_imu_frame_length = IMU_QUATLIN_FRAME_LENGTH;
+  }
+  else ROS_ERROR("[%s] Invalid reconfigure option", ros::this_node::getName().c_str());
+}
+
+void TerarangerHubEvo::reconfigure_sequence(
+  const teraranger_evo_cfg::TerarangerHubEvoConfig &config)
+{
+  ROS_INFO("[%s] Initial reconfigure call: Sequence mode", ros::this_node::getName().c_str());
+  if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Crosstalk)
+  {
+
+  }
+  else if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Anti_crosstalk)
+  {
+    setMode(NONCROSSTALK_MODE,4);
+  }
+  else ROS_ERROR("Invalid reconfigure option");
+}
+
+void TerarangerHubEvo::reconfigure_sensor_type(
+    const teraranger_evo_cfg::TerarangerHubEvoConfig &config)
+{
+ROS_INFO("[%s] Initial reconfigure call: Sensor_type", ros::this_node::getName().c_str());
+  float range_new = 0.0;
+
+  if(config.Sensor_type_port_0 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
+  {
+    range_array_msg.ranges[0].max_range = EVO_600HZ_MAX;
+    range_array_msg.ranges[0].min_range = EVO_600HZ_MIN;
+  }
+  else if(config.Sensor_type_port_0 == teraranger_evo_cfg::TerarangerHubEvo_EVO_60M)
+  {
+    range_array_msg.ranges[0].max_range = EVO_60M_MAX;
+    range_array_msg.ranges[0].min_range = EVO_60M_MIN;
+  }
+
+  if(config.Sensor_type_port_1 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
+  {
+    range_array_msg.ranges[1].max_range = EVO_600HZ_MAX;
+    range_array_msg.ranges[1].min_range = EVO_600HZ_MIN;
+  }
+  else if(config.Sensor_type_port_1 == teraranger_evo_cfg::TerarangerHubEvo_EVO_60M)
+  {
+    range_array_msg.ranges[1].max_range = EVO_60M_MAX;
+    range_array_msg.ranges[1].min_range = EVO_60M_MIN;
+  }
+
+  if(config.Sensor_type_port_2 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
+  {
+    range_array_msg.ranges[2].max_range = EVO_600HZ_MAX;
+    range_array_msg.ranges[2].min_range = EVO_600HZ_MIN;
+  }
+  else if(config.Sensor_type_port_2 == teraranger_evo_cfg::TerarangerHubEvo_EVO_60M)
+  {
+    range_array_msg.ranges[2].max_range = EVO_60M_MAX;
+    range_array_msg.ranges[2].min_range = EVO_60M_MIN;
+  }
+
+  if(config.Sensor_type_port_3 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
+  {
+    range_array_msg.ranges[3].max_range = EVO_600HZ_MAX;
+    range_array_msg.ranges[3].min_range = EVO_600HZ_MIN;
+  }
+  else if(config.Sensor_type_port_3 == teraranger_evo_cfg::TerarangerHubEvo_EVO_60M)
+  {
+    range_array_msg.ranges[3].max_range = EVO_60M_MAX;
+    range_array_msg.ranges[3].min_range = EVO_60M_MIN;
+  }
+
+  if(config.Sensor_type_port_4 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
+  {
+    range_array_msg.ranges[4].max_range = EVO_600HZ_MAX;
+    range_array_msg.ranges[4].min_range = EVO_600HZ_MIN;
+  }
+  else if(config.Sensor_type_port_4 == teraranger_evo_cfg::TerarangerHubEvo_EVO_60M)
+  {
+    range_array_msg.ranges[4].max_range = EVO_60M_MAX;
+    range_array_msg.ranges[4].min_range = EVO_60M_MIN;
+  }
+
+  if(config.Sensor_type_port_5 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
+  {
+    range_array_msg.ranges[5].max_range = EVO_600HZ_MAX;
+    range_array_msg.ranges[5].min_range = EVO_600HZ_MIN;
+  }
+  else if(config.Sensor_type_port_5 == teraranger_evo_cfg::TerarangerHubEvo_EVO_60M)
+  {
+    range_array_msg.ranges[5].max_range = EVO_60M_MAX;
+    range_array_msg.ranges[5].min_range = EVO_60M_MIN;
+  }
+
+  if(config.Sensor_type_port_6 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
+  {
+    range_array_msg.ranges[6].max_range = EVO_600HZ_MAX;
+    range_array_msg.ranges[6].min_range = EVO_600HZ_MIN;
+  }
+  else if(config.Sensor_type_port_6 == teraranger_evo_cfg::TerarangerHubEvo_EVO_60M)
+  {
+    range_array_msg.ranges[6].max_range = EVO_60M_MAX;
+    range_array_msg.ranges[6].min_range = EVO_60M_MIN;
+  }
+
+  if(config.Sensor_type_port_7 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
+  {
+    range_array_msg.ranges[7].max_range = EVO_600HZ_MAX;
+    range_array_msg.ranges[7].min_range = EVO_600HZ_MIN;
+  }
+  else if(config.Sensor_type_port_7 == teraranger_evo_cfg::TerarangerHubEvo_EVO_60M)
+  {
+    range_array_msg.ranges[7].max_range = EVO_60M_MAX;
+    range_array_msg.ranges[7].min_range = EVO_60M_MIN;
+  }
+  else ROS_ERROR("Invalid reconfigure option");
+}
+
 void TerarangerHubEvo::dynParamCallback(
     const teraranger_evo_cfg::TerarangerHubEvoConfig &config, uint32_t level)
 {
   switch(level)
   {
     case -1:// Catching first reconfigure call
+      reconfigure_output(config);
+      reconfigure_rate(config);
+      reconfigure_imu(config);
+      reconfigure_sequence(config);
+      reconfigure_sensor_type(config);
       break;
     case 0:// Set the mode dynamically
-      ROS_INFO("[%s] Reconfigure call: Output mode", ros::this_node::getName().c_str());
-      if (config.Output_Mode == teraranger_evo_cfg::TerarangerHubEvo_Binary)
-      {
-        setMode(BINARY_MODE, 4);
-      }
-      else if (config.Output_Mode == teraranger_evo_cfg::TerarangerHubEvo_Text)
-      {
-        setMode(TEXT_MODE, 4);
-      }
-      else ROS_ERROR("[%s] Invalid reconfigure option", ros::this_node::getName().c_str());
+      reconfigure_output(config);
       break;
     case 1:// Set the rate dynamically
-      ROS_INFO("[%s] Reconfigure call: Rate", ros::this_node::getName().c_str());
-      if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_ASAP)
-      {
-        setMode(RATE_ASAP, 5);
-      }
-      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_50)
-      {
-        setMode(RATE_50, 5);
-      }
-      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_100)
-      {
-        setMode(RATE_100, 5);
-      }
-      else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_250)
-      {
-        setMode(RATE_250, 5);
-      }
-      else ROS_ERROR("Invalid reconfigure option");
+      reconfigure_rate(config);
       break;
     case 2:// Set the IMU mode dynamically
-      ROS_INFO("[%s] Reconfigure call: IMU mode", ros::this_node::getName().c_str());
-      if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_OFF)
-      {
-        setMode(IMU_OFF,4);
-        imu_status = off;
-        current_imu_frame_length = 0;
-      }
-      else if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_QUAT)
-      {
-        setMode(IMU_QUAT,4);
-        imu_status = quat;
-        current_imu_frame_length = IMU_QUAT_FRAME_LENGTH;
-      }
-      else if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_EULER)
-      {
-        setMode(IMU_EULER,4);
-        imu_status = euler;
-        current_imu_frame_length = IMU_EULER_FRAME_LENGTH;
-      }
-      else if (config.IMU_mode == teraranger_evo_cfg::TerarangerHubEvo_QUATLIN)
-      {
-        setMode(IMU_QUATLIN,4);
-        imu_status = quatlin;
-        current_imu_frame_length = IMU_QUATLIN_FRAME_LENGTH;
-      }
-      else ROS_ERROR("[%s] Invalid reconfigure option", ros::this_node::getName().c_str());
+      reconfigure_imu(config);
       break;
     case 3://Set the sequence mode dynamically
-      ROS_INFO("[%s] Reconfigure call: Sequence mode", ros::this_node::getName().c_str());
-      if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Crosstalk)
-      {
-        setMode(CROSSTALK_MODE,4);
-      }
-      else if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Anti_crosstalk)
-      {
-        setMode(NONCROSSTALK_MODE,4);
-      }
-      else ROS_ERROR("Invalid reconfigure option");
+      reconfigure_sequence(config);
+      break;
+    case 4://Set the sensor type dynamically
+      reconfigure_sensor_type(config);
       break;
     default:
       ROS_ERROR("[%s] Invalid reconfigure level : %d", ros::this_node::getName().c_str(), level);
@@ -305,15 +431,6 @@ void TerarangerHubEvo::processRangeFrame(uint8_t* input_buffer, int seq_ctr)
       else if(current_range == INVALID_MEASURE_VALUE)// Not connected
       {
         final_range = std::numeric_limits<float>::quiet_NaN();
-      }
-      // Enforcing min and max range
-      else if(float_range > max_range)
-      {
-        final_range = std::numeric_limits<float>::infinity();
-      }
-      else if(float_range < min_range)
-      {
-        final_range = -std::numeric_limits<float>::infinity();
       }
       else// Convert to meters
       {
@@ -492,6 +609,7 @@ void TerarangerHubEvo::spin()
     ros::spinOnce();
   }
   setMode(DISABLE_CMD, 5);
+  serial_port_.close();
 }
 
 }// end of namespace

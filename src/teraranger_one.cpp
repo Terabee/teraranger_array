@@ -131,7 +131,7 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
           float float_range = HelperLib::two_chars_to_float(c1, c2) * VALUE_TO_METER_FACTOR;
           float final_range;
 
-          if(current_range == TOO_CLOSE_VALUE)// Too close, 255 is for short range
+          if(current_range == TOO_CLOSE_VALUE)// Too close
           {
             final_range = -std::numeric_limits<float>::infinity();
           }
@@ -142,15 +142,6 @@ void TerarangerHubOne::serialDataCallback(uint8_t single_character)
           else if(current_range == INVALID_MEASURE_VALUE)// Not connected
           {
             final_range = std::numeric_limits<float>::quiet_NaN();
-          }
-          // Enforcing min and max range
-          else if(float_range > max_range)
-          {
-            final_range = std::numeric_limits<float>::infinity();
-          }
-          else if(float_range < min_range)
-          {
-            final_range = -std::numeric_limits<float>::infinity();
           }
           else// Convert to meters
           {

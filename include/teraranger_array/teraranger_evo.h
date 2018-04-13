@@ -28,6 +28,12 @@
 #define INVALID_MEASURE_VALUE 1
 #define VALUE_TO_METER_FACTOR 0.001
 
+#define EVO_60M_MAX 60.0
+#define EVO_60M_MIN 0.5
+#define EVO_600HZ_MAX 8.0
+#define EVO_600HZ_MIN 0.75
+
+
 #define ACK_LENGTH 4
 #define ACK_HEADER 0x30
 #define NACK_VALUE 0xFF
@@ -91,8 +97,6 @@ public:
   std::string ns_;
 private:
   float field_of_view ;
-  float max_range;
-  float min_range;
   int number_of_sensor;
   std::string frame_id;
   serial::Serial serial_port_;
@@ -106,6 +110,17 @@ private:
   void processRangeFrame(uint8_t* input_buffer, int seq_ctr);
   void processImuFrame(uint8_t* input_buffer, int seq_ctr);
   bool processAck(uint8_t* ack_buffer, const uint8_t* cmd);
+
+  void reconfigure_output(
+    const teraranger_evo_cfg::TerarangerHubEvoConfig &config);
+  void reconfigure_rate(
+    const teraranger_evo_cfg::TerarangerHubEvoConfig &config);
+  void reconfigure_imu(
+    const teraranger_evo_cfg::TerarangerHubEvoConfig &config);
+  void reconfigure_sequence(
+    const teraranger_evo_cfg::TerarangerHubEvoConfig &config);
+  void reconfigure_sensor_type(
+    const teraranger_evo_cfg::TerarangerHubEvoConfig &config);
 };
 
 } // namespace teraranger_array
