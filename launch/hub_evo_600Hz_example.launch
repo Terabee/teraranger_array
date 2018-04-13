@@ -1,0 +1,27 @@
+<launch>
+  <!-- Create namesapce to avoid naming collisions if launching several drivers -->
+  <group ns="hub_1">
+      <node pkg="teraranger_array" type="teraranger_evo" name="hub_parser" output="screen">
+          <!-- Set the serial port name -->
+          <param name="portname" value="/dev/ttyACM0" />
+          <!-- Set the output frequency 0=ASAP, 1=50Hz, 2=100Hz, 3=250Hz-->
+          <param name="Rate" value="1" />
+          <!-- Set the sequence mode 0=Crosstalk, 1=Anti_crosstalk-->
+          <param name="Sequence_mode" value="1" />
+          <!-- Set the IMU mode 0=OFF, 1=QUAT, 2=EULER, 3=QUAT+LIN-->
+          <param name="IMU_mode" value="/dev/ttyACM1" />
+          <!-- Set the sensor type of each port 0=EVO_600HZ, 1=EVO_60M-->
+          <param name="Sensor_type_port_0" value="0" />
+          <param name="Sensor_type_port_1" value="0" />
+          <param name="Sensor_type_port_2" value="0" />
+          <param name="Sensor_type_port_3" value="0" />
+          <param name="Sensor_type_port_4" value="0" />
+          <param name="Sensor_type_port_5" value="0" />
+          <param name="Sensor_type_port_6" value="0" />
+          <param name="Sensor_type_port_7" value="0" />
+
+          <!-- Remapping topic when using converter nodes-->
+          <remap from="ranges" to="ranges_raw" />
+      </node>
+  </group>
+</launch>
