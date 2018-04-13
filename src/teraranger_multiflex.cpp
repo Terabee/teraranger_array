@@ -269,7 +269,7 @@ void TerarangerHubMultiflex::setSensorBitMask(int *sensor_bit_mask_ptr)
 void TerarangerHubMultiflex::dynParamCallback(const teraranger_mutliflex_cfg::TerarangerHubMultiflexConfig &config, uint32_t level)
 {
 
-  if (level == 1)
+  if (level == 1 || level == -1)
   {
     sensor_bit_mask[0] = config.Sensor_0 ? 1 : 0;
     sensor_bit_mask[1] = config.Sensor_1 ? 1 : 0;
