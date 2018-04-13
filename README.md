@@ -32,7 +32,7 @@ source devel/setup.bash
 
 ## Running TeraRanger Hub Evo
 
-TeraRanger Hub Evo uses **TeraRanger Evo** sensors for the distance measurements. To use them please run **teraranger_evo** node.
+TeraRanger Hub Evo uses **TeraRanger Evo 60m** or **TeraRanger Evo 600Hz** sensors for the distance measurements. To use them please run **teraranger_evo** node.
 
 After your workspace is built and sourced:
 ```
@@ -64,6 +64,10 @@ You can change the operating mode of the sensors by running **rqt_reconfigure**:
 ```
 rosrun rqt_reconfigure rqt_reconfigure
 ```
+
+**IMPORTANT: Please notice that for the Hub Evo you are able to set the sensor type of each sensor (Evo 60m or Evo 600Hz) with a dynamic_reconfigure for each port**
+
+By default Evo 60m are set on the Hub.
 
 ## Product pictures and where to get the sensors
 
