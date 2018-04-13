@@ -2,8 +2,8 @@
 Changelog for package teraranger_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.0 (2018-04-13)
+------------------
 * Add example launch files
 * Update for evo 600hz
 * Close serial port on shutdown
