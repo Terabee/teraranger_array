@@ -260,7 +260,7 @@ void TerarangerHubEvo::reconfigure_sequence(
   ROS_INFO("[%s] Initial reconfigure call: Sequence mode", ros::this_node::getName().c_str());
   if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Crosstalk)
   {
-
+    setMode(CROSSTALK_MODE,4);
   }
   else if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Anti_crosstalk)
   {
