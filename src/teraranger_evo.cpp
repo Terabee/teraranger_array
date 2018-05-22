@@ -100,9 +100,9 @@ TerarangerHubEvo::TerarangerHubEvo()
   }
 
   // This line is needed to start measurements on the hub
-  setMode(BINARY_MODE, 4);
-  setMode(CROSSTALK_MODE, 4);
-  setMode(RATE_100, 5);
+  setMode(BINARY_MODE,4);
+  setMode(NONCROSSTALK_MODE,4);
+  setMode(RATE_ASAP,5);
   setMode(IMU_OFF,4);
   imu_status = off;
   current_imu_frame_length = 0;
