@@ -2,6 +2,25 @@
 Changelog for package teraranger_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.3.1 (2018-05-22)
+------------------
+* Change default modes
+* Re-add line removed by mistake
+* Correct typo in example launch files
+* Contributors: Pierre-Louis Kabaradjian
+
+1.3.0 (2018-04-13)
+------------------
+* Add example launch files
+* Update for evo 600hz
+* Close serial port on shutdown
+* Move input flush
+* Fix/default modes
+* Make separate function for each reconfigure parameter
+* Initilalize all modes at first dynamic reconfigure call
+* Remove min and max clipping for One and Evo
+* Contributors: Pierre-Louis Kabaradjian, BaptistePotier
+
 1.2.3 (2017-12-08)
 ------------------
 * Correct linear acceleration conversion factor to a more accurate one
