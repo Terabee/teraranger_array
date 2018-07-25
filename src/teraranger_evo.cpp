@@ -15,6 +15,7 @@ TerarangerHubEvo::TerarangerHubEvo()
   ros::NodeHandle private_node_handle_("~");
   private_node_handle_.param("portname", portname_,
                              std::string("/dev/ttyACM0"));
+  private_node_handle_.param("baudrate", baudrate_, SERIAL_SPEED);
   ns_ = ros::this_node::getNamespace();
   ns_ = ros::names::clean(ns_);
   if (ns_ != "" && ns_[0] == '/')
@@ -30,7 +31,7 @@ TerarangerHubEvo::TerarangerHubEvo()
 
   // Serial Port init
   serial_port_.setPort(portname_);
-  serial_port_.setBaudrate(SERIAL_SPEED);
+  serial_port_.setBaudrate(baudrate_);
   serial_port_.setParity(serial::parity_none);
   serial_port_.setStopbits(serial::stopbits_one);
   serial_port_.setBytesize(serial::eightbits);
@@ -220,6 +221,14 @@ void TerarangerHubEvo::reconfigure_rate(
   {
     setMode(RATE_250, 5);
   }
+  else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_500)
+  {
+    setMode(RATE_500, 5);
+  }
+  else if (config.Rate == teraranger_evo_cfg::TerarangerHubEvo_600)
+  {
+    setMode(RATE_600, 5);
+  }
   else ROS_ERROR("[%s] Invalid reconfigure option", ros::this_node::getName().c_str());
 }
 
@@ -265,6 +274,10 @@ void TerarangerHubEvo::reconfigure_sequence(
   else if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Anti_crosstalk)
   {
     setMode(NONCROSSTALK_MODE,4);
+  }
+  else if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Tower_mode)
+  {
+    setMode(TOWER_MODE,4);
   }
   else ROS_ERROR("Invalid reconfigure option");
 }
