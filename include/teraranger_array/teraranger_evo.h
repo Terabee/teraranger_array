@@ -50,6 +50,7 @@ static const char BINARY_MODE[4] = {(char)0x00, (char)0x11, (char)0x02, (char)0x
 
 static const char CROSSTALK_MODE[4] = {(char)0x00, (char)0x31,(char)0x01,(char)0xEB}; // All sensors continously
 static const char NONCROSSTALK_MODE[4] = {(char)0x00, (char)0x31, (char)0x02, (char)0xE2}; // All sensors sequentially
+static const char TOWER_MODE[4] = {(char)0x00, (char)0x31, (char)0x03, (char)0xE5}; // 4 by 4 in a cross manner 
 
 static const char IMU_OFF[4] = {(char)0x00, (char)0x41, (char)0x01, (char)0x49};
 static const char IMU_QUAT[4] = {(char)0x00, (char)0x41, (char)0x02, (char)0x40};
@@ -60,6 +61,8 @@ static const char RATE_ASAP[5] = {(char)0x00, (char)0x52, (char)0x03,(char)0x01,
 static const char RATE_50[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x02,(char)0xC3};
 static const char RATE_100[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x03,(char)0xC4};
 static const char RATE_250[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x04,(char)0xD1};
+static const char RATE_500[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x05,(char)0xD6};
+static const char RATE_600[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x06,(char)0xDF};
 
 enum imu_mode{
   off,
@@ -94,7 +97,9 @@ public:
   boost::function<void(uint8_t)> serial_data_callback_function_;
 
   std::string portname_;
+  int baudrate_;
   std::string ns_;
+
 private:
   float field_of_view ;
   int number_of_sensor;

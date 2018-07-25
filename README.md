@@ -1,7 +1,8 @@
 # ROS package for TeraRanger array solutions by Terabee
 
 This package is a collection of nodes for TeraRanger array solutions:
-* [TeraRanger Hub Evo](https://www.terabee.com/portfolio-item/teraranger-hub-evo/)
+* [TeraRanger Tower Evo](https://www.terabee.com/portfolio-item/teraranger-tower-evo/) 
+* [TeraRanger Hub Evo](https://www.terabee.com/portfolio-item/teraranger-hub-evo/) 
 * [TeraRanger Tower](https://www.terabee.com/portfolio-item/teraranger-tower/)
 * [TeraRanger Multiflex](https://www.terabee.com/portfolio-item/teraranger-multiflex/)
 * [TeraRanger Hub](https://www.terabee.com/portfolio-item/teraranger-hub/)
@@ -30,18 +31,23 @@ catkin_make
 source devel/setup.bash
 ```
 
-## Running TeraRanger Hub Evo
+## Running TeraRanger Hub Evo & Tower Evo
 
-TeraRanger Hub Evo uses **TeraRanger Evo 60m** or **TeraRanger Evo 600Hz** sensors for the distance measurements. To use them please run **teraranger_evo** node.
+**TeraRanger Hub Evo/Tower Evo** uses **TeraRanger Evo 60m** or **TeraRanger Evo 600Hz** sensors for the distance measurements. To use them please run **teraranger_evo** node.
 
 After your workspace is built and sourced:
+If you are using **USB**:
 ```
 rosrun teraranger_array teraranger_evo _portname:=/dev/ttyACM0
+```
+If you are using **UART Daughterboard**:
+```
+rosrun teraranger_array teraranger_evo _portname:=/dev/ttyACM0 _baudrate:=921600
 ```
 
 ## Running TeraRanger Tower & TeraRanger Hub
 
-TeraRanger Tower and TeraRanger Hub uses **TeraRanger One** sensors for the distance measurements. To use them please run **teraranger_one** node.
+**TeraRanger Tower** and TeraRanger Hub uses **TeraRanger One** sensors for the distance measurements. To use them please run **teraranger_one** node.
 
 After your workspace is built and sourced:
 ```
@@ -67,11 +73,21 @@ rosrun rqt_reconfigure rqt_reconfigure
 
 **IMPORTANT: Please notice that for the Hub Evo you are able to set the sensor type of each sensor (Evo 60m or Evo 600Hz) with a dynamic_reconfigure for each port**
 
-By default Evo 60m are set on the Hub.
+By default sensors are set to Evo 60m type.
 
 ## Product pictures and where to get the sensors
 
-### TeraRanger Hub Evo
+### Teraranger Tower Evo
+
+<img src="https://www.terabee.com/wp-content/uploads/2018/06/DSC0872-Editar.jpg" width="400"/>
+
+| Information |
+| -------------- |
+|[Product page](https://www.terabee.com/portfolio-item/teraranger-tower-evo/)|
+|[Specification sheet](https://www.terabee.com/wp-content/uploads/2018/07/TeraRanger-Tower-Evo-Specification-sheet-.pdf)|
+|[Online shop](http://www.teraranger.com/product/teraranger-tower-evo/)|
+
+### TeraRanger Hub Evo  
 
 <img src="https://www.terabee.com/wp-content/uploads/2017/12/TeraRanger-Hub-Evo.jpg" width="300"/>
 
@@ -79,7 +95,8 @@ By default Evo 60m are set on the Hub.
 | -------------- |
 |[Product page](https://www.terabee.com/portfolio-item/teraranger-hub-evo/)|
 |[Specification sheet](https://www.terabee.com/wp-content/uploads/2018/02/TeraRanger-Hub-Evo-Specification-sheet.pdf)|
-|[Online shop](http://www.teraranger.com/product/teraranger-hub-evo/) |
+|[Online shop](http://www.teraranger.com/product/teraranger-hub-evo/)|
+
 
 ### TeraRanger Tower
 
