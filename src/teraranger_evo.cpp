@@ -275,6 +275,10 @@ void TerarangerHubEvo::reconfigure_sequence(
   {
     setMode(NONCROSSTALK_MODE,4);
   }
+  else if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Tower_mode)
+  {
+    setMode(TOWER_MODE,4);
+  }
   else ROS_ERROR("Invalid reconfigure option");
 }
 
