@@ -60,6 +60,8 @@ static const char RATE_ASAP[5] = {(char)0x00, (char)0x52, (char)0x03,(char)0x01,
 static const char RATE_50[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x02,(char)0xC3};
 static const char RATE_100[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x03,(char)0xC4};
 static const char RATE_250[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x04,(char)0xD1};
+static const char RATE_500[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x05,(char)0xD6};
+static const char RATE_600[5] = {(char)0x00, (char)0x52, (char)0x03, (char)0x06,(char)0xDF};
 
 enum imu_mode{
   off,
@@ -94,7 +96,9 @@ public:
   boost::function<void(uint8_t)> serial_data_callback_function_;
 
   std::string portname_;
+  int baudrate_;
   std::string ns_;
+
 private:
   float field_of_view ;
   int number_of_sensor;
