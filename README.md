@@ -79,7 +79,7 @@ By default sensors are set to Evo 60m type.
 
 ### Teraranger Tower Evo
 
-<img src="https://www.terabee.com/wp-content/uploads/2018/06/DSC0872-Editar.jpg" width="300"/>
+<img src="https://www.terabee.com/wp-content/uploads/2018/06/DSC0872-Editar.jpg" width="400"/>
 
 | Information |
 | -------------- |
