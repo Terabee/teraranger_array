@@ -2,8 +2,8 @@
 Changelog for package teraranger_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.2 (2018-07-25)
+------------------
 * Update Readme for Tower Evo
 * Set default rate to ASAP
 * Add 500 et 600 Hz mode
