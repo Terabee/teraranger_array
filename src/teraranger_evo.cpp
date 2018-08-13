@@ -299,6 +299,12 @@ ROS_INFO("[%s] Initial reconfigure call: Sensor_type", ros::this_node::getName()
     range_array_msg.ranges[0].min_range = EVO_60M_MIN;
   }
 
+  else if(config.Sensor_type_port_0 == teraranger_evo_cfg::TerarangerHubEvo_EVO_3M)
+  {
+    range_array_msg.ranges[0].max_range = EVO_3M_MAX;
+    range_array_msg.ranges[0].min_range = EVO_3M_MIN;
+  }
+
   if(config.Sensor_type_port_1 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
   {
     range_array_msg.ranges[1].max_range = EVO_600HZ_MAX;
@@ -308,6 +314,11 @@ ROS_INFO("[%s] Initial reconfigure call: Sensor_type", ros::this_node::getName()
   {
     range_array_msg.ranges[1].max_range = EVO_60M_MAX;
     range_array_msg.ranges[1].min_range = EVO_60M_MIN;
+  }
+  else if(config.Sensor_type_port_1 == teraranger_evo_cfg::TerarangerHubEvo_EVO_3M)
+  {
+    range_array_msg.ranges[1].max_range = EVO_3M_MAX;
+    range_array_msg.ranges[1].min_range = EVO_3M_MIN;
   }
 
   if(config.Sensor_type_port_2 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
@@ -320,6 +331,11 @@ ROS_INFO("[%s] Initial reconfigure call: Sensor_type", ros::this_node::getName()
     range_array_msg.ranges[2].max_range = EVO_60M_MAX;
     range_array_msg.ranges[2].min_range = EVO_60M_MIN;
   }
+  else if(config.Sensor_type_port_2 == teraranger_evo_cfg::TerarangerHubEvo_EVO_3M)
+  {
+    range_array_msg.ranges[2].max_range = EVO_3M_MAX;
+    range_array_msg.ranges[2].min_range = EVO_3M_MIN;
+  }
 
   if(config.Sensor_type_port_3 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
   {
@@ -330,6 +346,11 @@ ROS_INFO("[%s] Initial reconfigure call: Sensor_type", ros::this_node::getName()
   {
     range_array_msg.ranges[3].max_range = EVO_60M_MAX;
     range_array_msg.ranges[3].min_range = EVO_60M_MIN;
+  }
+  else if(config.Sensor_type_port_3 == teraranger_evo_cfg::TerarangerHubEvo_EVO_3M)
+  {
+    range_array_msg.ranges[3].max_range = EVO_3M_MAX;
+    range_array_msg.ranges[3].min_range = EVO_3M_MIN;
   }
 
   if(config.Sensor_type_port_4 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
@@ -342,6 +363,11 @@ ROS_INFO("[%s] Initial reconfigure call: Sensor_type", ros::this_node::getName()
     range_array_msg.ranges[4].max_range = EVO_60M_MAX;
     range_array_msg.ranges[4].min_range = EVO_60M_MIN;
   }
+  else if(config.Sensor_type_port_4 == teraranger_evo_cfg::TerarangerHubEvo_EVO_3M)
+  {
+    range_array_msg.ranges[4].max_range = EVO_3M_MAX;
+    range_array_msg.ranges[4].min_range = EVO_3M_MIN;
+  }
 
   if(config.Sensor_type_port_5 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
   {
@@ -352,6 +378,11 @@ ROS_INFO("[%s] Initial reconfigure call: Sensor_type", ros::this_node::getName()
   {
     range_array_msg.ranges[5].max_range = EVO_60M_MAX;
     range_array_msg.ranges[5].min_range = EVO_60M_MIN;
+  }
+  else if(config.Sensor_type_port_5 == teraranger_evo_cfg::TerarangerHubEvo_EVO_3M)
+  {
+    range_array_msg.ranges[5].max_range = EVO_3M_MAX;
+    range_array_msg.ranges[5].min_range = EVO_3M_MIN;
   }
 
   if(config.Sensor_type_port_6 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
@@ -364,6 +395,11 @@ ROS_INFO("[%s] Initial reconfigure call: Sensor_type", ros::this_node::getName()
     range_array_msg.ranges[6].max_range = EVO_60M_MAX;
     range_array_msg.ranges[6].min_range = EVO_60M_MIN;
   }
+  else if(config.Sensor_type_port_6 == teraranger_evo_cfg::TerarangerHubEvo_EVO_3M)
+  {
+    range_array_msg.ranges[6].max_range = EVO_3M_MAX;
+    range_array_msg.ranges[6].min_range = EVO_3M_MIN;
+  }
 
   if(config.Sensor_type_port_7 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
   {
@@ -375,6 +411,12 @@ ROS_INFO("[%s] Initial reconfigure call: Sensor_type", ros::this_node::getName()
     range_array_msg.ranges[7].max_range = EVO_60M_MAX;
     range_array_msg.ranges[7].min_range = EVO_60M_MIN;
   }
+  else if(config.Sensor_type_port_7 == teraranger_evo_cfg::TerarangerHubEvo_EVO_3M)
+  {
+    range_array_msg.ranges[7].max_range = EVO_3M_MAX;
+    range_array_msg.ranges[7].min_range = EVO_3M_MIN;
+  }
+
   else ROS_ERROR("Invalid reconfigure option");
 }
 
