@@ -286,7 +286,6 @@ void TerarangerHubEvo::reconfigure_sensor_type(
     const teraranger_evo_cfg::TerarangerHubEvoConfig &config)
 {
 ROS_INFO("[%s] Initial reconfigure call: Sensor_type", ros::this_node::getName().c_str());
-  float range_new = 0.0;
 
   if(config.Sensor_type_port_0 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
   {
