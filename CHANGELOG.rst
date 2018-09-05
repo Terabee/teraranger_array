@@ -2,6 +2,14 @@
 Changelog for package teraranger_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.3.2 (2018-07-25)
+------------------
+* Update Readme for Tower Evo
+* Set default rate to ASAP
+* Add 500 et 600 Hz mode
+* Add specific firing mode for TeraRanger Tower Evo
+* Contributors: Baptiste Potier, Pierre-Louis Kabaradjian
+
 1.3.1 (2018-05-22)
 ------------------
 * Change default modes
@@ -19,7 +27,7 @@ Changelog for package teraranger_array
 * Make separate function for each reconfigure parameter
 * Initilalize all modes at first dynamic reconfigure call
 * Remove min and max clipping for One and Evo
-* Contributors: Pierre-Louis Kabaradjian, BaptistePotier
+* Contributors: Pierre-Louis Kabaradjian, Baptiste Potier
 
 1.2.3 (2017-12-08)
 ------------------
