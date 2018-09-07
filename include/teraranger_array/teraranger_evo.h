@@ -32,6 +32,8 @@
 #define EVO_60M_MIN 0.5
 #define EVO_600HZ_MAX 8.0
 #define EVO_600HZ_MIN 0.75
+#define EVO_3M_MAX 3.0
+#define EVO_3M_MIN 0.1
 
 
 #define ACK_LENGTH 4
@@ -50,7 +52,7 @@ static const char BINARY_MODE[4] = {(char)0x00, (char)0x11, (char)0x02, (char)0x
 
 static const char CROSSTALK_MODE[4] = {(char)0x00, (char)0x31,(char)0x01,(char)0xEB}; // All sensors continously
 static const char NONCROSSTALK_MODE[4] = {(char)0x00, (char)0x31, (char)0x02, (char)0xE2}; // All sensors sequentially
-static const char TOWER_MODE[4] = {(char)0x00, (char)0x31, (char)0x03, (char)0xE5}; // 4 by 4 in a cross manner 
+static const char TOWER_MODE[4] = {(char)0x00, (char)0x31, (char)0x03, (char)0xE5}; // 4 by 4 in a cross manner
 
 static const char IMU_OFF[4] = {(char)0x00, (char)0x41, (char)0x01, (char)0x49};
 static const char IMU_QUAT[4] = {(char)0x00, (char)0x41, (char)0x02, (char)0x40};
