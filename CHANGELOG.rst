@@ -2,6 +2,12 @@
 Changelog for package teraranger_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update Readme for Evo 3m
+* Add Evo 3m type to the list of available Evo's
+* Contributors: BaptistePotier, Pierre-Louis Kabaradjian
+
 1.3.2 (2018-07-25)
 ------------------
 * Update Readme for Tower Evo
