@@ -424,7 +424,7 @@ void TerarangerHubEvo::dynParamCallback(
 {
   switch(level)
   {
-    case -1:// Catching first reconfigure call
+    case UINT32_MAX:// Catching first reconfigure call
       reconfigure_output(config);
       reconfigure_rate(config);
       reconfigure_imu(config);
