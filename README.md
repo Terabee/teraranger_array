@@ -31,6 +31,9 @@ catkin_make
 source devel/setup.bash
 ```
 
+### Dependencies
+This package depends on [serial](http://wiki.ros.org/serial). If it's not available for your distribution, clone https://github.com/wjwwood/serial into `~/ros_ws/src` and `catkin_make` it.
+
 ## Running TeraRanger Hub Evo & Tower Evo
 
 **TeraRanger Hub Evo/Tower Evo** uses **TeraRanger Evo 60m**, **TeraRanger Evo 600Hz** or **TeraRanger Evo 3m** sensors for the distance measurements. To use them please run **teraranger_evo** node.
@@ -87,7 +90,7 @@ By default sensors are set to Evo 60m type.
 |[Specification sheet](https://www.terabee.com/wp-content/uploads/2018/07/TeraRanger-Tower-Evo-Specification-sheet-.pdf)|
 |[Online shop](http://www.teraranger.com/product/teraranger-tower-evo/)|
 
-### TeraRanger Hub Evo  
+### TeraRanger Hub Evo
 
 <img src="https://www.terabee.com/wp-content/uploads/2017/12/TeraRanger-Hub-Evo.jpg" width="300"/>
 
