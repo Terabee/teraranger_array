@@ -162,7 +162,7 @@ bool TerarangerHubEvo::processAck(uint8_t* ack_buffer, const uint8_t* cmd)
         {
           return true;
         }
-        else if (ack_buffer[2] == NACK_VALUE)
+        else
         {
           return false;
         }
