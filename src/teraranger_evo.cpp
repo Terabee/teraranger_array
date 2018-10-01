@@ -266,7 +266,7 @@ void TerarangerHubEvo::reconfigure_imu(
 void TerarangerHubEvo::reconfigure_sequence(
   const teraranger_evo_cfg::TerarangerHubEvoConfig &config)
 {
-  ROS_INFO("[%s] Initial reconfigure call: Sequence mode", ros::this_node::getName().c_str());
+  ROS_INFO("[%s] Reconfigure call: Sequence mode", ros::this_node::getName().c_str());
   if(config.Sequence_mode == teraranger_evo_cfg::TerarangerHubEvo_Crosstalk)
   {
     setMode(CROSSTALK_MODE,4);
@@ -285,7 +285,7 @@ void TerarangerHubEvo::reconfigure_sequence(
 void TerarangerHubEvo::reconfigure_sensor_type(
     const teraranger_evo_cfg::TerarangerHubEvoConfig &config)
 {
-ROS_INFO("[%s] Initial reconfigure call: Sensor_type", ros::this_node::getName().c_str());
+  ROS_INFO("[%s] Reconfigure call: Sensor_type", ros::this_node::getName().c_str());
 
   if(config.Sensor_type_port_0 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
   {
@@ -425,6 +425,7 @@ void TerarangerHubEvo::dynParamCallback(
   switch(level)
   {
     case 0xffffffff:// Catching first reconfigure call
+      ROS_INFO("[%s] Initial reconfigure call", ros::this_node::getName().c_str());
       reconfigure_output(config);
       reconfigure_rate(config);
       reconfigure_imu(config);
