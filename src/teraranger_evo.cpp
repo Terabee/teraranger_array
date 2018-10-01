@@ -164,6 +164,12 @@ bool TerarangerHubEvo::processAck(uint8_t* ack_buffer, const uint8_t* cmd)
         }
         else if (ack_buffer[2] == NACK_VALUE)
         {
+          ROS_ERROR("[%s] Command was not acknowledged", ros::this_node::getName().c_str());
+          return false;
+        }
+        else
+        {
+          ROS_ERROR("[%s] Invalid acknowledgment value", ros::this_node::getName().c_str());
           return false;
         }
       }
