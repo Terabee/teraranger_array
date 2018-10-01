@@ -424,7 +424,7 @@ void TerarangerHubEvo::dynParamCallback(
 {
   switch(level)
   {
-    case -1:// Catching first reconfigure call
+    case 0xffffffff:// Catching first reconfigure call
       ROS_INFO("[%s] Initial reconfigure call", ros::this_node::getName().c_str());
       reconfigure_output(config);
       reconfigure_rate(config);
