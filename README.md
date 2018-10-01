@@ -31,8 +31,16 @@ catkin_make
 source devel/setup.bash
 ```
 
-### Dependencies
-This package depends on [serial](http://wiki.ros.org/serial). If it's not available for your distribution, clone https://github.com/wjwwood/serial into `~/ros_ws/src` and `catkin_make` it.
+## Dependencies
+This package depends on this [serial](http://wiki.ros.org/serial) library. To get it, execute the following command:
+
+```
+sudo apt-get install ros-<your_distro>-serial
+```
+
+where <your_distro> is your ROS distribution (e.g. kinetic, lunar, indigo).
+
+If it's not available for your distribution, clone https://github.com/wjwwood/serial into your workspace, then build and source your workspace.
 
 ## Running TeraRanger Hub Evo & Tower Evo
 
