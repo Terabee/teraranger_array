@@ -31,6 +31,17 @@ catkin_make
 source devel/setup.bash
 ```
 
+## Dependencies
+This package depends on this [serial](http://wiki.ros.org/serial) library. To get it, execute the following command:
+
+```
+sudo apt-get install ros-<your_distro>-serial
+```
+
+where <your_distro> is your ROS distribution (e.g. kinetic, lunar, indigo).
+
+If it's not available for your distribution, clone https://github.com/wjwwood/serial into your workspace, then build and source your workspace.
+
 ## Running TeraRanger Hub Evo & Tower Evo
 
 **TeraRanger Hub Evo/Tower Evo** uses **TeraRanger Evo 60m**, **TeraRanger Evo 600Hz** or **TeraRanger Evo 3m** sensors for the distance measurements. To use them please run **teraranger_evo** node.
@@ -87,7 +98,7 @@ By default sensors are set to Evo 60m type.
 |[Specification sheet](https://www.terabee.com/wp-content/uploads/2018/07/TeraRanger-Tower-Evo-Specification-sheet-.pdf)|
 |[Online shop](http://www.teraranger.com/product/teraranger-tower-evo/)|
 
-### TeraRanger Hub Evo  
+### TeraRanger Hub Evo
 
 <img src="https://www.terabee.com/wp-content/uploads/2017/12/TeraRanger-Hub-Evo.jpg" width="300"/>
 
