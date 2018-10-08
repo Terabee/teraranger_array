@@ -2,8 +2,8 @@
 Changelog for package teraranger_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.4 (2018-10-08)
+------------------
 * Update maintainer list
 * Fix reconfigure infos
 * Make sure processAck always returns something
