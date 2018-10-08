@@ -2,6 +2,21 @@
 Changelog for package teraranger_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.3.4 (2018-10-08)
+------------------
+* Update maintainer list
+* Fix reconfigure infos
+* Make sure processAck always returns something
+* Mention dependency on serial package in readme
+* Avoid narrowing cast in switch case
+* Contributors: Morten Fyhn Amundsen, Pierre-Louis Kabaradjian
+
+1.3.3 (2018-09-07)
+------------------
+* Update Readme for Evo 3m
+* Add Evo 3m type to the list of available Evo's
+* Contributors: BaptistePotier, Pierre-Louis Kabaradjian
+
 1.3.2 (2018-07-25)
 ------------------
 * Update Readme for Tower Evo
