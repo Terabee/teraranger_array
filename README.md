@@ -1,11 +1,11 @@
 # ROS package for TeraRanger array solutions by Terabee
 
 This package is a collection of nodes for TeraRanger array solutions:
-* [TeraRanger Tower Evo](https://www.terabee.com/portfolio-item/teraranger-tower-evo/)
-* [TeraRanger Hub Evo](https://www.terabee.com/portfolio-item/teraranger-hub-evo/)
-* [TeraRanger Tower](https://www.terabee.com/portfolio-item/teraranger-tower/)
-* [TeraRanger Multiflex](https://www.terabee.com/portfolio-item/teraranger-multiflex/)
-* [TeraRanger Hub](https://www.terabee.com/portfolio-item/teraranger-hub/)
+* [TeraRanger Tower Evo](https://www.terabee.com/shop/lidar-tof-multi-directional-arrays/teraranger-tower-evo/)
+* [TeraRanger Hub Evo](https://www.terabee.com/shop/accessories/teraranger-hub-evo/)
+* [TeraRanger Tower](https://www.terabee.com/shop/lidar-tof-multi-directional-arrays/teraranger-tower/)
+* [TeraRanger Multiflex](https://www.terabee.com/shop/lidar-tof-multi-directional-arrays/teraranger-multiflex/)
+* [TeraRanger Hub](https://www.terabee.com/shop/accessories/teraranger-hub/)
 
 ## Building and running the package from source
 
@@ -90,42 +90,38 @@ By default sensors are set to Evo 60m type.
 
 ### Teraranger Tower Evo
 
-<img src="https://www.terabee.com/wp-content/uploads/2018/06/DSC0872-Editar.jpg" width="400"/>
+<img src="https://www.terabee.com/wp-content/uploads/2019/03/TeraRanger-Tower-Evo.png" width="400"/>
 
 | Information |
 | -------------- |
-|[Product page](https://www.terabee.com/portfolio-item/teraranger-tower-evo/)|
-|[Specification sheet](https://www.terabee.com/wp-content/uploads/2018/07/TeraRanger-Tower-Evo-Specification-sheet-.pdf)|
-|[Online shop](http://www.teraranger.com/product/teraranger-tower-evo/)|
+|[Product page](https://www.terabee.com/shop/lidar-tof-multi-directional-arrays/teraranger-tower-evo/)|
+|[Specification sheet](https://www.terabee.com/wp-content/uploads/2019/03/TeraRanger-Tower-Evo-Specification-sheet-.pdf)|
 
 ### TeraRanger Hub Evo
 
-<img src="https://www.terabee.com/wp-content/uploads/2017/12/TeraRanger-Hub-Evo.jpg" width="300"/>
+<img src="https://www.terabee.com/wp-content/uploads/2019/03/Whats-in-the-pack.jpg" width="300"/>
 
 | Information |
 | -------------- |
-|[Product page](https://www.terabee.com/portfolio-item/teraranger-hub-evo/)|
-|[Specification sheet](https://www.terabee.com/wp-content/uploads/2018/02/TeraRanger-Hub-Evo-Specification-sheet.pdf)|
-|[Online shop](http://www.teraranger.com/product/teraranger-hub-evo/)|
+|[Product page](https://www.terabee.com/shop/accessories/teraranger-hub-evo/)|
+|[Specification sheet](https://www.terabee.com/wp-content/uploads/2019/03/TeraRanger-Hub-Evo-Specification-sheet.pdf)|
 
 
 ### TeraRanger Tower
 
-<img src="http://www.teraranger.com/wp-content/uploads/2016/03/Teraranger_tower_typeB-1.png" width="300"/>
+<img src="https://www.terabee.com/wp-content/uploads/2019/03/Teraranger_tower_typeB-1.jpg" width="300"/>
 
 | Information |
 | -------------- |
-|[Product page](https://www.terabee.com/portfolio-item/teraranger-tower/)|
-|[Specification sheet](https://www.terabee.com/portfolio-item/teraranger-tower/#tower-specifications)|
-|[Online shop](http://www.teraranger.com/product/teraranger-tower/) |
+|[Product page](https://www.terabee.com/shop/lidar-tof-multi-directional-arrays/teraranger-tower/)|
+|[Specification sheet](https://www.terabee.com/wp-content/uploads/2019/03/Towerspecificationsheet-1.pdf)|
 
 
 ### TeraRanger Multiflex
 
-<img src="https://www.terabee.com/wp-content/uploads/2017/08/DSC0311-Editar-3.jpg" width="300"/>
+<img src="https://www.terabee.com/wp-content/uploads/2019/03/TeraRanger-Multiflex-e1553710124882.png" width="300"/>
 
 | Information |
 | -------------- |
-|[Product page](https://www.terabee.com/portfolio-item/teraranger-multiflex/)|
-|[Specification sheet](https://www.terabee.com/portfolio-item/teraranger-multiflex/#teraranger-specifications)|
-|[Online shop](http://www.teraranger.com/product/teraranger-multiflex/) |
+|[Product page](https://www.terabee.com/shop/lidar-tof-multi-directional-arrays/teraranger-multiflex/)|
+|[Specification sheet](https://www.terabee.com/wp-content/uploads/2019/03/MultiflexSpecificationSheet.pdf)|
