@@ -32,7 +32,7 @@ generate_messages(
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME}
+  #LIBRARIES ${PROJECT_NAME}
   CATKIN_DEPENDS roscpp sensor_msgs std_msgs message_runtime dynamic_reconfigure serial geometry_msgs
   DEPENDS Boost
 )
