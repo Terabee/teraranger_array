@@ -2,8 +2,8 @@
 Changelog for package teraranger_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2019-05-03)
+------------------
 * Update package description
 * Merge pull request `#60 <https://github.com/Terabee/teraranger_array/issues/60>`_ from FRC900/remove_lib_from_cmake
   Removed teraranger_array library from catkin_package LIBRARIES
