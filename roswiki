@@ -67,7 +67,7 @@ param{
     2.type = int
     2.default = 0
     3.name = ~Sensor_type
-    3.desc = Change the type of sensor: 0 = Evo_600Hz, 1 = Evo_60m, 2 = Evo_3m
+    3.desc = Change the type of sensor: 0 = Evo_600Hz, 1 = Evo_60m, 2 = Evo_3m, 3 = Evo_mini
     3.type = int
     3.default = 1
   }
