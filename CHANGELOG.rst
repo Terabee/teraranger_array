@@ -2,6 +2,25 @@
 Changelog for package teraranger_array
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.0.0 (2019-05-03)
+------------------
+* Update package description
+* Merge pull request `#60 <https://github.com/Terabee/teraranger_array/issues/60>`_ from FRC900/remove_lib_from_cmake
+  Removed teraranger_array library from catkin_package LIBRARIES
+* Merge remote-tracking branch 'origin/master' into remove_lib_from_cmake
+* Merge pull request `#59 <https://github.com/Terabee/teraranger_array/issues/59>`_ from FRC900/cpp_msg_header
+  Move header to start of RangeArray.msg
+* Add travis config
+* Removed teraranger_array library from catkin_package LIBRARIES
+  This file isn't built, so packages referencing teraranger_array
+  fail when searching for the non-existent library
+* Move header to start of RangeArray.msg
+  The cpp tools require the header to be the first entry in the
+  message for ros::message_traits to recognize that the message
+  in fact has a header.
+* Update links in Readme
+* Contributors: Kevin Jaget, Pierre-Louis Kabaradjian
+
 1.3.4 (2018-10-08)
 ------------------
 * Update maintainer list
