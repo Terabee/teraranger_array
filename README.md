@@ -1,4 +1,5 @@
 # ROS package for TeraRanger array solutions by Terabee
+[![Build Status](https://travis-ci.org/Terabee/teraranger_array.svg?branch=master)](https://travis-ci.org/Terabee/teraranger_array)
 
 This package is a collection of nodes for TeraRanger array solutions:
 * [TeraRanger Tower Evo](https://www.terabee.com/shop/lidar-tof-multi-directional-arrays/teraranger-tower-evo/)
