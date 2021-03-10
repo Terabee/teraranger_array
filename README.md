@@ -45,7 +45,7 @@ If it's not available for your distribution, clone https://github.com/wjwwood/se
 
 ## Running TeraRanger Hub Evo & Tower Evo
 
-**TeraRanger Hub Evo/Tower Evo** uses **TeraRanger Evo 60m**, **TeraRanger Evo 600Hz** or **TeraRanger Evo 3m** sensors for the distance measurements. To use them please run **teraranger_evo** node.
+**TeraRanger Hub Evo/Tower Evo** uses **TeraRanger Evo 60m**, **TeraRanger Evo 40m**, **TeraRanger Evo 15m**, **TeraRanger Evo 600Hz** or **TeraRanger Evo 3m** sensors for the distance measurements. To use them please run **teraranger_evo** node.
 
 After your workspace is built and sourced:
 If you are using **USB**:
@@ -83,7 +83,7 @@ You can change the operating mode of the sensors by running **rqt_reconfigure**:
 rosrun rqt_reconfigure rqt_reconfigure
 ```
 
-**IMPORTANT: Please notice that for the Hub Evo you are able to set the sensor type of each sensor (Evo 60m, Evo 600Hz, Evo 3m or Evo Mini) with a dynamic_reconfigure for each port**
+**IMPORTANT: Please notice that for the Hub Evo you are able to set the sensor type of each sensor (Evo 60m, Evo 40m, Evo 15m, Evo 600Hz, Evo 3m or Evo Mini) with a dynamic_reconfigure for each port**
 
 By default sensors are set to Evo 60m type.
 

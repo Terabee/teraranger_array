@@ -10,7 +10,7 @@
           <param name="Sequence_mode" value="1" />
           <!-- Set the IMU mode 0=OFF, 1=QUAT, 2=EULER, 3=QUAT+LIN-->
           <param name="IMU_mode" value="1" />
-          <!-- Set the sensor type of each port 0=EVO_600HZ, 1=EVO_60M-->
+          <!-- Set the sensor type of each port 0=EVO_600HZ, 1=EVO_60M, 2=EVO_3M, 3=EVO_MINI, 4=EVO_40M, 5=EVO_15M-->
           <param name="Sensor_type_port_0" value="1" />
           <param name="Sensor_type_port_1" value="1" />
           <param name="Sensor_type_port_2" value="1" />
