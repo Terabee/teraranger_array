@@ -36,6 +36,9 @@
 #define EVO_3M_MIN 0.1
 #define EVO_MINI_MIN 0.03
 #define EVO_MINI_MAX 3.3
+#define EVO_40M_MAX 40.0
+#define EVO_15M_MAX 15.0
+
 
 #define ACK_LENGTH 4
 #define ACK_HEADER 0x30

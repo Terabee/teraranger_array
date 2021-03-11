@@ -313,6 +313,17 @@ void TerarangerHubEvo::reconfigure_sensor_type(
     range_array_msg.ranges[0].max_range = EVO_MINI_MAX;
     range_array_msg.ranges[0].min_range = EVO_MINI_MIN;
   }
+  else if(config.Sensor_type_port_0 == teraranger_evo_cfg::TerarangerHubEvo_EVO_40M)
+  {
+    range_array_msg.ranges[0].max_range = EVO_40M_MAX;
+    range_array_msg.ranges[0].min_range = EVO_60M_MIN;
+  }
+  else if(config.Sensor_type_port_0 == teraranger_evo_cfg::TerarangerHubEvo_EVO_15M)
+  {
+    range_array_msg.ranges[0].max_range = EVO_15M_MAX;
+    range_array_msg.ranges[0].min_range = EVO_60M_MIN;
+  }
+
   // Setting type for sensor on port 1
   if(config.Sensor_type_port_1 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
   {
@@ -334,6 +345,17 @@ void TerarangerHubEvo::reconfigure_sensor_type(
     range_array_msg.ranges[1].max_range = EVO_MINI_MAX;
     range_array_msg.ranges[1].min_range = EVO_MINI_MIN;
   }
+  else if(config.Sensor_type_port_1 == teraranger_evo_cfg::TerarangerHubEvo_EVO_40M)
+  {
+    range_array_msg.ranges[1].max_range = EVO_40M_MAX;
+    range_array_msg.ranges[1].min_range = EVO_60M_MIN;
+  }
+  else if(config.Sensor_type_port_1 == teraranger_evo_cfg::TerarangerHubEvo_EVO_15M)
+  {
+    range_array_msg.ranges[1].max_range = EVO_15M_MAX;
+    range_array_msg.ranges[1].min_range = EVO_60M_MIN;
+  }
+
   // Setting type for sensor on port 2
   if(config.Sensor_type_port_2 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
   {
@@ -355,6 +377,17 @@ void TerarangerHubEvo::reconfigure_sensor_type(
     range_array_msg.ranges[2].max_range = EVO_MINI_MAX;
     range_array_msg.ranges[2].min_range = EVO_MINI_MIN;
   }
+  else if(config.Sensor_type_port_2 == teraranger_evo_cfg::TerarangerHubEvo_EVO_40M)
+  {
+    range_array_msg.ranges[2].max_range = EVO_40M_MAX;
+    range_array_msg.ranges[2].min_range = EVO_60M_MIN;
+  }
+  else if(config.Sensor_type_port_2 == teraranger_evo_cfg::TerarangerHubEvo_EVO_15M)
+  {
+    range_array_msg.ranges[2].max_range = EVO_15M_MAX;
+    range_array_msg.ranges[2].min_range = EVO_60M_MIN;
+  }
+
   // Setting type for sensor on port 3
   if(config.Sensor_type_port_3 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
   {
@@ -376,6 +409,17 @@ void TerarangerHubEvo::reconfigure_sensor_type(
     range_array_msg.ranges[3].max_range = EVO_MINI_MAX;
     range_array_msg.ranges[3].min_range = EVO_MINI_MIN;
   }
+  else if(config.Sensor_type_port_3 == teraranger_evo_cfg::TerarangerHubEvo_EVO_40M)
+  {
+    range_array_msg.ranges[3].max_range = EVO_40M_MAX;
+    range_array_msg.ranges[3].min_range = EVO_60M_MIN;
+  }
+  else if(config.Sensor_type_port_3 == teraranger_evo_cfg::TerarangerHubEvo_EVO_15M)
+  {
+    range_array_msg.ranges[3].max_range = EVO_15M_MAX;
+    range_array_msg.ranges[3].min_range = EVO_60M_MIN;
+  }
+
   // Setting type for sensor on port 4
   if(config.Sensor_type_port_4 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
   {
@@ -397,6 +441,17 @@ void TerarangerHubEvo::reconfigure_sensor_type(
     range_array_msg.ranges[4].max_range = EVO_MINI_MAX;
     range_array_msg.ranges[4].min_range = EVO_MINI_MIN;
   }
+  else if(config.Sensor_type_port_4 == teraranger_evo_cfg::TerarangerHubEvo_EVO_40M)
+  {
+    range_array_msg.ranges[4].max_range = EVO_40M_MAX;
+    range_array_msg.ranges[4].min_range = EVO_60M_MIN;
+  }
+  else if(config.Sensor_type_port_4 == teraranger_evo_cfg::TerarangerHubEvo_EVO_15M)
+  {
+    range_array_msg.ranges[4].max_range = EVO_15M_MAX;
+    range_array_msg.ranges[4].min_range = EVO_60M_MIN;
+  }
+
   // Setting type for sensor on port 5
   if(config.Sensor_type_port_5 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
   {
@@ -418,6 +473,17 @@ void TerarangerHubEvo::reconfigure_sensor_type(
     range_array_msg.ranges[5].max_range = EVO_MINI_MAX;
     range_array_msg.ranges[5].min_range = EVO_MINI_MIN;
   }
+  else if(config.Sensor_type_port_5 == teraranger_evo_cfg::TerarangerHubEvo_EVO_40M)
+  {
+    range_array_msg.ranges[5].max_range = EVO_40M_MAX;
+    range_array_msg.ranges[5].min_range = EVO_60M_MIN;
+  }
+  else if(config.Sensor_type_port_5 == teraranger_evo_cfg::TerarangerHubEvo_EVO_15M)
+  {
+    range_array_msg.ranges[5].max_range = EVO_15M_MAX;
+    range_array_msg.ranges[5].min_range = EVO_60M_MIN;
+  }
+
   // Setting type for sensor on port 6
   if(config.Sensor_type_port_6 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
   {
@@ -439,6 +505,17 @@ void TerarangerHubEvo::reconfigure_sensor_type(
     range_array_msg.ranges[6].max_range = EVO_MINI_MAX;
     range_array_msg.ranges[6].min_range = EVO_MINI_MIN;
   }
+  else if(config.Sensor_type_port_6 == teraranger_evo_cfg::TerarangerHubEvo_EVO_40M)
+  {
+    range_array_msg.ranges[6].max_range = EVO_40M_MAX;
+    range_array_msg.ranges[6].min_range = EVO_60M_MIN;
+  }
+  else if(config.Sensor_type_port_6 == teraranger_evo_cfg::TerarangerHubEvo_EVO_15M)
+  {
+    range_array_msg.ranges[6].max_range = EVO_15M_MAX;
+    range_array_msg.ranges[6].min_range = EVO_60M_MIN;
+  }
+
   // Setting type for sensor on port 7
   if(config.Sensor_type_port_7 == teraranger_evo_cfg::TerarangerHubEvo_EVO_600HZ)
   {
@@ -459,6 +536,16 @@ void TerarangerHubEvo::reconfigure_sensor_type(
   {
     range_array_msg.ranges[7].max_range = EVO_MINI_MAX;
     range_array_msg.ranges[7].min_range = EVO_MINI_MIN;
+  }
+  else if(config.Sensor_type_port_7 == teraranger_evo_cfg::TerarangerHubEvo_EVO_40M)
+  {
+    range_array_msg.ranges[7].max_range = EVO_40M_MAX;
+    range_array_msg.ranges[7].min_range = EVO_60M_MIN;
+  }
+  else if(config.Sensor_type_port_7 == teraranger_evo_cfg::TerarangerHubEvo_EVO_15M)
+  {
+    range_array_msg.ranges[7].max_range = EVO_15M_MAX;
+    range_array_msg.ranges[7].min_range = EVO_60M_MIN;
   }
 
   else ROS_ERROR("Invalid reconfigure option");
